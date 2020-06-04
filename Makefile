@@ -2,6 +2,11 @@
 
 SOURCES:=$(shell find . -name '*.go')
 
+version=0.1
+branch=$(shell git rev-parse --abbrev-ref HEAD)
+commit=$(shell git rev-parse HEAD)
+buildtime=$(shell date)
+
 default: build
 
 clean: ## Run go clean
@@ -9,46 +14,46 @@ clean: ## Run go clean
 	rm -f rest-api-tests
 
 build: ## Run go build
-	./build.sh
+	go build -ldflags="-X 'main.BuildTime=$(buildtime)' -X 'main.BuildVersion=$(version)' -X 'main.BuildBranch=$(branch)' -X 'main.BuildCommit=$(commit)'"
 
 fmt: ## Run go fmt -w for all sources
 	@echo "Running go formatting"
-	./gofmt.sh
+	gofmt -l .
 
 lint: ## Run golint
 	@echo "Running go lint"
-	./golint.sh
+	golint $(go list ./...)
 
 vet: ## Run go vet. Report likely mistakes in source code
 	@echo "Running go vet"
-	./govet.sh
+	go vet $(go list ./...)
 
 cyclo: ## Run gocyclo
 	@echo "Running gocyclo"
-	./gocyclo.sh
+	gocyclo -over 9 -avg .
 
 ineffassign: ## Run ineffassign checker
 	@echo "Running ineffassign checker"
-	./ineffassign.sh
+	ineffassign .
 
 shellcheck: ## Run shellcheck
 	shellcheck $(shell find . -name "*.sh")
 
 errcheck: ## Run errcheck
 	@echo "Running errcheck"
-	./goerrcheck.sh
+	errcheck ./...
 
 goconst: ## Run goconst checker
 	@echo "Running goconst checker"
-	./goconst.sh
+	goconst -min-occurrences=3 ./...
 
 gosec: ## Run gosec checker
 	@echo "Running gosec checker"
-	./gosec.sh
+	gosec ./...
 
 abcgo: ## Run ABC metrics checker
 	@echo "Run ABC metrics checker"
-	./abcgo.sh
+	abcgo -path .
 
 style: fmt vet lint cyclo shellcheck errcheck goconst gosec ineffassign abcgo ## Run all the formatting related commands (fmt, vet, lint, cyclo) + check shell scripts
 
