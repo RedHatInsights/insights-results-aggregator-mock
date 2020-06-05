@@ -22,26 +22,34 @@ package server
 import (
 	"context"
 	"net/http"
+
+	// we just have to import this package in order to expose pprof interface in debug mode
+	// disable "G108 (CWE-): Profiling endpoint is automatically exposed on /debug/pprof"
+	// #nosec G108
+	_ "net/http/pprof"
 	"path/filepath"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
 
 	"github.com/RedHatInsights/insights-results-aggregator-mock/groups"
+	"github.com/RedHatInsights/insights-results-aggregator-mock/storage"
 )
 
 // HTTPServer in an implementation of Server interface
 type HTTPServer struct {
-	Config Configuration
-	Groups map[string]groups.Group
-	Serv   *http.Server
+	Config  Configuration
+	Storage storage.Storage
+	Groups  map[string]groups.Group
+	Serv    *http.Server
 }
 
 // New constructs new implementation of Server interface
-func New(config Configuration, groups map[string]groups.Group) *HTTPServer {
+func New(config Configuration, storage storage.Storage, groups map[string]groups.Group) *HTTPServer {
 	return &HTTPServer{
-		Config: config,
-		Groups: groups,
+		Config:  config,
+		Storage: storage,
+		Groups:  groups,
 	}
 }
 

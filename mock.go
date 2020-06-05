@@ -28,6 +28,7 @@ import (
 	"github.com/RedHatInsights/insights-results-aggregator-mock/conf"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/groups"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/server"
+	"github.com/RedHatInsights/insights-results-aggregator-mock/storage"
 )
 
 const (
@@ -63,14 +64,20 @@ var (
 func startService() int {
 	serverCfg := conf.GetServerConfiguration()
 	groupsCfg := conf.GetGroupsConfiguration()
-	groups, err := groups.ParseGroupConfigFile(groupsCfg.ConfigPath)
 
+	groups, err := groups.ParseGroupConfigFile(groupsCfg.ConfigPath)
 	if err != nil {
 		log.Error().Err(err).Msg("Groups init error")
 		return ExitStatusServerError
 	}
 
-	serverInstance = server.New(serverCfg, groups)
+	storage, err := storage.New("data")
+	if err != nil {
+		log.Error().Err(err).Msg("Storage init error")
+		return ExitStatusServerError
+	}
+
+	serverInstance = server.New(serverCfg, storage, groups)
 
 	err = serverInstance.Start()
 	if err != nil {
@@ -156,6 +163,7 @@ func main() {
 }
 
 func handleCommand(command string) int {
+	// TODO: allow -/-- at the beggining of all commands
 	switch command {
 	case "start-service":
 		logVersionInfo()
