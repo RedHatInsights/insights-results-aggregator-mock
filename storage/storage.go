@@ -115,8 +115,10 @@ type Report struct {
 
 // ListOfOrgs reads list of all organizations that have at least one cluster report
 func (storage MemoryStorage) ListOfOrgs() ([]types.OrgID, error) {
-	orgs := make([]types.OrgID, 0)
-
+	orgs := []types.OrgID{
+		11789772,
+		11940171,
+	}
 	return orgs, nil
 }
 
