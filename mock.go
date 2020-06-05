@@ -169,7 +169,7 @@ func handleCommand(command string) int {
 		return printHelp()
 	case "print-config":
 		return printConfig(conf.Config)
-	case "print-version-info":
+	case "version", "print-version-info":
 		return printVersionInfo()
 	default:
 		fmt.Printf("\nCommand '%v' not found\n", command)
