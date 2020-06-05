@@ -16,8 +16,10 @@ See the License for the specific language governing permissions and
 package storage
 
 import (
-	"github.com/rs/zerolog/log"
+	"errors"
 	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
@@ -125,6 +127,15 @@ func (storage MemoryStorage) ListOfOrgs() ([]types.OrgID, error) {
 // ListOfClustersForOrg reads list of all clusters fro given organization
 func (storage MemoryStorage) ListOfClustersForOrg(orgID types.OrgID) ([]types.ClusterName, error) {
 	clusters := make([]types.ClusterName, 0)
+	switch orgID {
+	case 11940171:
+		return clusters, errors.New("You have no permissions to get or change info about this organization")
+	case 11789772:
+		clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a266")
+		clusters = append(clusters, "74ae54aa-6577-4e80-85e7-697cb646ff37")
+		clusters = append(clusters, "a7467445-8d6a-43cc-b82c-7007664bdf69")
+		clusters = append(clusters, "ee7d2bf4-8933-4a3a-8634-3328fe806e08")
+	}
 
 	return clusters, nil
 }
