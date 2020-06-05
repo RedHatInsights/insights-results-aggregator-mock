@@ -17,6 +17,8 @@ package storage
 
 import (
 	"errors"
+	"io/ioutil"
+	"path/filepath"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -30,7 +32,7 @@ type Storage interface {
 	Close() error
 	ListOfOrgs() ([]types.OrgID, error)
 	ListOfClustersForOrg(orgID types.OrgID) ([]types.ClusterName, error)
-	ReadReportForCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, types.Timestamp, error)
+	ReadReportForCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, error)
 	ReadReportForClusterByClusterName(clusterName types.ClusterName) (types.ClusterReport, types.Timestamp, error)
 	ReportsCount() (int, error)
 	VoteOnRule(
@@ -84,6 +86,32 @@ type Storage interface {
 }
 
 type MemoryStorage struct {
+}
+
+var reports map[string]string = make(map[string]string)
+
+func readReport(clusterName string) string {
+	absPath, err := filepath.Abs("data/report_" + clusterName + ".json")
+	if err != nil {
+		panic(err)
+	}
+	report, err := ioutil.ReadFile(absPath)
+	if err != nil {
+		panic(err)
+	}
+	return string(report)
+}
+
+func init() {
+	clusters := []string{
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+		"74ae54aa-6577-4e80-85e7-697cb646ff37",
+		"a7467445-8d6a-43cc-b82c-7007664bdf69",
+		"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
+	}
+	for _, cluster := range clusters {
+		reports[cluster] = readReport(cluster)
+	}
 }
 
 // New function creates and initializes a new instance of Storage interface
@@ -147,14 +175,28 @@ func (storage MemoryStorage) GetOrgIDByClusterID(cluster types.ClusterName) (typ
 	return types.OrgID(orgID), nil
 }
 
+func getReportForCluster(clusterName types.ClusterName) string {
+	report, ok := reports[string(clusterName)]
+	if !ok {
+		return ""
+	}
+	return report
+}
+
 // ReadReportForCluster reads result (health status) for selected cluster for given organization
 func (storage MemoryStorage) ReadReportForCluster(
 	orgID types.OrgID, clusterName types.ClusterName,
-) (types.ClusterReport, types.Timestamp, error) {
+) (types.ClusterReport, error) {
 	var report string
-	var lastChecked time.Time
 
-	return types.ClusterReport(report), types.Timestamp(lastChecked.UTC().Format(time.RFC3339)), nil
+	switch orgID {
+	case 11940171:
+		return types.ClusterReport(report), errors.New("You have no permissions to get or change info about this organization")
+	case 11789772:
+		report = getReportForCluster(clusterName)
+	}
+
+	return types.ClusterReport(report), nil
 }
 
 // ReadReportForClusterByClusterName reads result (health status) for selected cluster for given organization

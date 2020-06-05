@@ -39,6 +39,20 @@ func readOrganizationID(writer http.ResponseWriter, request *http.Request) (type
 	return types.OrgID(organizationID), nil
 }
 
+// readClusterName retrieves cluster name from request
+// if it's not possible, it writes http error to the writer and returns error
+func readClusterName(writer http.ResponseWriter, request *http.Request) (types.ClusterName, error) {
+	clusterName, err := getRouterParam(request, "cluster")
+	if err != nil {
+		return "", err
+	}
+
+	if err != nil {
+		return "", err
+	}
+	return types.ClusterName(clusterName), nil
+}
+
 // getRouterParam retrieves parameter from URL like `/organization/{org_id}`
 func getRouterParam(request *http.Request, paramName string) (string, error) {
 	value, found := mux.Vars(request)[paramName]
@@ -130,6 +144,33 @@ func (server *HTTPServer) listOfClustersForOrganization(writer http.ResponseWrit
 		return
 	}
 	err = responses.SendOK(writer, responses.BuildOkResponseWithData("clusters", clusters))
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
+}
+
+func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, request *http.Request) {
+	organizationID, err := readOrganizationID(writer, request)
+	if err != nil {
+		// everything has been handled already
+		return
+	}
+
+	clusterName, err := readClusterName(writer, request)
+	if err != nil {
+		// everything has been handled already
+		return
+	}
+
+	report, err := server.Storage.ReadReportForCluster(organizationID, clusterName)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to read report for cluster")
+		handleServerError(err)
+		return
+	}
+
+	r := []byte(report)
+	_, err = writer.Write(r)
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}
