@@ -27,6 +27,37 @@ const (
 
 	// GroupsEndpoint defines suffix of the groups request endpoint
 	GroupsEndpoint = "groups"
+	// DeleteOrganizationsEndpoint deletes all {organizations}(comma separated array). DEBUG only
+	DeleteOrganizationsEndpoint = "organizations/{organizations}"
+	// DeleteClustersEndpoint deletes all {clusters}(comma separated array). DEBUG only
+	DeleteClustersEndpoint = "clusters/{clusters}"
+	// OrganizationsEndpoint returns all organizations
+	OrganizationsEndpoint = "organizations"
+	// ReportEndpoint returns report for provided {organization} and {cluster}
+	ReportEndpoint = "report/{organization}/{cluster}"
+	// LikeRuleEndpoint likes rule with {rule_id} for {cluster} using current user(from auth header)
+	LikeRuleEndpoint = "clusters/{cluster}/rules/{rule_id}/like"
+	// DislikeRuleEndpoint dislikes rule with {rule_id} for {cluster} using current user(from auth header)
+	DislikeRuleEndpoint = "clusters/{cluster}/rules/{rule_id}/dislike"
+	// ResetVoteOnRuleEndpoint resets vote on rule with {rule_id} for {cluster} using current user(from auth header)
+	ResetVoteOnRuleEndpoint = "clusters/{cluster}/rules/{rule_id}/reset_vote"
+	// GetVoteOnRuleEndpoint is an endpoint to get vote on rule. DEBUG only
+	GetVoteOnRuleEndpoint = "clusters/{cluster}/rules/{rule_id}/get_vote"
+	// RuleEndpoint is an endpoint to create&delete a rule. DEBUG only
+	RuleEndpoint = "rules/{rule_id}"
+	// RuleErrorKeyEndpoint is for endpoints to create&delete a rule_error_key (DEBUG only)
+	// and for endpoint to get a rule
+	RuleErrorKeyEndpoint = "rules/{rule_id}/error_keys/{error_key}"
+	// RuleGroupsEndpoint is a simple redirect endpoint to the insights-content-service API specified in configruation
+	RuleGroupsEndpoint = "groups"
+	// ClustersForOrganizationEndpoint returns all clusters for {organization}
+	ClustersForOrganizationEndpoint = "organizations/{organization}/clusters"
+	// DisableRuleForClusterEndpoint disables a rule for specified cluster
+	DisableRuleForClusterEndpoint = "clusters/{cluster}/rules/{rule_id}/disable"
+	// EnableRuleForClusterEndpoint re-enables a rule for specified cluster
+	EnableRuleForClusterEndpoint = "clusters/{cluster}/rules/{rule_id}/enable"
+	// MetricsEndpoint returns prometheus metrics
+	MetricsEndpoint = "metrics"
 )
 
 // MakeURLToEndpoint creates URL to endpoint, use constants from file endpoints.go

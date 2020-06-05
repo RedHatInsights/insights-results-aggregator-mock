@@ -22,8 +22,6 @@ import (
 
 	"github.com/RedHatInsights/insights-operator-utils/responses"
 	"github.com/rs/zerolog/log"
-
-	"github.com/RedHatInsights/insights-results-aggregator-mock/groups"
 )
 
 // mainEndpoint will handle the requests for / endpoint
@@ -49,12 +47,25 @@ func (server *HTTPServer) serveAPISpecFile(writer http.ResponseWriter, request *
 
 // listOfGroups returns the list of defined groups
 func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, request *http.Request) {
-	groups := make([]groups.Group, 0, len(server.Groups))
-
-	for _, group := range server.Groups {
-		groups = append(groups, group)
+	absPath, err := filepath.Abs(server.Config.APISpecFile)
+	if err != nil {
+		log.Error().Err(err)
+		handleServerError(err)
+		return
 	}
 
-	retval := responses.BuildOkResponseWithData("groups", groups)
-	_ = responses.SendOK(writer, retval)
+	http.ServeFile(writer, request, absPath)
+}
+
+func (server *HTTPServer) listOfOrganizations(writer http.ResponseWriter, _ *http.Request) {
+	organizations, err := server.Storage.ListOfOrgs()
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to get list of organizations")
+		handleServerError(err)
+		return
+	}
+	err = responses.SendOK(writer, responses.BuildOkResponseWithData("organizations", organizations))
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
 }
