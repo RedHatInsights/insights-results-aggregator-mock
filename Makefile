@@ -58,7 +58,7 @@ abcgo: ## Run ABC metrics checker
 style: fmt vet lint cyclo shellcheck errcheck goconst gosec ineffassign abcgo ## Run all the formatting related commands (fmt, vet, lint, cyclo) + check shell scripts
 
 run: clean build ## Build the project and executes the binary
-	./insights-content-service
+	./insights-results-aggregator-mock
 
 test: clean build ## Run the unit tests
 	@go test -coverprofile coverage.out $(shell go list ./... | grep -v tests)
