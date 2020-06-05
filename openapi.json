@@ -1,9 +1,10 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Insights Content Service",
-    "description": "Insights Content Service",
-    "version": "1.0.0"
+    "title": "Insights Results Aggregator Mock service",
+    "description": "Insights Results Aggregator Mock service",
+    "version": "1.0.0",
+    "contact": {}
   },
   "paths": {
     "/openapi.json": {
@@ -47,38 +48,41 @@
         }
       }
     },
-    "/groups": {
-      "get": {
-        "summary": "Returns a list of groups.",
-        "operationId": "getGroups",
+    "/rules/{ruleId}/error_keys/{errorKey}": {
+      "post": {
+        "summary": "Creates or updates rule_error_key with provided ruleId and errorKey",
+        "operationId": "createOrUpdateRuleErrorKey",
+        "description": "[DEBUG ONLY] Creates or updates rule_error_key with provided data in body",
+        "parameters": [
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the rule to be created or updated",
+            "schema": {
+              "type": "string",
+              "example": "some.python.module"
+            }
+          },
+          {
+            "name": "errorKey",
+            "in": "path",
+            "required": true,
+            "description": "errorKey to be created",
+            "schema": {
+              "type": "string",
+              "example": "ek"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "A JSON array of groups.",
+            "description": "status ok",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "groups": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "title": {
-                            "type": "strings"
-                          },
-                          "description": {
-                            "type": "strings"
-                          },
-                          "tags": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          }
-                        }
-                      }
-                    },
                     "status": {
                       "type": "string",
                       "example": "ok"
@@ -88,8 +92,210 @@
               }
             }
           }
+        },
+        "tags": [
+          "rule",
+          "debug"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "description": "Rule error key data",
+          "required": true
         }
+      },
+      "delete": {
+        "summary": "Deletes rule_error_key with provided ruleId and errorKey",
+        "operationId": "deleteRuleErrorKey",
+        "description": "[DEBUG ONLY] Deletes rule_error_key with provided ruleId and errorKey",
+        "parameters": [
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the rule to be created or updated",
+            "schema": {
+              "type": "string",
+              "example": "some.python.module"
+            }
+          },
+          {
+            "name": "errorKey",
+            "in": "path",
+            "required": true,
+            "description": "errorKey to be created",
+            "schema": {
+              "type": "string",
+              "example": "ek"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "status ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "rule",
+          "debug"
+        ]
+      },
+      "get": {
+        "summary": "getRule returns rule with content for provided rule ID and rule error key",
+        "description": "",
+        "parameters": [
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "errorKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "getRule",
+        "responses": {
+          "default": {
+            "description": "Default response"
+          }
+        },
+        "tags": [
+          "rule",
+          "prod"
+        ]
+      }
+    },
+    "/clusters/{clusterId}/rules/{ruleId}/disable": {
+      "put": {
+        "summary": "Disables a rule/health check recommendation for specified cluster",
+        "operationId": "disableRule",
+        "description": "Disables a rule (ruleId) for cluster (clusterId) for current organization/user",
+        "parameters": [
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 36,
+              "maxLength": 36,
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "rule",
+          "prod"
+        ]
+      }
+    },
+    "/clusters/{clusterId}/rules/{ruleId}/enable": {
+      "put": {
+        "summary": "Re-enables a rule/health check recommendation for specified cluster",
+        "operationId": "enableRule",
+        "description": "Enables a rule (ruleId) for cluster (clusterId) for current organization/user",
+        "parameters": [
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 36,
+              "maxLength": 36,
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "ruleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "rule",
+          "prod"
+        ]
       }
     }
+  },
+  "security": [],
+  "servers": [],
+  "components": {
+    "links": {},
+    "callbacks": {},
+    "schemas": {}
   }
 }
