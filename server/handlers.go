@@ -17,12 +17,57 @@ limitations under the License.
 package server
 
 import (
+	"errors"
 	"net/http"
 	"path/filepath"
+	"strconv"
 
 	"github.com/RedHatInsights/insights-operator-utils/responses"
+	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
+
+	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
+
+// readOrganizationID retrieves organization id from request
+// if it's not possible, it writes http error to the writer and returns error
+func readOrganizationID(writer http.ResponseWriter, request *http.Request) (types.OrgID, error) {
+	organizationID, err := getRouterPositiveIntParam(request, "organization")
+	if err != nil {
+		return 0, err
+	}
+	return types.OrgID(organizationID), nil
+}
+
+// getRouterParam retrieves parameter from URL like `/organization/{org_id}`
+func getRouterParam(request *http.Request, paramName string) (string, error) {
+	value, found := mux.Vars(request)[paramName]
+	if !found {
+		return "", errors.New("Missing param")
+	}
+
+	return value, nil
+}
+
+// getRouterPositiveIntParam retrieves parameter from URL like `/organization/{org_id}`
+// and check it for being valid and positive integer, otherwise returns error
+func getRouterPositiveIntParam(request *http.Request, paramName string) (uint64, error) {
+	value, err := getRouterParam(request, paramName)
+	if err != nil {
+		return 0, err
+	}
+
+	uintValue, err := strconv.ParseUint(value, 10, 64)
+	if err != nil {
+		return 0, err
+	}
+
+	if uintValue == 0 {
+		return 0, err
+	}
+
+	return uintValue, nil
+}
 
 // mainEndpoint will handle the requests for / endpoint
 func (server *HTTPServer) mainEndpoint(writer http.ResponseWriter, _ *http.Request) {
@@ -61,10 +106,30 @@ func (server *HTTPServer) listOfOrganizations(writer http.ResponseWriter, _ *htt
 	organizations, err := server.Storage.ListOfOrgs()
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to get list of organizations")
-		handleServerError(err)
 		return
 	}
 	err = responses.SendOK(writer, responses.BuildOkResponseWithData("organizations", organizations))
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
+}
+
+func (server *HTTPServer) listOfClustersForOrganization(writer http.ResponseWriter, request *http.Request) {
+	organizationID, err := readOrganizationID(writer, request)
+
+	if err != nil {
+		// everything has been handled already
+		return
+	}
+
+	clusters, err := server.Storage.ListOfClustersForOrg(organizationID)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to get list of clusters")
+		handleServerError(err)
+		responses.SendForbidden(writer, err.Error())
+		return
+	}
+	err = responses.SendOK(writer, responses.BuildOkResponseWithData("clusters", clusters))
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}
