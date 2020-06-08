@@ -35,17 +35,22 @@ const (
 	configFileEnvVariableName = "INSIGHTS_RESULTS_AGGREGATOR_MOCK_CONFIG_FILE"
 )
 
+type PathsConfiguration struct {
+	MockDataPath string `mapstructure:"mock_data" toml:"mock_data"`
+}
+
 // ConfigStruct is a structure holding the whole service configuration
 type ConfigStruct struct {
 	Server server.Configuration `mapstructure:"server" toml:"server"`
 	Groups groups.Configuration `mapstructure:"groups" toml:"groups"`
+	Paths  PathsConfiguration   `mapstructure:"paths" toml:"paths"`
 }
 
 // Config has exactly the same structure as *.toml file
 var Config ConfigStruct
 
 // LoadConfiguration loads configuration from defaultConfigFile, file set in configFileEnvVariableName or from env
-func LoadConfiguration(defaultConfigFile string) error {
+func LoadConfiguration(defaultConfigFile string) (ConfigStruct, error) {
 	configFile, specified := os.LookupEnv(configFileEnvVariableName)
 	if specified {
 		// we need to separate the directory name and filename without extension
@@ -67,7 +72,7 @@ func LoadConfiguration(defaultConfigFile string) error {
 
 		err := toml.NewEncoder(fakeTomlConfigWriter).Encode(Config)
 		if err != nil {
-			return err
+			return Config, err
 		}
 
 		fakeTomlConfig := fakeTomlConfigWriter.String()
@@ -76,10 +81,10 @@ func LoadConfiguration(defaultConfigFile string) error {
 
 		err = viper.ReadConfig(strings.NewReader(fakeTomlConfig))
 		if err != nil {
-			return err
+			return Config, err
 		}
 	} else if err != nil {
-		return fmt.Errorf("fatal error config file: %s", err)
+		return Config, fmt.Errorf("fatal error config file: %s", err)
 	}
 
 	// override config from env if there's variable in env
@@ -90,7 +95,8 @@ func LoadConfiguration(defaultConfigFile string) error {
 	viper.SetEnvPrefix(envPrefix)
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_", ".", "__"))
 
-	return viper.Unmarshal(&Config)
+	err = viper.Unmarshal(&Config)
+	return Config, err
 }
 
 // GetServerConfiguration returns server configuration

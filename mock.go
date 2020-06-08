@@ -61,7 +61,7 @@ var (
 )
 
 // startService starts service and returns error code
-func startService() int {
+func startService(config conf.ConfigStruct) int {
 	serverCfg := conf.GetServerConfiguration()
 	groupsCfg := conf.GetGroupsConfiguration()
 
@@ -71,7 +71,7 @@ func startService() int {
 		return ExitStatusServerError
 	}
 
-	storage, err := storage.New("data")
+	storage, err := storage.New(config.Paths.MockDataPath)
 	if err != nil {
 		log.Error().Err(err).Msg("Storage init error")
 		return ExitStatusServerError
@@ -148,7 +148,7 @@ func printConfig(config conf.ConfigStruct) int {
 }
 
 func main() {
-	err := conf.LoadConfiguration(defaultConfigFilename)
+	config, err := conf.LoadConfiguration(defaultConfigFilename)
 	if err != nil {
 		panic(err)
 	}
@@ -159,16 +159,16 @@ func main() {
 		command = strings.ToLower(strings.TrimSpace(os.Args[1]))
 	}
 
-	os.Exit(handleCommand(command))
+	os.Exit(handleCommand(config, command))
 }
 
-func handleCommand(command string) int {
+func handleCommand(config conf.ConfigStruct, command string) int {
 	// TODO: allow -/-- at the beggining of all commands
 	switch command {
 	case "start-service":
 		logVersionInfo()
 
-		errCode := startService()
+		errCode := startService(config)
 		if errCode != ExitStatusOK {
 			return errCode
 		}
