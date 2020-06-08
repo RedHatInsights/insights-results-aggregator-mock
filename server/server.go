@@ -22,6 +22,7 @@ package server
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	// we just have to import this package in order to expose pprof interface in debug mode
 	// disable "G108 (CWE-): Profiling endpoint is automatically exposed on /debug/pprof"
@@ -88,6 +89,11 @@ func (server *HTTPServer) Initialize(address string) http.Handler {
 
 func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	apiPrefix := server.Config.APIPrefix
+	if !strings.HasSuffix(apiPrefix, "/") {
+		apiPrefix += "/"
+	}
+	log.Info().Msgf("API prefix is set to '%s'", apiPrefix)
+
 	openAPIURL := apiPrefix + filepath.Base(server.Config.APISpecFile)
 
 	// common REST API endpoints
