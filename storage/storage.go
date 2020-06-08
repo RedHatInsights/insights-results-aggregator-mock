@@ -90,19 +90,19 @@ type MemoryStorage struct {
 
 var reports map[string]string = make(map[string]string)
 
-func readReport(clusterName string) string {
-	absPath, err := filepath.Abs("data/report_" + clusterName + ".json")
+func readReport(path string, clusterName string) (string, error) {
+	absPath, err := filepath.Abs(path + "/report_" + clusterName + ".json")
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 	report, err := ioutil.ReadFile(absPath)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
-	return string(report)
+	return string(report), nil
 }
 
-func init() {
+func initStorage(path string) error {
 	clusters := []string{
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
 		"74ae54aa-6577-4e80-85e7-697cb646ff37",
@@ -110,13 +110,19 @@ func init() {
 		"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
 	}
 	for _, cluster := range clusters {
-		reports[cluster] = readReport(cluster)
+		report, err := readReport(path, cluster)
+		if err != nil {
+			return err
+		}
+		reports[cluster] = report
 	}
+	return nil
 }
 
 // New function creates and initializes a new instance of Storage interface
 func New(path string) (*MemoryStorage, error) {
-	return &MemoryStorage{}, nil
+	err := initStorage(path)
+	return &MemoryStorage{}, err
 }
 
 // Init performs all database initialization
