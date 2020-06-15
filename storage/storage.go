@@ -32,7 +32,8 @@ type Storage interface {
 	Close() error
 	ListOfOrgs() ([]types.OrgID, error)
 	ListOfClustersForOrg(orgID types.OrgID) ([]types.ClusterName, error)
-	ReadReportForCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, error)
+	ReadReportForCluster(clusterName types.ClusterName) (types.ClusterReport, error)
+	ReadReportForOrganizationAndCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, error)
 	ReadReportForClusterByClusterName(clusterName types.ClusterName) (types.ClusterReport, types.Timestamp, error)
 	ReportsCount() (int, error)
 	VoteOnRule(
@@ -189,8 +190,19 @@ func getReportForCluster(clusterName types.ClusterName) string {
 	return report
 }
 
-// ReadReportForCluster reads result (health status) for selected cluster for given organization
+// ReadReportForCluster reads result (health status) for selected cluster
 func (storage MemoryStorage) ReadReportForCluster(
+	clusterName types.ClusterName,
+) (types.ClusterReport, error) {
+	var report string
+
+	report = getReportForCluster(clusterName)
+
+	return types.ClusterReport(report), nil
+}
+
+// ReadReportForCluster reads result (health status) for selected cluster for given organization
+func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 	orgID types.OrgID, clusterName types.ClusterName,
 ) (types.ClusterReport, error) {
 	var report string
