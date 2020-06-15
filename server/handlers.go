@@ -150,6 +150,27 @@ func (server *HTTPServer) listOfClustersForOrganization(writer http.ResponseWrit
 }
 
 func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, request *http.Request) {
+	clusterName, err := readClusterName(writer, request)
+	if err != nil {
+		// everything has been handled already
+		return
+	}
+
+	report, err := server.Storage.ReadReportForCluster(clusterName)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to read report for cluster")
+		handleServerError(err)
+		return
+	}
+
+	r := []byte(report)
+	_, err = writer.Write(r)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
+}
+
+func (server *HTTPServer) readReportForOrganizationAndCluster(writer http.ResponseWriter, request *http.Request) {
 	organizationID, err := readOrganizationID(writer, request)
 	if err != nil {
 		// everything has been handled already
@@ -162,7 +183,7 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 		return
 	}
 
-	report, err := server.Storage.ReadReportForCluster(organizationID, clusterName)
+	report, err := server.Storage.ReadReportForOrganizationAndCluster(organizationID, clusterName)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to read report for cluster")
 		handleServerError(err)

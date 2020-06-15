@@ -35,6 +35,8 @@ const (
 	OrganizationsEndpoint = "organizations"
 	// ReportEndpoint returns report for provided {organization} and {cluster}
 	ReportEndpoint = "report/{organization}/{cluster}"
+	// ReportForClusterEndpoint returns report for provided {cluster} (w/o organization)
+	ReportForClusterEndpoint = "report/{cluster}"
 	// LikeRuleEndpoint likes rule with {rule_id} for {cluster} using current user(from auth header)
 	LikeRuleEndpoint = "clusters/{cluster}/rules/{rule_id}/like"
 	// DislikeRuleEndpoint dislikes rule with {rule_id} for {cluster} using current user(from auth header)
