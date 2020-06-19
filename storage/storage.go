@@ -18,9 +18,11 @@ package storage
 import (
 	"errors"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"time"
 
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
@@ -89,6 +91,10 @@ type Storage interface {
 type MemoryStorage struct {
 }
 
+// Special clusters can change results in given time period, for example each
+// 10 minutes or so. This is to simulate real world behaviour.
+const changingClustersPeriodInMinutes = 15
+
 var reports map[string]string = make(map[string]string)
 
 func readReport(path string, clusterName string) (string, error) {
@@ -103,12 +109,17 @@ func readReport(path string, clusterName string) (string, error) {
 	return string(report), nil
 }
 
+func init() {
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+}
+
 func initStorage(path string) error {
 	clusters := []string{
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
 		"74ae54aa-6577-4e80-85e7-697cb646ff37",
 		"a7467445-8d6a-43cc-b82c-7007664bdf69",
 		"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
+		"eeeeeeee-eeee-eeee-eeee-000000000001",
 	}
 	for _, cluster := range clusters {
 		report, err := readReport(path, cluster)
@@ -170,6 +181,7 @@ func (storage MemoryStorage) ListOfClustersForOrg(orgID types.OrgID) ([]types.Cl
 		clusters = append(clusters, "74ae54aa-6577-4e80-85e7-697cb646ff37")
 		clusters = append(clusters, "a7467445-8d6a-43cc-b82c-7007664bdf69")
 		clusters = append(clusters, "ee7d2bf4-8933-4a3a-8634-3328fe806e08")
+		clusters = append(clusters, "eeeeeeee-eeee-eeee-eeee-000000000001")
 	}
 
 	return clusters, nil
@@ -196,12 +208,62 @@ func (storage MemoryStorage) ReadReportForCluster(
 ) (types.ClusterReport, error) {
 	var report string
 
-	report = getReportForCluster(clusterName)
+	// clusters that can change its output (report)
+	// please note that these clusters have special name:
+	// "cccccccc-cccc-cccc-cccc-{index}"
+	//
+	// Mnemotechnic: c - changing
+	changingClusters := map[string][]string{
+		"cccccccc-cccc-cccc-cccc-000000000001": {
+			"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+			"74ae54aa-6577-4e80-85e7-697cb646ff37",
+			"a7467445-8d6a-43cc-b82c-7007664bdf69"},
+		"cccccccc-cccc-cccc-cccc-000000000002": {
+			"74ae54aa-6577-4e80-85e7-697cb646ff37",
+			"a7467445-8d6a-43cc-b82c-7007664bdf69",
+			"ee7d2bf4-8933-4a3a-8634-3328fe806e08"},
+		"cccccccc-cccc-cccc-cccc-000000000003": {
+			"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
+			"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
+			"34c3ecc5-624a-49a5-bab8-4fdc5e51a266"},
+		"cccccccc-cccc-cccc-cccc-000000000004": {
+			"eeeeeeee-eeee-eeee-eeee-000000000001",
+			"eeeeeeee-eeee-eeee-eeee-000000000001",
+			"34c3ecc5-624a-49a5-bab8-4fdc5e51a266"},
+	}
+
+	reportName := clusterName
+
+	// handling for clusters that can change its report
+	if changingCluster, found := changingClusters[string(clusterName)]; found {
+		reportName = chooseReport(changingCluster)
+	}
+
+	report = getReportForCluster(reportName)
 
 	return types.ClusterReport(report), nil
 }
 
-// ReadReportForCluster reads result (health status) for selected cluster for given organization
+// chooseReport for "changing cluster"
+func chooseReport(variants []string) types.ClusterName {
+	// first we need to get the minute in hour
+	currentTime := time.Now()
+	minute := currentTime.Minute()
+	log.Info().Int("Minute in hour", minute).Msg("changingCluster")
+
+	// then compute index of report
+	i := minute / changingClustersPeriodInMinutes
+	i %= len(variants)
+
+	// and choose the report according to the index
+	cluster := variants[i]
+	log.Info().Int("Index", i).Msg("changingCluster")
+	log.Info().Str("Cluster", cluster).Msg("changingCluster")
+	return types.ClusterName(cluster)
+}
+
+// ReadReportForCluster reads result (health status) for selected cluster for
+// given organization
 func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 	orgID types.OrgID, clusterName types.ClusterName,
 ) (types.ClusterReport, error) {
