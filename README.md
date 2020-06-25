@@ -91,11 +91,28 @@ cccccccc-cccc-cccc-cccc-000000000004  eeeeeeee-eeee-eeee-eeee-000000000001
 ### List of clusters that return improper results and/or failure
 
 ```
-ffffffff-ffff-ffff-ffff-000000000001
-ffffffff-ffff-ffff-ffff-000000000002
-ffffffff-ffff-ffff-ffff-000000000003
-ffffffff-ffff-ffff-ffff-000000000004
+ffffffff-ffff-ffff-ffff-000000000xxx'
 ```
+
+Returns HTTP code xxx taken directly from the last three digits of cluster ID.
+It means that devels/testers could use this functionality to check the
+behaviour on client side.
 
 **Mnemotechnic**: `f` means "failure"
 
+Example:
+
+```
+ADDRESS=localhost:8080/api/v1
+
+clusters="ffffffff-ffff-ffff-ffff-000000000200
+ffffffff-ffff-ffff-ffff-000000000201
+ffffffff-ffff-ffff-ffff-000000000404
+ffffffff-ffff-ffff-ffff-000000000405
+ffffffff-ffff-ffff-ffff-000000000201"
+
+for cluster in $clusters
+do
+    curl -k -v $ADDRESS/report/${cluster}
+done
+```

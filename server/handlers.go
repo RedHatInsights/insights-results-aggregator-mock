@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/RedHatInsights/insights-operator-utils/responses"
 	"github.com/gorilla/mux"
@@ -28,6 +29,8 @@ import (
 
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
+
+const failureClusterIDPrefix = "ffffffff-ffff-ffff-ffff-"
 
 // readOrganizationID retrieves organization id from request
 // if it's not possible, it writes http error to the writer and returns error
@@ -156,6 +159,19 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 		return
 	}
 
+	if strings.HasPrefix(string(clusterName), failureClusterIDPrefix) {
+		s := string(clusterName)
+		log.Info().Str("Cluster name", s).Msg("Failed clusters")
+		suffix := s[len(s)-3:]
+		code, err := strconv.Atoi(suffix)
+		if err != nil {
+			handleServerError(err)
+			return
+		}
+		log.Info().Int("Code", int(code)).Msg("Failed clusters")
+		writer.WriteHeader(code)
+		return
+	}
 	report, err := server.Storage.ReadReportForCluster(clusterName)
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to read report for cluster")
