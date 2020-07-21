@@ -17,14 +17,10 @@ limitations under the License.
 package types
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"regexp"
-	"strings"
 
-	"github.com/lib/pq"
-	"github.com/mattn/go-sqlite3"
 	"github.com/rs/zerolog/log"
 )
 
@@ -79,6 +75,7 @@ func (err *ForeignKeyError) Error() string {
 	)
 }
 
+/*
 // ConvertDBError converts sql errors to those defined in this package
 func ConvertDBError(err error, itemID interface{}) error {
 	if err == nil {
@@ -103,6 +100,8 @@ func ConvertDBError(err error, itemID interface{}) error {
 
 	return err
 }
+*/
+
 func regexGetFirstMatchOrLogError(regexStr string, str string) string {
 	return regexGetNthMatchOrLogError(regexStr, 1, str)
 }
@@ -137,6 +136,7 @@ func regexGetNthMatch(regexStr string, nMatch uint, str string) (string, error) 
 	return matches[nMatch], nil
 }
 
+/*
 func convertPostgresError(err error) error {
 	pqError, ok := err.(*pq.Error)
 	if !ok {
@@ -191,3 +191,4 @@ func convertSQLiteError(err error) error {
 
 	return err
 }
+*/
