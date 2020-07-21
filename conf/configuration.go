@@ -105,7 +105,7 @@ func LoadConfiguration(defaultConfigFile string) (ConfigStruct, error) {
 
 	// override config from env if there's variable in env
 
-	const envPrefix = "INSIGHTS_CONTENT_SERVICE_"
+	const envPrefix = "INSIGHTS_RESULTS_AGGREGATOR_MOCK_"
 
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix(envPrefix)
