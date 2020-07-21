@@ -13,6 +13,18 @@ make build
 make run
 ```
 
+## Generate the image for Docker
+
+```
+docker build -t insights-results-aggregator-mock:latest .
+```
+
+## Running in Docker
+
+```
+docker run --rm insights-results-aggregator-mock:latest
+```
+
 ## Accessing results
 
 Settings for localhost:
