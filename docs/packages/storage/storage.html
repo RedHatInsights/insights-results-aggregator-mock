@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<!--
+ Copyright 2020 Red Hat, Inc
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<html>
+<head>
+<title>storage.go</title>
+<meta charset="utf-8"/>
+<style type="text/css">body {
+    background: rgb(225, 225, 225);
+    margin: 0px;
+    padding: 0px;
+}
+
+#docgo p {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 15px;
+    margin-left: 0px;
+}
+
+#docgo div {
+    display: inline;
+}
+
+#docgo #background {
+    position: fixed;
+    top: 0; left: 525px; right: 0; bottom: 0;
+    background: rgb(47, 47, 47);
+    border-left: 1px solid #e5e5ee;
+    z-index: -1;
+}
+
+#docgo .keyword {
+    color: rgb(250, 200, 100);
+}
+
+#docgo .literal {
+    color: rgb(140, 190, 100);
+}
+
+#docgo .ident {
+    color: white;
+}
+
+#docgo .operator {
+    color: white;
+}
+
+#docgo .comment {
+}
+
+#docgo h1, h2, h3, h4, h5 {
+    text-align: left;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 15px;
+    margin-left: 0px;
+}
+
+#docgo h1 {
+    margin-top: 40px;
+}
+
+#docgo .doc {
+    vertical-align: top;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+    font-size: 15px;
+    line-height: 22px;
+    color: black;
+    min-width: 450px;
+    max-width: 450px;
+    padding-top: 10px;
+    padding-right: 25px;
+    padding-bottom: 1px;
+    padding-left: 50px;
+    overflow-x: hidden;
+}
+
+#docgo .code {
+    min-width: 650px;
+    max-width: 650px;
+    padding-left: 25px;
+    padding-right: 15px;
+    border-left: 1px;
+    overflow-x: hidden;
+    vertical-align: top;
+}
+
+#docgo .code pre code  {
+    font-size: 12px;
+    line-height: 18px;
+    font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+    color: rgb(120, 120, 120);
+}
+</style>
+</head>
+<body>
+<div id="docgo">
+  <div id="background"></div>
+  <table>
+    <thead><tr><th class="doc"><h1>storage.go</h1></th><th class="code"></th></tr></thead>
+    <tbody>
+      
+      <tr class="section">
+	<td class="doc"></td>
+	<td class="code"><pre><code><div class="comment">/*
+Copyright © 2020 Red Hat, Inc.
+
+Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+*/</div>
+
+<div class="keyword">package</div> <div class="ident">storage</div><div class="operator"></div>
+
+<div class="keyword">import</div> <div class="operator">(</div>
+	<div class="literal">&#34;errors&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;io/ioutil&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;os&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;path/filepath&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;time&#34;</div><div class="operator"></div>
+
+	<div class="literal">&#34;github.com/rs/zerolog&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;github.com/rs/zerolog/log&#34;</div><div class="operator"></div>
+
+	<div class="literal">&#34;github.com/RedHatInsights/insights-results-aggregator-mock/types&#34;</div><div class="operator"></div>
+<div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>Storage represents an interface to almost any database or storage system</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">type</div> <div class="ident">Storage</div> <div class="keyword">interface</div> <div class="operator">{</div>
+	<div class="ident">Init</div><div class="operator">(</div><div class="operator">)</div> <div class="ident">error</div><div class="operator"></div>
+	<div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div> <div class="ident">error</div><div class="operator"></div>
+	<div class="ident">ListOfOrgs</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">ListOfClustersForOrg</div><div class="operator">(</div><div class="ident">orgID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">)</div> <div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">ReadReportForCluster</div><div class="operator">(</div><div class="ident">clusterName</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">ReadReportForOrganizationAndCluster</div><div class="operator">(</div><div class="ident">orgID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">,</div> <div class="ident">clusterName</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">ReadReportForClusterByClusterName</div><div class="operator">(</div><div class="ident">clusterName</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">,</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">Timestamp</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">ReportsCount</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">int</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">VoteOnRule</div><div class="operator">(</div>
+		<div class="ident">clusterID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+		<div class="ident">ruleID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">,</div>
+		<div class="ident">userID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">UserID</div><div class="operator">,</div>
+		<div class="ident">userVote</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">UserVote</div><div class="operator">,</div>
+	<div class="operator">)</div> <div class="ident">error</div><div class="operator"></div>
+	<div class="ident">AddOrUpdateFeedbackOnRule</div><div class="operator">(</div>
+		<div class="ident">clusterID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+		<div class="ident">ruleID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">,</div>
+		<div class="ident">userID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">UserID</div><div class="operator">,</div>
+		<div class="ident">message</div> <div class="ident">string</div><div class="operator">,</div>
+	<div class="operator">)</div> <div class="ident">error</div><div class="operator"></div>
+	<div class="ident">GetUserFeedbackOnRule</div><div class="operator">(</div>
+		<div class="ident">clusterID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div> <div class="ident">ruleID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">,</div> <div class="ident">userID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">UserID</div><div class="operator">,</div>
+	<div class="operator">)</div> <div class="operator">(</div><div class="operator">*</div><div class="ident">UserFeedbackOnRule</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">GetContentForRules</div><div class="operator">(</div>
+		<div class="ident">rules</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ReportRules</div><div class="operator">,</div>
+		<div class="ident">userID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">UserID</div><div class="operator">,</div>
+		<div class="ident">clusterName</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+	<div class="operator">)</div> <div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">RuleContentResponse</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">ToggleRuleForCluster</div><div class="operator">(</div>
+		<div class="ident">clusterID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+		<div class="ident">ruleID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">,</div>
+		<div class="ident">userID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">UserID</div><div class="operator">,</div>
+		<div class="ident">ruleToggle</div> <div class="ident">RuleToggle</div><div class="operator">,</div>
+	<div class="operator">)</div> <div class="ident">error</div><div class="operator"></div>
+	<div class="ident">ListDisabledRulesForCluster</div><div class="operator">(</div>
+		<div class="ident">clusterID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+		<div class="ident">userID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">UserID</div><div class="operator">,</div>
+	<div class="operator">)</div> <div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">DisabledRuleResponse</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">GetFromClusterRuleToggle</div><div class="operator">(</div>
+		<div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+		<div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">,</div>
+		<div class="ident">types</div><div class="operator">.</div><div class="ident">UserID</div><div class="operator">,</div>
+	<div class="operator">)</div> <div class="operator">(</div><div class="operator">*</div><div class="ident">ClusterRuleToggle</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">DeleteFromRuleClusterToggle</div><div class="operator">(</div>
+		<div class="ident">clusterID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+		<div class="ident">ruleID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">,</div>
+		<div class="ident">userID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">UserID</div><div class="operator">,</div>
+	<div class="operator">)</div> <div class="ident">error</div><div class="operator"></div>
+	<div class="ident">GetRuleByID</div><div class="operator">(</div><div class="ident">ruleID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">)</div> <div class="operator">(</div><div class="operator">*</div><div class="ident">types</div><div class="operator">.</div><div class="ident">Rule</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">GetOrgIDByClusterID</div><div class="operator">(</div><div class="ident">cluster</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">GetUserFeedbackOnRules</div><div class="operator">(</div>
+		<div class="ident">clusterID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+		<div class="ident">rulesContent</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">RuleContentResponse</div><div class="operator">,</div>
+		<div class="ident">userID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">UserID</div><div class="operator">,</div>
+	<div class="operator">)</div> <div class="operator">(</div><div class="keyword">map</div><div class="operator">[</div><div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">UserVote</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">GetRuleWithContent</div><div class="operator">(</div><div class="ident">ruleID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">,</div> <div class="ident">ruleErrorKey</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ErrorKey</div><div class="operator">)</div> <div class="operator">(</div><div class="operator">*</div><div class="ident">types</div><div class="operator">.</div><div class="ident">RuleWithContent</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">type</div> <div class="ident">MemoryStorage</div> <div class="keyword">struct</div> <div class="operator">{</div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>Special clusters can change results in given time period, for example each
+10 minutes or so. This is to simulate real world behaviour.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">const</div> <div class="ident">changingClustersPeriodInMinutes</div> <div class="operator">=</div> <div class="literal">15</div><div class="operator"></div>
+
+<div class="keyword">var</div> <div class="ident">reports</div> <div class="keyword">map</div><div class="operator">[</div><div class="ident">string</div><div class="operator">]</div><div class="ident">string</div> <div class="operator">=</div> <div class="ident">make</div><div class="operator">(</div><div class="keyword">map</div><div class="operator">[</div><div class="ident">string</div><div class="operator">]</div><div class="ident">string</div><div class="operator">)</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">readReport</div><div class="operator">(</div><div class="ident">path</div> <div class="ident">string</div><div class="operator">,</div> <div class="ident">clusterName</div> <div class="ident">string</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">string</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">absPath</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">filepath</div><div class="operator">.</div><div class="ident">Abs</div><div class="operator">(</div><div class="ident">path</div> <div class="operator">&#43;</div> <div class="literal">&#34;/report_&#34;</div> <div class="operator">&#43;</div> <div class="ident">clusterName</div> <div class="operator">&#43;</div> <div class="literal">&#34;.json&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="keyword">return</div> <div class="literal">&#34;&#34;</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="ident">report</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">ioutil</div><div class="operator">.</div><div class="ident">ReadFile</div><div class="operator">(</div><div class="ident">absPath</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="keyword">return</div> <div class="literal">&#34;&#34;</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">string</div><div class="operator">(</div><div class="ident">report</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">init</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Logger</div> <div class="operator">=</div> <div class="ident">log</div><div class="operator">.</div><div class="ident">Output</div><div class="operator">(</div><div class="ident">zerolog</div><div class="operator">.</div><div class="ident">ConsoleWriter</div><div class="operator">{</div><div class="ident">Out</div><div class="operator">:</div> <div class="ident">os</div><div class="operator">.</div><div class="ident">Stderr</div><div class="operator">}</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">initStorage</div><div class="operator">(</div><div class="ident">path</div> <div class="ident">string</div><div class="operator">)</div> <div class="ident">error</div> <div class="operator">{</div>
+	<div class="ident">clusters</div> <div class="operator">:=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">string</div><div class="operator">{</div>
+		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;74ae54aa-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;a7467445-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;ee7d2bf4-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;eeeeeeee-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">,</div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="keyword">for</div> <div class="ident">_</div><div class="operator">,</div> <div class="ident">cluster</div> <div class="operator">:=</div> <div class="keyword">range</div> <div class="ident">clusters</div> <div class="operator">{</div>
+		<div class="ident">report</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">readReport</div><div class="operator">(</div><div class="ident">path</div><div class="operator">,</div> <div class="ident">cluster</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+			<div class="keyword">return</div> <div class="ident">err</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+		<div class="ident">reports</div><div class="operator">[</div><div class="ident">cluster</div><div class="operator">]</div> <div class="operator">=</div> <div class="ident">report</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>New function creates and initializes a new instance of Storage interface</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">New</div><div class="operator">(</div><div class="ident">path</div> <div class="ident">string</div><div class="operator">)</div> <div class="operator">(</div><div class="operator">*</div><div class="ident">MemoryStorage</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">initStorage</div><div class="operator">(</div><div class="ident">path</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="operator">&amp;</div><div class="ident">MemoryStorage</div><div class="operator">{</div><div class="operator">}</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>Init performs all database initialization
+tasks necessary for further service operation.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">Init</div><div class="operator">(</div><div class="operator">)</div> <div class="ident">error</div> <div class="operator">{</div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;Initializing connection to data storage&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>Close method closes the connection to database. Needs to be called at the end of application lifecycle.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">Close</div><div class="operator">(</div><div class="operator">)</div> <div class="ident">error</div> <div class="operator">{</div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;Closing connection to data storage&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>Report represents one (latest) cluster report.
+    Org: organization ID
+    Name: cluster GUID in the following format:
+        c8590f31-e97e-4b85-b506-c45ce1911a12</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">type</div> <div class="ident">Report</div> <div class="keyword">struct</div> <div class="operator">{</div>
+	<div class="ident">Org</div>        <div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div>         <div class="literal">`json:&#34;org&#34;`</div><div class="operator"></div>
+	<div class="ident">Name</div>       <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div>   <div class="literal">`json:&#34;cluster&#34;`</div><div class="operator"></div>
+	<div class="ident">Report</div>     <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div> <div class="literal">`json:&#34;report&#34;`</div><div class="operator"></div>
+	<div class="ident">ReportedAt</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">Timestamp</div>     <div class="literal">`json:&#34;reported_at&#34;`</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>ListOfOrgs reads list of all organizations that have at least one cluster report</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">ListOfOrgs</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">orgs</div> <div class="operator">:=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">{</div>
+		<div class="literal">11789772</div><div class="operator">,</div>
+		<div class="literal">11940171</div><div class="operator">,</div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">orgs</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>ListOfClustersForOrg reads list of all clusters fro given organization</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">ListOfClustersForOrg</div><div class="operator">(</div><div class="ident">orgID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">)</div> <div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">clusters</div> <div class="operator">:=</div> <div class="ident">make</div><div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">switch</div> <div class="ident">orgID</div> <div class="operator">{</div>
+	<div class="keyword">case</div> <div class="literal">11940171</div><div class="operator">:</div>
+		<div class="keyword">return</div> <div class="ident">clusters</div><div class="operator">,</div> <div class="ident">errors</div><div class="operator">.</div><div class="ident">New</div><div class="operator">(</div><div class="literal">&#34;You have no permissions to get or change info about this organization&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">case</div> <div class="literal">11789772</div><div class="operator">:</div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;74ae54aa-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;a7467445-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;ee7d2bf4-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;eeeeeeee-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="keyword">return</div> <div class="ident">clusters</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>GetOrgIDByClusterID reads OrgID for specified cluster</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">GetOrgIDByClusterID</div><div class="operator">(</div><div class="ident">cluster</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="keyword">var</div> <div class="ident">orgID</div> <div class="ident">uint64</div> <div class="operator">=</div> <div class="literal">42</div><div class="operator"></div>
+
+	<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">(</div><div class="ident">orgID</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">getReportForCluster</div><div class="operator">(</div><div class="ident">clusterName</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">)</div> <div class="ident">string</div> <div class="operator">{</div>
+	<div class="ident">report</div><div class="operator">,</div> <div class="ident">ok</div> <div class="operator">:=</div> <div class="ident">reports</div><div class="operator">[</div><div class="ident">string</div><div class="operator">(</div><div class="ident">clusterName</div><div class="operator">)</div><div class="operator">]</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="operator">!</div><div class="ident">ok</div> <div class="operator">{</div>
+		<div class="keyword">return</div> <div class="literal">&#34;&#34;</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">report</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>ReadReportForCluster reads result (health status) for selected cluster</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">ReadReportForCluster</div><div class="operator">(</div>
+	<div class="ident">clusterName</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+<div class="operator">)</div> <div class="operator">(</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="keyword">var</div> <div class="ident">report</div> <div class="ident">string</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>clusters that can change its output (report)
+please note that these clusters have special name:
+&quot;cccccccc-cccc-cccc-cccc-{index}&quot;</p>
+
+<p>Mnemotechnic: c - changing</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">changingClusters</div> <div class="operator">:=</div> <div class="keyword">map</div><div class="operator">[</div><div class="ident">string</div><div class="operator">]</div><div class="operator">[</div><div class="operator">]</div><div class="ident">string</div><div class="operator">{</div>
+		<div class="literal">&#34;cccccccc-cccc-cccc-cccc-000000000001&#34;</div><div class="operator">:</div> <div class="operator">{</div>
+			<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">,</div>
+			<div class="literal">&#34;74ae54aa-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">,</div>
+			<div class="literal">&#34;a7467445-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="literal">&#34;cccccccc-cccc-cccc-cccc-000000000002&#34;</div><div class="operator">:</div> <div class="operator">{</div>
+			<div class="literal">&#34;74ae54aa-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">,</div>
+			<div class="literal">&#34;a7467445-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">,</div>
+			<div class="literal">&#34;ee7d2bf4-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="literal">&#34;cccccccc-cccc-cccc-cccc-000000000003&#34;</div><div class="operator">:</div> <div class="operator">{</div>
+			<div class="literal">&#34;ee7d2bf4-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">,</div>
+			<div class="literal">&#34;ee7d2bf4-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">,</div>
+			<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">}</div><div class="operator">,</div>
+		<div class="literal">&#34;cccccccc-cccc-cccc-cccc-000000000004&#34;</div><div class="operator">:</div> <div class="operator">{</div>
+			<div class="literal">&#34;eeeeeeee-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">,</div>
+			<div class="literal">&#34;eeeeeeee-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">,</div>
+			<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">}</div><div class="operator">,</div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="ident">reportName</div> <div class="operator">:=</div> <div class="ident">clusterName</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>handling for clusters that can change its report</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">if</div> <div class="ident">changingCluster</div><div class="operator">,</div> <div class="ident">found</div> <div class="operator">:=</div> <div class="ident">changingClusters</div><div class="operator">[</div><div class="ident">string</div><div class="operator">(</div><div class="ident">clusterName</div><div class="operator">)</div><div class="operator">]</div><div class="operator">;</div> <div class="ident">found</div> <div class="operator">{</div>
+		<div class="ident">reportName</div> <div class="operator">=</div> <div class="ident">chooseReport</div><div class="operator">(</div><div class="ident">changingCluster</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="ident">report</div> <div class="operator">=</div> <div class="ident">getReportForCluster</div><div class="operator">(</div><div class="ident">reportName</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">(</div><div class="ident">report</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>chooseReport for &quot;changing cluster&quot;</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">chooseReport</div><div class="operator">(</div><div class="ident">variants</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">string</div><div class="operator">)</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>first we need to get the minute in hour</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">currentTime</div> <div class="operator">:=</div> <div class="ident">time</div><div class="operator">.</div><div class="ident">Now</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">minute</div> <div class="operator">:=</div> <div class="ident">currentTime</div><div class="operator">.</div><div class="ident">Minute</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Int</div><div class="operator">(</div><div class="literal">&#34;Minute in hour&#34;</div><div class="operator">,</div> <div class="ident">minute</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;changingCluster&#34;</div><div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>then compute index of report</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">i</div> <div class="operator">:=</div> <div class="ident">minute</div> <div class="operator">/</div> <div class="ident">changingClustersPeriodInMinutes</div><div class="operator"></div>
+	<div class="ident">i</div> <div class="operator">%=</div> <div class="ident">len</div><div class="operator">(</div><div class="ident">variants</div><div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>and choose the report according to the index</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">cluster</div> <div class="operator">:=</div> <div class="ident">variants</div><div class="operator">[</div><div class="ident">i</div><div class="operator">]</div><div class="operator"></div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Int</div><div class="operator">(</div><div class="literal">&#34;Index&#34;</div><div class="operator">,</div> <div class="ident">i</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;changingCluster&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Str</div><div class="operator">(</div><div class="literal">&#34;Cluster&#34;</div><div class="operator">,</div> <div class="ident">cluster</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;changingCluster&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">(</div><div class="ident">cluster</div><div class="operator">)</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>ReadReportForCluster reads result (health status) for selected cluster for
+given organization</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">ReadReportForOrganizationAndCluster</div><div class="operator">(</div>
+	<div class="ident">orgID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">,</div> <div class="ident">clusterName</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+<div class="operator">)</div> <div class="operator">(</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="keyword">var</div> <div class="ident">report</div> <div class="ident">string</div><div class="operator"></div>
+
+	<div class="keyword">switch</div> <div class="ident">orgID</div> <div class="operator">{</div>
+	<div class="keyword">case</div> <div class="literal">11940171</div><div class="operator">:</div>
+		<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">(</div><div class="ident">report</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">errors</div><div class="operator">.</div><div class="ident">New</div><div class="operator">(</div><div class="literal">&#34;You have no permissions to get or change info about this organization&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">case</div> <div class="literal">11789772</div><div class="operator">:</div>
+		<div class="ident">report</div> <div class="operator">=</div> <div class="ident">getReportForCluster</div><div class="operator">(</div><div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">(</div><div class="ident">report</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>ReadReportForClusterByClusterName reads result (health status) for selected cluster for given organization</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">ReadReportForClusterByClusterName</div><div class="operator">(</div>
+	<div class="ident">clusterName</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+<div class="operator">)</div> <div class="operator">(</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">,</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">Timestamp</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="keyword">var</div> <div class="ident">report</div> <div class="ident">string</div><div class="operator"></div>
+	<div class="keyword">var</div> <div class="ident">lastChecked</div> <div class="ident">time</div><div class="operator">.</div><div class="ident">Time</div><div class="operator"></div>
+
+	<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">(</div><div class="ident">report</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">Timestamp</div><div class="operator">(</div><div class="ident">lastChecked</div><div class="operator">.</div><div class="ident">UTC</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Format</div><div class="operator">(</div><div class="ident">time</div><div class="operator">.</div><div class="ident">RFC3339</div><div class="operator">)</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>GetContentForRules retrieves content for rules that were hit in the report</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">GetContentForRules</div><div class="operator">(</div>
+	<div class="ident">reportRules</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ReportRules</div><div class="operator">,</div>
+	<div class="ident">userID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">UserID</div><div class="operator">,</div>
+	<div class="ident">clusterName</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
+<div class="operator">)</div> <div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">RuleContentResponse</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">rules</div> <div class="operator">:=</div> <div class="ident">make</div><div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">RuleContentResponse</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="keyword">return</div> <div class="ident">rules</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>ReportsCount reads number of all records stored in database</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">ReportsCount</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">int</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">count</div> <div class="operator">:=</div> <div class="operator">-</div><div class="literal">1</div><div class="operator"></div>
+
+	<div class="keyword">return</div> <div class="ident">count</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>GetRuleByID gets a rule by ID</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">GetRuleByID</div><div class="operator">(</div><div class="ident">ruleID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">)</div> <div class="operator">(</div><div class="operator">*</div><div class="ident">types</div><div class="operator">.</div><div class="ident">Rule</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="keyword">var</div> <div class="ident">rule</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">Rule</div><div class="operator"></div>
+
+	<div class="keyword">return</div> <div class="operator">&amp;</div><div class="ident">rule</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
