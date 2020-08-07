@@ -1,0 +1,298 @@
+@startuml
+namespace conf {
+    class ConfigStruct << (S,Aquamarine) >> {
+        + Server server.Configuration
+        + Groups groups.Configuration
+        + Paths PathsConfiguration
+
+    }
+    class PathsConfiguration << (S,Aquamarine) >> {
+        + MockDataPath string
+
+    }
+}
+
+
+namespace groups {
+    class Configuration << (S,Aquamarine) >> {
+        + ConfigPath string
+
+    }
+    class Group << (S,Aquamarine) >> {
+        + Name string
+        + Description string
+        + Tags []string
+
+    }
+}
+
+
+namespace server {
+    class AuthenticationError << (S,Aquamarine) >> {
+        - errString string
+
+    }
+    class Configuration << (S,Aquamarine) >> {
+        + Address string
+        + APIPrefix string
+        + APISpecFile string
+        + Debug bool
+
+    }
+    class HTTPServer << (S,Aquamarine) >> {
+        + Config Configuration
+        + Storage storage.Storage
+        + Groups <font color=blue>map</font>[string]groups.Group
+        + Serv *http.Server
+
+        - addEndpointsToRouter(router *mux.Router) 
+        - addCORSHeaders(nextHandler http.Handler) http.Handler
+        - handleOptionsMethod(nextHandler http.Handler) http.Handler
+        - mainEndpoint(writer http.ResponseWriter, _ *http.Request) 
+        - serveAPISpecFile(writer http.ResponseWriter, request *http.Request) 
+        - listOfGroups(writer http.ResponseWriter, request *http.Request) 
+        - listOfOrganizations(writer http.ResponseWriter, _ *http.Request) 
+        - listOfClustersForOrganization(writer http.ResponseWriter, request *http.Request) 
+        - readReportForCluster(writer http.ResponseWriter, request *http.Request) 
+        - readReportForOrganizationAndCluster(writer http.ResponseWriter, request *http.Request) 
+
+        + Start() error
+        + Stop(ctx context.Context) error
+        + Initialize(address string) http.Handler
+
+    }
+}
+
+
+namespace storage {
+    class ClusterRuleToggle << (S,Aquamarine) >> {
+        + ClusterID types.ClusterName
+        + RuleID types.RuleID
+        + UserID types.UserID
+        + Disabled RuleToggle
+        + DisabledAt time.Time
+        + EnabledAt time.Time
+        + UpdatedAt time.Time
+
+    }
+    class MemoryStorage << (S,Aquamarine) >> {
+        - addOrUpdateUserFeedbackOnRuleForCluster(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID, userVotePtr *types.UserVote, messagePtr *string) error
+
+        + GetRuleWithContent(ruleID types.RuleID, ruleErrorKey types.ErrorKey) (*types.RuleWithContent, error)
+        + VoteOnRule(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID, userVote types.UserVote) error
+        + AddOrUpdateFeedbackOnRule(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID, message string) error
+        + GetUserFeedbackOnRule(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID) (*UserFeedbackOnRule, error)
+        + GetUserFeedbackOnRules(clusterID types.ClusterName, rulesContent []types.RuleContentResponse, userID types.UserID) (<font color=blue>map</font>[types.RuleID]types.UserVote, error)
+        + Init() error
+        + Close() error
+        + ListOfOrgs() ([]types.OrgID, error)
+        + ListOfClustersForOrg(orgID types.OrgID) ([]types.ClusterName, error)
+        + GetOrgIDByClusterID(cluster types.ClusterName) (types.OrgID, error)
+        + ReadReportForCluster(clusterName types.ClusterName) (types.ClusterReport, error)
+        + ReadReportForOrganizationAndCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, error)
+        + ReadReportForClusterByClusterName(clusterName types.ClusterName) (types.ClusterReport, types.Timestamp, error)
+        + GetContentForRules(reportRules types.ReportRules, userID types.UserID, clusterName types.ClusterName) ([]types.RuleContentResponse, error)
+        + ReportsCount() (int, error)
+        + GetRuleByID(ruleID types.RuleID) (*types.Rule, error)
+        + ToggleRuleForCluster(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID, ruleToggle RuleToggle) error
+        + ListDisabledRulesForCluster(clusterID types.ClusterName, userID types.UserID) ([]types.DisabledRuleResponse, error)
+        + GetFromClusterRuleToggle(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID) (*ClusterRuleToggle, error)
+        + DeleteFromRuleClusterToggle(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID) error
+
+    }
+    class Report << (S,Aquamarine) >> {
+        + Org types.OrgID
+        + Name types.ClusterName
+        + Report types.ClusterReport
+        + ReportedAt types.Timestamp
+
+    }
+    interface Storage  {
+        + Init() error
+        + Close() error
+        + ListOfOrgs() ([]types.OrgID, error)
+        + ListOfClustersForOrg(orgID types.OrgID) ([]types.ClusterName, error)
+        + ReadReportForCluster(clusterName types.ClusterName) (types.ClusterReport, error)
+        + ReadReportForOrganizationAndCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, error)
+        + ReadReportForClusterByClusterName(clusterName types.ClusterName) (types.ClusterReport, types.Timestamp, error)
+        + ReportsCount() (int, error)
+        + VoteOnRule(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID, userVote types.UserVote) error
+        + AddOrUpdateFeedbackOnRule(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID, message string) error
+        + GetUserFeedbackOnRule(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID) (*UserFeedbackOnRule, error)
+        + GetContentForRules(rules types.ReportRules, userID types.UserID, clusterName types.ClusterName) ([]types.RuleContentResponse, error)
+        + ToggleRuleForCluster(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID, ruleToggle RuleToggle) error
+        + ListDisabledRulesForCluster(clusterID types.ClusterName, userID types.UserID) ([]types.DisabledRuleResponse, error)
+        + GetFromClusterRuleToggle( types.ClusterName,  types.RuleID,  types.UserID) (*ClusterRuleToggle, error)
+        + DeleteFromRuleClusterToggle(clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID) error
+        + GetRuleByID(ruleID types.RuleID) (*types.Rule, error)
+        + GetOrgIDByClusterID(cluster types.ClusterName) (types.OrgID, error)
+        + GetUserFeedbackOnRules(clusterID types.ClusterName, rulesContent []types.RuleContentResponse, userID types.UserID) (<font color=blue>map</font>[types.RuleID]types.UserVote, error)
+        + GetRuleWithContent(ruleID types.RuleID, ruleErrorKey types.ErrorKey) (*types.RuleWithContent, error)
+
+    }
+    class UserFeedbackOnRule << (S,Aquamarine) >> {
+        + ClusterID types.ClusterName
+        + RuleID types.RuleID
+        + UserID types.UserID
+        + Message string
+        + UserVote types.UserVote
+        + AddedAt time.Time
+        + UpdatedAt time.Time
+
+    }
+    class storage.RuleToggle << (T, #FF7700) >>  {
+    }
+}
+
+"storage.Storage" <|-- "storage.MemoryStorage"
+
+namespace types {
+    class DisabledRuleResponse << (S,Aquamarine) >> {
+        + RuleModule string
+        + Description string
+        + Generic string
+        + DisabledAt string
+
+    }
+    class ForeignKeyError << (S,Aquamarine) >> {
+        + TableName string
+        + ForeignKeyName string
+        + Details string
+
+        + Error() string
+
+    }
+    class ItemNotFoundError << (S,Aquamarine) >> {
+        + ItemID <font color=blue>interface</font>{}
+
+        + Error() string
+
+    }
+    class ReportResponse << (S,Aquamarine) >> {
+        + Meta ReportResponseMeta
+        + Rules []RuleContentResponse
+
+    }
+    class ReportResponseMeta << (S,Aquamarine) >> {
+        + Count int
+        + LastCheckedAt Timestamp
+
+    }
+    class ReportRules << (S,Aquamarine) >> {
+        + HitRules []RuleOnReport
+        + SkippedRules []RuleOnReport
+        + PassedRules []RuleOnReport
+        + TotalCount int
+
+    }
+    class Rule << (S,Aquamarine) >> {
+        + Module RuleID
+        + Name string
+        + Summary string
+        + Reason string
+        + Resolution string
+        + MoreInfo string
+
+    }
+    class RuleContentResponse << (S,Aquamarine) >> {
+        + CreatedAt string
+        + Description string
+        + ErrorKey string
+        + Generic string
+        + Reason string
+        + Resolution string
+        + TotalRisk int
+        + RiskOfChange int
+        + RuleModule string
+        + TemplateData <font color=blue>interface</font>{}
+        + Tags []string
+        + UserVote UserVote
+        + Disabled bool
+
+    }
+    class RuleErrorKey << (S,Aquamarine) >> {
+        + ErrorKey ErrorKey
+        + RuleModule RuleID
+        + Condition string
+        + Description string
+        + Impact int
+        + Likelihood int
+        + PublishDate time.Time
+        + Active bool
+        + Generic string
+        + Tags []string
+
+    }
+    class RuleOnReport << (S,Aquamarine) >> {
+        + Module string
+        + ErrorKey string
+        + Details <font color=blue>interface</font>{}
+
+    }
+    class RuleWithContent << (S,Aquamarine) >> {
+        + Module RuleID
+        + Name string
+        + Summary string
+        + Reason string
+        + Resolution string
+        + MoreInfo string
+        + ErrorKey ErrorKey
+        + Condition string
+        + Description string
+        + TotalRisk int
+        + PublishDate time.Time
+        + Active bool
+        + Generic string
+        + Tags []string
+
+    }
+    class TableAlreadyExistsError << (S,Aquamarine) >> {
+        - tableName string
+
+        + Error() string
+
+    }
+    class TableNotFoundError << (S,Aquamarine) >> {
+        - tableName string
+
+        + Error() string
+
+    }
+    class types.ClusterName << (T, #FF7700) >>  {
+    }
+    class types.ClusterReport << (T, #FF7700) >>  {
+    }
+    class types.DBDriver << (T, #FF7700) >>  {
+    }
+    class types.ErrorKey << (T, #FF7700) >>  {
+    }
+    class types.KafkaOffset << (T, #FF7700) >>  {
+    }
+    class types.OrgID << (T, #FF7700) >>  {
+    }
+    class types.RequestID << (T, #FF7700) >>  {
+    }
+    class types.RuleID << (T, #FF7700) >>  {
+    }
+    class types.Timestamp << (T, #FF7700) >>  {
+    }
+    class types.UserID << (T, #FF7700) >>  {
+    }
+    class types.UserVote << (T, #FF7700) >>  {
+    }
+}
+
+
+"__builtin__.int" #.. "storage.RuleToggle"
+"__builtin__.int" #.. "types.DBDriver"
+"__builtin__.int" #.. "types.UserVote"
+"__builtin__.int64" #.. "types.KafkaOffset"
+"__builtin__.string" #.. "types.ClusterName"
+"__builtin__.string" #.. "types.ClusterReport"
+"__builtin__.string" #.. "types.ErrorKey"
+"__builtin__.string" #.. "types.RequestID"
+"__builtin__.string" #.. "types.RuleID"
+"__builtin__.string" #.. "types.Timestamp"
+"__builtin__.string" #.. "types.UserID"
+"__builtin__.uint32" #.. "types.OrgID"
+@enduml
