@@ -50,7 +50,7 @@ const (
 	// RuleErrorKeyEndpoint is for endpoints to create&delete a rule_error_key (DEBUG only)
 	// and for endpoint to get a rule
 	RuleErrorKeyEndpoint = "rules/{rule_id}/error_keys/{error_key}"
-	// RuleGroupsEndpoint is a simple redirect endpoint to the insights-content-service API specified in configruation
+	// RuleGroupsEndpoint is a simple redirect endpoint to the insights-content-service API specified in configuration
 	RuleGroupsEndpoint = "groups"
 	// ClustersForOrganizationEndpoint returns all clusters for {organization}
 	ClustersForOrganizationEndpoint = "organizations/{organization}/clusters"
