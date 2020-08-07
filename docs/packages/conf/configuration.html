@@ -172,7 +172,14 @@ https://redhatinsights.github.io/insights-content-service/packages/conf/configur
 	<div class="ident">configFileEnvVariableName</div> <div class="operator">=</div> <div class="literal">&#34;INSIGHTS_RESULTS_AGGREGATOR_MOCK_CONFIG_FILE&#34;</div><div class="operator"></div>
 <div class="operator">)</div><div class="operator"></div>
 
-<div class="keyword">type</div> <div class="ident">PathsConfiguration</div> <div class="keyword">struct</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>PathsConfiguration is data structure that represents path to directory
+containing files with mock data.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">type</div> <div class="ident">PathsConfiguration</div> <div class="keyword">struct</div> <div class="operator">{</div>
 	<div class="ident">MockDataPath</div> <div class="ident">string</div> <div class="literal">`mapstructure:&#34;mock_data&#34; toml:&#34;mock_data&#34;`</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
