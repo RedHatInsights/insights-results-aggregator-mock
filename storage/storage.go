@@ -88,6 +88,8 @@ type Storage interface {
 	GetRuleWithContent(ruleID types.RuleID, ruleErrorKey types.ErrorKey) (*types.RuleWithContent, error)
 }
 
+// MemoryStorage data structure represents configuration of memory storage used
+// to store mock data.
 type MemoryStorage struct {
 }
 
