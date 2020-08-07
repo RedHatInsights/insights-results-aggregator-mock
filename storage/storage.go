@@ -264,8 +264,8 @@ func chooseReport(variants []string) types.ClusterName {
 	return types.ClusterName(cluster)
 }
 
-// ReadReportForCluster reads result (health status) for selected cluster for
-// given organization
+// ReadReportForOrganizationAndCluster reads result (health status) for
+// selected cluster for given organization
 func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 	orgID types.OrgID, clusterName types.ClusterName,
 ) (types.ClusterReport, error) {
