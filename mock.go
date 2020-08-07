@@ -163,7 +163,7 @@ func main() {
 }
 
 func handleCommand(config conf.ConfigStruct, command string) int {
-	// TODO: allow -/-- at the beggining of all commands
+	// TODO: allow -/-- at the beginning of all commands
 	switch command {
 	case "start-service":
 		logVersionInfo()
