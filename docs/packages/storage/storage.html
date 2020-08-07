@@ -212,7 +212,14 @@ See the License for the specific language governing permissions and
 	<div class="ident">GetRuleWithContent</div><div class="operator">(</div><div class="ident">ruleID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleID</div><div class="operator">,</div> <div class="ident">ruleErrorKey</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ErrorKey</div><div class="operator">)</div> <div class="operator">(</div><div class="operator">*</div><div class="ident">types</div><div class="operator">.</div><div class="ident">RuleWithContent</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
-<div class="keyword">type</div> <div class="ident">MemoryStorage</div> <div class="keyword">struct</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>MemoryStorage data structure represents configuration of memory storage used
+to store mock data.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">type</div> <div class="ident">MemoryStorage</div> <div class="keyword">struct</div> <div class="operator">{</div>
 <div class="operator">}</div><div class="operator"></div>
 
 </code></pre></td>
@@ -465,8 +472,8 @@ please note that these clusters have special name:
       </tr>
       
       <tr class="section">
-	<td class="doc"><p>ReadReportForCluster reads result (health status) for selected cluster for
-given organization</p>
+	<td class="doc"><p>ReadReportForOrganizationAndCluster reads result (health status) for
+selected cluster for given organization</p>
 </td>
 	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">storage</div> <div class="ident">MemoryStorage</div><div class="operator">)</div> <div class="ident">ReadReportForOrganizationAndCluster</div><div class="operator">(</div>
 	<div class="ident">orgID</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">,</div> <div class="ident">clusterName</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div>
