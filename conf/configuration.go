@@ -48,6 +48,8 @@ const (
 	configFileEnvVariableName = "INSIGHTS_RESULTS_AGGREGATOR_MOCK_CONFIG_FILE"
 )
 
+// PathsConfiguration is data structure that represents path to directory
+// containing files with mock data.
 type PathsConfiguration struct {
 	MockDataPath string `mapstructure:"mock_data" toml:"mock_data"`
 }
