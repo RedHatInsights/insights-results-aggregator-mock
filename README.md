@@ -77,12 +77,12 @@ Format of the payload:
 
 ```json
 {
-	"clusters" : [
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
-		"74ae54aa-6577-4e80-85e7-697cb646ff37",
-		"a7467445-8d6a-43cc-b82c-7007664bdf69",
-		"ee7d2bf4-8933-4a3a-8634-3328fe806e08"
-	]
+        "clusters" : [
+                "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+                "74ae54aa-6577-4e80-85e7-697cb646ff37",
+                "a7467445-8d6a-43cc-b82c-7007664bdf69",
+                "ee7d2bf4-8933-4a3a-8634-3328fe806e08"
+        ]
 }
 ```
 
@@ -90,21 +90,23 @@ Format of response:
 
 ```json
 {
-	"clusters": [
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
-		"74ae54aa-6577-4e80-85e7-697cb646ff37",
-		"a7467445-8d6a-43cc-b82c-7007664bdf69",
-		"ee7d2bf4-8933-4a3a-8634-3328fe806e08"
-	],
-	"errors": null,
-	"reports": {
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266": {
-			"report": {
-                        ...
-                        ...
-                        ...
-	},
-	"generated_at": "2020-08-11T10:17:29Z"
+        "clusters": [
+                "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+                "74ae54aa-6577-4e80-85e7-697cb646ff37",
+                "a7467445-8d6a-43cc-b82c-7007664bdf69",
+                "ee7d2bf4-8933-4a3a-8634-3328fe806e08"
+        ],
+        "errors": null,
+        "reports": {
+                "34c3ecc5-624a-49a5-bab8-4fdc5e51a266": {
+                        "report": {
+                            // ...
+                            // ...
+                            // ...
+                        }
+                }
+        },
+        "generated_at": "2020-08-11T10:17:29Z"
 }
 ```
 
@@ -112,24 +114,25 @@ Response format in case it is not possible to return result for some cluster:
 
 ```json
 {
-	"clusters": [
-		"ee7d2bf4-8933-4a3a-8634-3328fe806e08"
-	],
-	"errors": [
-		"00000000-0000-0000-0000-000000000000"
-	],
-	"reports": {
-		"ee7d2bf4-8933-4a3a-8634-3328fe806e08": {
-			"report": {
-				"data": [
-                                ...
-                                ...
-                                ...
-			},
-			"status": "ok"
-		}
-	},
-	"generated_at": "2020-08-11T10:17:29Z"
+        "clusters": [
+                "ee7d2bf4-8933-4a3a-8634-3328fe806e08"
+        ],
+        "errors": [
+                "00000000-0000-0000-0000-000000000000"
+        ],
+        "reports": {
+                "ee7d2bf4-8933-4a3a-8634-3328fe806e08": {
+                        "report": {
+                                "data": [
+                                    // ...
+                                    // ...
+                                    // ...
+                                ]
+                        },
+                        "status": "ok"
+                }
+        },
+        "generated_at": "2020-08-11T10:17:29Z"
 }
 ```
 
