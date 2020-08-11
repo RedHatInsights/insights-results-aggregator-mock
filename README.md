@@ -31,37 +31,106 @@ docker run --rm insights-results-aggregator-mock:latest
 
 ## Accessing results
 
-Settings for localhost:
+### Settings for localhost
 
 ```
 ADDRESS=localhost:8080/api/v1
 ```
 
-Basic endpoints:
+### Basic endpoints
 
 ```
 curl -k -v $ADDRESS/
 curl -k -v $ADDRESS/groups
 curl -k -v $ADDRESS/organizations
+curl -k -v $ADDRESS/clusters
 ```
 
-Clusters per organization:
+### Clusters per organization
 
 ```
 curl -k -v $ADDRESS/organizations/11789772/clusters
 curl -k -v $ADDRESS/organizations/11940171/clusters
 ```
 
-Report for organization + cluster:
+### Report for organization + cluster
 
 ```
 curl -k -v $ADDRESS/report/34c3ecc5-624a-49a5-bab8-4fdc5e51a266
 ```
 
-Report for cluster:
+### Report for one particular cluster
 
 ```
 curl -k -v $ADDRESS/report/34c3ecc5-624a-49a5-bab8-4fdc5e51a266
+```
+
+### Getting report for several clusters
+
+List of clusters has to be provided in payload in JSON format:
+
+```
+curl -k -v $ADDRESS/clusters -d @cluster_list.json
+```
+
+Format of the payload:
+
+```json
+{
+	"clusters" : [
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+		"74ae54aa-6577-4e80-85e7-697cb646ff37",
+		"a7467445-8d6a-43cc-b82c-7007664bdf69",
+		"ee7d2bf4-8933-4a3a-8634-3328fe806e08"
+	]
+}
+```
+
+Format of response:
+
+```json
+{
+	"clusters": [
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+		"74ae54aa-6577-4e80-85e7-697cb646ff37",
+		"a7467445-8d6a-43cc-b82c-7007664bdf69",
+		"ee7d2bf4-8933-4a3a-8634-3328fe806e08"
+	],
+	"errors": null,
+	"reports": {
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266": {
+			"report": {
+                        ...
+                        ...
+                        ...
+	},
+	"generated_at": "2020-08-11T10:17:29Z"
+}
+```
+
+Response format in case it is not possible to return result for some cluster:
+
+```json
+{
+	"clusters": [
+		"ee7d2bf4-8933-4a3a-8634-3328fe806e08"
+	],
+	"errors": [
+		"00000000-0000-0000-0000-000000000000"
+	],
+	"reports": {
+		"ee7d2bf4-8933-4a3a-8634-3328fe806e08": {
+			"report": {
+				"data": [
+                                ...
+                                ...
+                                ...
+			},
+			"status": "ok"
+		}
+	},
+	"generated_at": "2020-08-11T10:17:29Z"
+}
 ```
 
 ## List of cluster IDs that can be accesses by this service

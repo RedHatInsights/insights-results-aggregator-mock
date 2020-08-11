@@ -17,11 +17,13 @@ limitations under the License.
 package server
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/RedHatInsights/insights-operator-utils/responses"
 	"github.com/gorilla/mux"
@@ -181,6 +183,64 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 
 	r := []byte(report)
 	_, err = writer.Write(r)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
+}
+
+type ClusterList struct {
+	Clusters []string `json:"clusters"`
+}
+
+type ClusterReports struct {
+	ClusterList []types.ClusterName               `json:"clusters"`
+	Errors      []types.ClusterName               `json:"errors"`
+	Reports     map[types.ClusterName]interface{} `json:"reports"`
+	GeneratedAt string                            `json:"generated_at"`
+}
+
+func (server *HTTPServer) readReportForClusters(writer http.ResponseWriter, request *http.Request) {
+	var clusterList ClusterList
+	var generatedReports ClusterReports
+	generatedReports.GeneratedAt = time.Now().UTC().Format(time.RFC3339)
+
+	generatedReports.Reports = make(map[types.ClusterName]interface{})
+
+	err := json.NewDecoder(request.Body).Decode(&clusterList)
+
+	if err != nil {
+		log.Error().Err(err).Msg("getting list of clusters")
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	for _, clusterName := range clusterList.Clusters {
+		log.Info().Str("cluster", clusterName).Msg("result for cluster")
+		clusterName := types.ClusterName(clusterName)
+		reportStr, err := server.Storage.ReadReportForCluster(clusterName)
+		if err != nil {
+			log.Error().Err(err).Msg("Unable to read report for cluster")
+			generatedReports.Errors = append(generatedReports.Errors, clusterName)
+			// if error happen, simply go to the next cluster
+			continue
+		}
+		var report interface{}
+		err = json.Unmarshal([]byte(reportStr), &report)
+		if err != nil {
+			log.Error().Err(err).Msg("Unable to unmarshal report for cluster")
+			generatedReports.Errors = append(generatedReports.Errors, clusterName)
+			// if error happen, simply go to the next cluster
+			continue
+		}
+		generatedReports.ClusterList = append(generatedReports.ClusterList, clusterName)
+		generatedReports.Reports[clusterName] = report
+	}
+	bytes, err := json.MarshalIndent(generatedReports, "", "\t")
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+		return
+	}
+	_, err = writer.Write(bytes)
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}

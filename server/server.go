@@ -104,6 +104,7 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	router.HandleFunc(apiPrefix+ClustersForOrganizationEndpoint, server.listOfClustersForOrganization).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+ReportEndpoint, server.readReportForOrganizationAndCluster).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc(apiPrefix+ReportForClusterEndpoint, server.readReportForCluster).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc(apiPrefix+ClustersEndpoint, server.readReportForClusters).Methods(http.MethodGet, http.MethodPost, http.MethodOptions)
 
 	// OpenAPI specs
 	router.HandleFunc(openAPIURL, server.serveAPISpecFile).Methods(http.MethodGet)
