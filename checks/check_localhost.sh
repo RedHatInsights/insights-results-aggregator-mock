@@ -9,6 +9,14 @@ curl -k -v $ADDRESS/organizations > localhost/organizations.json
 curl -k -v $ADDRESS/organizations/11789772/clusters > localhost/clusters_11789772.json
 curl -k -v $ADDRESS/organizations/11940171/clusters > localhost/clusters_11940171.json
 
+curl -k -v $ADDRESS/clusters -d @cluster_list_1.json > localhost/report_list1.json
+curl -k -v $ADDRESS/clusters -d @cluster_list_2.json > localhost/report_list2.json
+curl -k -v $ADDRESS/clusters -d @cluster_list_3.json > localhost/report_list3.json
+curl -k -v $ADDRESS/clusters -d @cluster_list_4.json > localhost/report_list4.json
+curl -k -v $ADDRESS/clusters -d @cluster_list_5.json > localhost/report_list5.json
+curl -k -v $ADDRESS/clusters -d @cluster_list_6.json > localhost/report_list6.json
+curl -k -v $ADDRESS/clusters -d @cluster_list_7.json > localhost/report_list7.json
+
 clusters="34c3ecc5-624a-49a5-bab8-4fdc5e51a266 74ae54aa-6577-4e80-85e7-697cb646ff37 a7467445-8d6a-43cc-b82c-7007664bdf69 ee7d2bf4-8933-4a3a-8634-3328fe806e08 eeeeeeee-eeee-eeee-eeee-000000000001"
 
 for cluster in $clusters
