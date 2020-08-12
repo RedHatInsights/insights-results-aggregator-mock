@@ -16,6 +16,9 @@ limitations under the License.
 
 package groups
 
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/insights-results-aggregator-mock/packages/groups/configuration.html
+
 // Configuration represents configuration for groups configuration file
 type Configuration struct {
 	ConfigPath string `mapstructure:"path" toml:"path"`
