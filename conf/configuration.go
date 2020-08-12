@@ -23,10 +23,10 @@ limitations under the License.
 // options.
 //
 // Generated documentation is available at:
-// https://godoc.org/github.com/RedHatInsights/insights-content-service/conf
+// https://godoc.org/github.com/RedHatInsights/insights-results-aggregator-mock/conf
 //
 // Documentation in literate-programming-style is available at:
-// https://redhatinsights.github.io/insights-content-service/packages/conf/configuration.html
+// https://redhatinsights.github.io/insights-results-aggregator-mock/packages/conf/configuration.html
 package conf
 
 import (
