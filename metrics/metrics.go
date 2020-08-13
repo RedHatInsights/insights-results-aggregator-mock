@@ -26,6 +26,12 @@ limitations under the License.
 // produced_messages - total number of produced messages
 //
 // written_reports - total number of reports written into the storage (cache)
+//
+// Generated documentation is available at:
+// https://godoc.org/github.com/RedHatInsights/insights-results-aggregator-mock/metrics
+//
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/insights-results-aggregator-mock/packages/metrics/metrics.html
 package metrics
 
 import (
