@@ -14,6 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Generated documentation is available at:
+// https://godoc.org/github.com/RedHatInsights/insights-results-aggregator-mock/groups
+//
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/insights-results-aggregator-mock/packages/groups/groups.html
 package groups
 
 import (
