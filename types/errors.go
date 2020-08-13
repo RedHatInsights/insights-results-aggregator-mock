@@ -16,6 +16,12 @@ limitations under the License.
 
 package types
 
+// Generated documentation is available at:
+// https://godoc.org/github.com/RedHatInsights/insights-results-aggregator-mock/types
+//
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/insights-results-aggregator-mock/packages/types/errors.html
+
 import (
 	"errors"
 	"fmt"
