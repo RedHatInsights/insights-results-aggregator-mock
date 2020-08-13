@@ -16,6 +16,12 @@ limitations under the License.
 
 // Package types contains declaration of various data types (usually structures)
 // used elsewhere in the aggregator code.
+//
+// Generated documentation is available at:
+// https://godoc.org/github.com/RedHatInsights/insights-results-aggregator-mock/types
+//
+// Documentation in literate-programming-style is available at:
+// https://redhatinsights.github.io/insights-results-aggregator-mock/packages/types/types.html
 package types
 
 import "time"
