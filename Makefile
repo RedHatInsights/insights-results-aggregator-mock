@@ -19,42 +19,42 @@ build: ## Run go build
 
 fmt: ## Run go fmt -w for all sources
 	@echo "Running go formatting"
-	gofmt -l .
+	./gofmt.sh
 
 lint: ## Run golint
 	@echo "Running go lint"
-	golint $(go list ./...)
+	./golint.sh
 
 vet: ## Run go vet. Report likely mistakes in source code
 	@echo "Running go vet"
-	go vet $(go list ./...)
+	./govet.sh
 
 cyclo: ## Run gocyclo
 	@echo "Running gocyclo"
-	gocyclo -over 9 -avg .
+	./gocyclo.sh
 
 ineffassign: ## Run ineffassign checker
 	@echo "Running ineffassign checker"
-	ineffassign .
+	./ineffassign.sh
 
 shellcheck: ## Run shellcheck
 	shellcheck $(shell find . -name "*.sh")
 
 errcheck: ## Run errcheck
 	@echo "Running errcheck"
-	errcheck ./...
+	./goerrcheck.sh
 
 goconst: ## Run goconst checker
 	@echo "Running goconst checker"
-	goconst -min-occurrences=3 ./...
+	./goconst.sh
 
 gosec: ## Run gosec checker
 	@echo "Running gosec checker"
-	gosec ./...
+	./gosec.sh
 
 abcgo: ## Run ABC metrics checker
 	@echo "Run ABC metrics checker"
-	abcgo -path .
+	./abcgo.sh
 
 style: fmt vet lint cyclo shellcheck errcheck goconst gosec ineffassign abcgo ## Run all the formatting related commands (fmt, vet, lint, cyclo) + check shell scripts
 
