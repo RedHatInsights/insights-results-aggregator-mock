@@ -18,6 +18,9 @@ go:
 
 jobs:
   include:
+    - stage: build
+      script:
+        - go build
     - stage: style
       script:
         - ./gofmt.sh
@@ -43,6 +46,7 @@ jobs:
         - go test ./tests -v
 
 stages:
+  - build
   - style
   - unit tests
   - functional tests
