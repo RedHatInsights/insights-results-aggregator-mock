@@ -23,14 +23,7 @@ jobs:
         - go build
     - stage: style
       script:
-        - ./gofmt.sh
-        - ./govet.sh
-        - ./golint.sh
-        - ./gocyclo.sh
-        - ./goerrcheck.sh
-        - ./gosec.sh
-        - ./abcgo.sh
-        - ./ineffassign.sh
+        - make style
     - stage: unit tests
       before_script: go build
       script:
