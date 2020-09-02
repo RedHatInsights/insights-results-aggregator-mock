@@ -193,6 +193,8 @@ type ClusterList struct {
 	Clusters []string `json:"clusters"`
 }
 
+// ClusterReports is a data structure containing list of clusters, list of
+// errors and dictionary with results per cluster.
 type ClusterReports struct {
 	ClusterList []types.ClusterName               `json:"clusters"`
 	Errors      []types.ClusterName               `json:"errors"`
