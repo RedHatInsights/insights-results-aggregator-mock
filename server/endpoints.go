@@ -33,7 +33,7 @@ const (
 	DeleteClustersEndpoint = "clusters/{clusters}"
 	// OrganizationsEndpoint returns all organizations
 	OrganizationsEndpoint = "organizations"
-	// Clusters returns reports for selected clusters
+	// ClustersEndpoint returns reports for selected clusters
 	ClustersEndpoint = "clusters"
 	// ReportEndpoint returns report for provided {organization} and {cluster}
 	ReportEndpoint = "report/{organization}/{cluster}"
