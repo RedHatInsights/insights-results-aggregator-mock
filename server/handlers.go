@@ -188,6 +188,7 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 	}
 }
 
+// ClusterList is a data structure that store list of cluster IDs (names).
 type ClusterList struct {
 	Clusters []string `json:"clusters"`
 }
