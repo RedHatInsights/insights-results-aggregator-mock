@@ -14,6 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Package groups contains definition of data structure that represents the
+// relative information about a group and a set of functions to handle that
+// data structure.
+//
 // Generated documentation is available at:
 // https://godoc.org/github.com/RedHatInsights/insights-results-aggregator-mock/groups
 //
