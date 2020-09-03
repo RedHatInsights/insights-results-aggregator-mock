@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ADDRESS=localhost:8080/api/v1
 
 mkdir -p localhost
