@@ -23,4 +23,4 @@ mv class_diagram.uml docs/
 mv class_diagram.svg docs/
 mv class_diagram_.svg docs/
 mv class_diagram.png docs/
-popd
+cd ... || exit
