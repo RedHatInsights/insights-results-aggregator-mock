@@ -28,7 +28,7 @@ done
 
 for cluster in $clusters
 do
-    curl -k -v $ADDRESS/report/${cluster} > localhost/report_${cluster}.json
+    curl -k -v "$ADDRESS/report/${cluster}" > "localhost/report_${cluster}.json"
 done
 
 diff -r expected localhost
