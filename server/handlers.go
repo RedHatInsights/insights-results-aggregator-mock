@@ -145,7 +145,10 @@ func (server *HTTPServer) listOfClustersForOrganization(writer http.ResponseWrit
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to get list of clusters")
 		handleServerError(err)
-		responses.SendForbidden(writer, err.Error())
+		err := responses.SendForbidden(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg("Unable send forbidden response")
+		}
 		return
 	}
 	err = responses.SendOK(writer, responses.BuildOkResponseWithData("clusters", clusters))
