@@ -33,6 +33,7 @@ done
 
 diff -r expected localhost
 
+# shellcheck disable=SC2181
 if [ $? -ne 0 ]; then
     echo "Error!"
 else
