@@ -23,7 +23,7 @@ clusters="34c3ecc5-624a-49a5-bab8-4fdc5e51a266 74ae54aa-6577-4e80-85e7-697cb646f
 
 for cluster in $clusters
 do
-    curl -k -v $ADDRESS/report/11789772/${cluster} > localhost/report_11789772_org_${cluster}.json
+    curl -k -v "$ADDRESS/report/11789772/${cluster}" > "localhost/report_11789772_org_${cluster}.json"
 done
 
 for cluster in $clusters
