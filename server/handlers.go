@@ -34,6 +34,8 @@ import (
 
 const failureClusterIDPrefix = "ffffffff-ffff-ffff-ffff-"
 
+const unableToReadReportErrorMessage = "Unable to read report for cluster"
+
 // readOrganizationID retrieves organization id from request
 // if it's not possible, it writes http error to the writer and returns error
 func readOrganizationID(writer http.ResponseWriter, request *http.Request) (types.OrgID, error) {
@@ -179,7 +181,7 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 	}
 	report, err := server.Storage.ReadReportForCluster(clusterName)
 	if err != nil {
-		log.Error().Err(err).Msg("Unable to read report for cluster")
+		log.Error().Err(err).Msg(unableToReadReportErrorMessage)
 		handleServerError(err)
 		return
 	}
