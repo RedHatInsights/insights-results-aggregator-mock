@@ -227,7 +227,7 @@ func (server *HTTPServer) readReportForClusters(writer http.ResponseWriter, requ
 		clusterName := types.ClusterName(clusterName)
 		reportStr, err := server.Storage.ReadReportForCluster(clusterName)
 		if err != nil {
-			log.Error().Err(err).Msg("Unable to read report for cluster")
+			log.Error().Err(err).Msg(unableToReadReportErrorMessage)
 			generatedReports.Errors = append(generatedReports.Errors, clusterName)
 			// if error happen, simply go to the next cluster
 			continue
