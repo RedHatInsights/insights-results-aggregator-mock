@@ -253,10 +253,12 @@ func (storage MemoryStorage) ReadReportForCluster(
 
 // chooseReport for "changing cluster"
 func chooseReport(variants []string) types.ClusterName {
+	const operationName = "changingCluster"
+
 	// first we need to get the minute in hour
 	currentTime := time.Now()
 	minute := currentTime.Minute()
-	log.Info().Int("Minute in hour", minute).Msg("changingCluster")
+	log.Info().Int("Minute in hour", minute).Msg(operationName)
 
 	// then compute index of report
 	i := minute / changingClustersPeriodInMinutes
