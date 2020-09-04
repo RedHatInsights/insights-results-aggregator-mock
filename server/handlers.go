@@ -269,7 +269,7 @@ func (server *HTTPServer) readReportForOrganizationAndCluster(writer http.Respon
 
 	report, err := server.Storage.ReadReportForOrganizationAndCluster(organizationID, clusterName)
 	if err != nil {
-		log.Error().Err(err).Msg("Unable to read report for cluster")
+		log.Error().Err(err).Msg(unableToReadReportErrorMessage)
 		handleServerError(err)
 		return
 	}
