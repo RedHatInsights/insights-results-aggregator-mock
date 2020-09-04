@@ -267,7 +267,7 @@ func chooseReport(variants []string) types.ClusterName {
 	// and choose the report according to the index
 	cluster := variants[i]
 	log.Info().Int("Index", i).Msg(operationName)
-	log.Info().Str("Cluster", cluster).Msg("changingCluster")
+	log.Info().Str("Cluster", cluster).Msg(operationName)
 	return types.ClusterName(cluster)
 }
 
