@@ -109,6 +109,8 @@ func readReport(path string, clusterName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	// disable "G304 (CWE-22): Potential file inclusion via variable"
+	// #nosec G304
 	report, err := ioutil.ReadFile(absPath)
 	if err != nil {
 		return "", err
