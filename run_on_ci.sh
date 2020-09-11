@@ -16,5 +16,5 @@
 make build
 
 set -m
-./insights-results-aggregator-mock &bg
+./insights-results-aggregator-mock &
 sleep 5
