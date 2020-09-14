@@ -207,6 +207,31 @@ type ClusterReports struct {
 	GeneratedAt string                            `json:"generated_at"`
 }
 
+func (server *HTTPServer) readReportForAllClustersInOrg(writer http.ResponseWriter, request *http.Request) {
+	organizationID, err := readOrganizationID(writer, request)
+
+	if err != nil {
+		// everything has been handled already
+		return
+	}
+	log.Info().Int("OrgID", int(organizationID)).Msg("Organization ID to get list of results")
+
+	var generatedReports ClusterReports
+	generatedReports.GeneratedAt = time.Now().UTC().Format(time.RFC3339)
+
+	generatedReports.Reports = make(map[types.ClusterName]interface{})
+
+	bytes, err := json.MarshalIndent(generatedReports, "", "\t")
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+		return
+	}
+	_, err = writer.Write(bytes)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
+}
+
 func (server *HTTPServer) readReportForClusters(writer http.ResponseWriter, request *http.Request) {
 	var clusterList ClusterList
 	var generatedReports ClusterReports
