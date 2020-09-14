@@ -35,7 +35,7 @@ const (
 	OrganizationsEndpoint = "organizations"
 	// ClustersEndpoint returns reports for selected clusters
 	ClustersEndpoint = "clusters"
-	// ClustersInOrg returns reports for all clusters in selected organization
+	// ClustersInOrgEndpoint returns reports for all clusters in selected organization
 	ClustersInOrgEndpoint = "clusters/{organization}"
 	// ReportEndpoint returns report for provided {organization} and {cluster}
 	ReportEndpoint = "report/{organization}/{cluster}"
