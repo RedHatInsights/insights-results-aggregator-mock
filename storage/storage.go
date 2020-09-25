@@ -129,6 +129,17 @@ func initStorage(path string) error {
 		"a7467445-8d6a-43cc-b82c-7007664bdf69",
 		"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
 		"eeeeeeee-eeee-eeee-eeee-000000000001",
+		"00000001-624a-49a5-bab8-4fdc5e51a266",
+		"00000001-6577-4e80-85e7-697cb646ff37",
+		"00000001-8933-4a3a-8634-3328fe806e08",
+		"00000001-8d6a-43cc-b82c-7007664bdf69",
+		"00000001-eeee-eeee-eeee-000000000001",
+		"00000002-624a-49a5-bab8-4fdc5e51a266",
+		"00000002-6577-4e80-85e7-697cb646ff37",
+		"00000002-8933-4a3a-8634-3328fe806e08",
+		"00000003-8933-4a3a-8634-3328fe806e08",
+		"00000003-8d6a-43cc-b82c-7007664bdf69",
+		"00000003-eeee-eeee-eeee-000000000001",
 	}
 	for _, cluster := range clusters {
 		report, err := readReport(path, cluster)
@@ -191,6 +202,20 @@ func (storage MemoryStorage) ListOfClustersForOrg(orgID types.OrgID) ([]types.Cl
 		clusters = append(clusters, "a7467445-8d6a-43cc-b82c-7007664bdf69")
 		clusters = append(clusters, "ee7d2bf4-8933-4a3a-8634-3328fe806e08")
 		clusters = append(clusters, "eeeeeeee-eeee-eeee-eeee-000000000001")
+	case 1:
+		clusters = append(clusters, "00000001-624a-49a5-bab8-4fdc5e51a266")
+		clusters = append(clusters, "00000001-6577-4e80-85e7-697cb646ff37")
+		clusters = append(clusters, "00000001-8933-4a3a-8634-3328fe806e08")
+		clusters = append(clusters, "00000001-8d6a-43cc-b82c-7007664bdf69")
+		clusters = append(clusters, "00000001-eeee-eeee-eeee-000000000001")
+	case 2:
+		clusters = append(clusters, "00000002-624a-49a5-bab8-4fdc5e51a266")
+		clusters = append(clusters, "00000002-6577-4e80-85e7-697cb646ff37")
+		clusters = append(clusters, "00000002-8933-4a3a-8634-3328fe806e08")
+	case 3:
+		clusters = append(clusters, "00000003-8933-4a3a-8634-3328fe806e08")
+		clusters = append(clusters, "00000003-8d6a-43cc-b82c-7007664bdf69")
+		clusters = append(clusters, "00000003-eeee-eeee-eeee-000000000001")
 	}
 
 	return clusters, nil
@@ -283,6 +308,12 @@ func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 	switch orgID {
 	case 11940171:
 		return types.ClusterReport(report), errors.New("You have no permissions to get or change info about this organization")
+	case 1:
+		fallthrough
+	case 2:
+		fallthrough
+	case 3:
+		fallthrough
 	case 11789772:
 		report = getReportForCluster(clusterName)
 	}

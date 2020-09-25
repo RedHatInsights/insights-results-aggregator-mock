@@ -10,6 +10,9 @@ curl -k -v $ADDRESS/organizations > localhost/organizations.json
 
 curl -k -v $ADDRESS/organizations/11789772/clusters > localhost/clusters_11789772.json
 curl -k -v $ADDRESS/organizations/11940171/clusters > localhost/clusters_11940171.json
+curl -k -v $ADDRESS/organizations/1/clusters > localhost/clusters_00000001.json
+curl -k -v $ADDRESS/organizations/2/clusters > localhost/clusters_00000002.json
+curl -k -v $ADDRESS/organizations/3/clusters > localhost/clusters_00000003.json
 
 curl -k -v $ADDRESS/clusters -d @cluster_list_1.json | jq --tab 'del(.generated_at)' > localhost/report_list1.json
 curl -k -v $ADDRESS/clusters -d @cluster_list_2.json | jq --tab 'del(.generated_at)' > localhost/report_list2.json

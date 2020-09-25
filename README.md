@@ -56,8 +56,10 @@ curl -k -v $ADDRESS/organizations/11940171/clusters
 ### Report for organization + cluster
 
 ```
-curl -k -v $ADDRESS/report/34c3ecc5-624a-49a5-bab8-4fdc5e51a266
+curl -k -v $ADDRESS/report/11789772/34c3ecc5-624a-49a5-bab8-4fdc5e51a266
 ```
+
+In this case `11789772` is organization ID and `34c3ecc5-624a-49a5-bab8-4fdc5e51a266` is cluster ID
 
 ### Report for one particular cluster
 
@@ -145,12 +147,23 @@ Response format in case it is not possible to return result for some cluster:
 74ae54aa-6577-4e80-85e7-697cb646ff37
 a7467445-8d6a-43cc-b82c-7007664bdf69
 ee7d2bf4-8933-4a3a-8634-3328fe806e08
+00000001-624a-49a5-bab8-4fdc5e51a266
+00000001-6577-4e80-85e7-697cb646ff37
+00000001-8933-4a3a-8634-3328fe806e08
+00000001-8d6a-43cc-b82c-7007664bdf69
+00000002-624a-49a5-bab8-4fdc5e51a266
+00000002-6577-4e80-85e7-697cb646ff37
+00000002-8933-4a3a-8634-3328fe806e08
+00000003-8933-4a3a-8634-3328fe806e08
+00000003-8d6a-43cc-b82c-7007664bdf69
 ```
 
 ### Cluster that returns no results (ie just empty report)
 
 ```
 eeeeeeee-eeee-eeee-eeee-000000000001
+00000001-eeee-eeee-eeee-000000000001
+00000003-eeee-eeee-eeee-000000000001
 ```
 
 **Mnemotechnic**: `e` means "empty"
