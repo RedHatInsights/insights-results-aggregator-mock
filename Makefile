@@ -63,6 +63,7 @@ run: clean build ## Build the project and executes the binary
 
 test: clean build ## Run the unit tests
 	@go test -coverprofile coverage.out $(shell go list ./... | grep -v tests)
+	@go tool cover -func=coverage.out
 
 cover: test
 	@go tool cover -html=coverage.out
