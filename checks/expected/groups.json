@@ -10,6 +10,7 @@
     "/openapi.json": {
       "get": {
         "summary": "Returns the OpenAPI specification JSON.",
+        "description": "The OpenAPI specification of this REST API service that is represented in formatted and human-readable JSON is available under this endpoint.",
         "operationId": "getOpenApi",
         "responses": {
           "200": {
@@ -52,7 +53,7 @@
     "/metrics": {
       "get": {
         "summary": "Read all metrics exposed by this service",
-        "description": "",
+        "description": "Set of metrics provided by insights-operator-utils library providing total number of requests counter, API endpoints response times, and counter of HTTP status code responses. Additionally it is possible to consume all metrics provided by Go runtime. These metrics start with go_ and process_ prefixes.",
         "parameters": [],
         "operationId": "getMetrics",
         "responses": {
