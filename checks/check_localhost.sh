@@ -34,11 +34,15 @@ do
     curl -k -v "$ADDRESS/report/${cluster}" > "localhost/report_${cluster}.json"
 done
 
+RED_BG=$(tput setab 1)
+GREEN_BG=$(tput setab 2)
+NC=$(tput sgr0) # No Color
+
 diff -r expected localhost
 
 # shellcheck disable=SC2181
 if [ $? -ne 0 ]; then
-    echo "Error!"
+    echo "${RED_BG}Error!${NC}"
 else
-    echo "OK"
+    echo "${GREEN_BG}OK${NC}"
 fi
