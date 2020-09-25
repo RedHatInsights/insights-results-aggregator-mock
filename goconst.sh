@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+BLUE=$(tput setaf 4)
+RED_BG=$(tput setab 1)
+GREEN_BG=$(tput setab 2)
+NC=$(tput sgr0) # No Color
 
 if ! [ -x "$(command -v goconst)" ]
 then
@@ -22,9 +26,9 @@ fi
 
 if [[ $(goconst -min-occurrences=3 ./... | tee /dev/tty | wc -l) -ne 0 ]]
 then
-    echo "Duplicated string(s) found"
+    echo "${RED_BG}Duplicated string(s) found${NC}"
     exit 1
 else
-    echo "No duplicated strings found"
+    echo "${GREEN_BG}No duplicated strings found${NC}"
     exit 0
 fi
