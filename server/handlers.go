@@ -248,7 +248,7 @@ func (server *HTTPServer) readReportForClusters(writer http.ResponseWriter, requ
 	}
 
 	for _, clusterName := range clusterList.Clusters {
-		log.Info().Str("cluster", clusterName).Msg("result for cluster")
+		log.Info().Str("cluster name", clusterName).Msg("result for cluster")
 		clusterName := types.ClusterName(clusterName)
 		reportStr, err := server.Storage.ReadReportForCluster(clusterName)
 		if err != nil {
