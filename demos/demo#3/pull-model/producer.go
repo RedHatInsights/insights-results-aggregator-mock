@@ -16,6 +16,9 @@ import (
 // ClusterName represents name of cluster in format c8590f31-e97e-4b85-b506-c45ce1911a12
 type ClusterName string
 
+// ClusterReport represents cluster report
+type ClusterReport string
+
 const path = "../../../data"
 
 const address = ":8080"
@@ -26,7 +29,46 @@ const appJSON = "application/json; charset=utf-8"
 // responseDataError is used as the error message when the responses functions return an error
 const responseDataError = "Unexpected error during response data encoding"
 
+const reportForClusterMessage = "report for cluster"
+
 var reports map[string]string = make(map[string]string)
+
+var clusters = []string{
+	"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+	"34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
+	"34c3ecc5-624a-49a5-bab8-4fdc5e51a268",
+	"34c3ecc5-624a-49a5-bab8-4fdc5e51a269",
+	"34c3ecc5-624a-49a5-bab8-4fdc5e51a26a",
+	"34c3ecc5-624a-49a5-bab8-4fdc5e51a26b",
+	"34c3ecc5-624a-49a5-bab8-4fdc5e51a26c",
+	"34c3ecc5-624a-49a5-bab8-4fdc5e51a26d",
+	"34c3ecc5-624a-49a5-bab8-4fdc5e51a26e",
+	"34c3ecc5-624a-49a5-bab8-4fdc5e51a26f",
+	"74ae54aa-6577-4e80-85e7-697cb646ff37",
+	"a7467445-8d6a-43cc-b82c-7007664bdf69",
+	"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
+	"eeeeeeee-eeee-eeee-eeee-000000000001",
+	"00000001-624a-49a5-bab8-4fdc5e51a266",
+	"00000001-624a-49a5-bab8-4fdc5e51a267",
+	"00000001-624a-49a5-bab8-4fdc5e51a268",
+	"00000001-624a-49a5-bab8-4fdc5e51a269",
+	"00000001-624a-49a5-bab8-4fdc5e51a26a",
+	"00000001-624a-49a5-bab8-4fdc5e51a26b",
+	"00000001-624a-49a5-bab8-4fdc5e51a26c",
+	"00000001-624a-49a5-bab8-4fdc5e51a26d",
+	"00000001-624a-49a5-bab8-4fdc5e51a26e",
+	"00000001-624a-49a5-bab8-4fdc5e51a26f",
+	"00000001-6577-4e80-85e7-697cb646ff37",
+	"00000001-8933-4a3a-8634-3328fe806e08",
+	"00000001-8d6a-43cc-b82c-7007664bdf69",
+	"00000001-eeee-eeee-eeee-000000000001",
+	"00000002-624a-49a5-bab8-4fdc5e51a266",
+	"00000002-6577-4e80-85e7-697cb646ff37",
+	"00000002-8933-4a3a-8634-3328fe806e08",
+	"00000003-8933-4a3a-8634-3328fe806e08",
+	"00000003-8d6a-43cc-b82c-7007664bdf69",
+	"00000003-eeee-eeee-eeee-000000000001",
+}
 
 func readReport(path string, clusterName string) (string, error) {
 	absPath, err := filepath.Abs(path + "/report_" + clusterName + ".json")
@@ -43,42 +85,6 @@ func readReport(path string, clusterName string) (string, error) {
 }
 
 func initStorage(path string) error {
-	clusters := []string{
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a268",
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a269",
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26a",
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26b",
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26c",
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26d",
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26e",
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26f",
-		"74ae54aa-6577-4e80-85e7-697cb646ff37",
-		"a7467445-8d6a-43cc-b82c-7007664bdf69",
-		"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
-		"eeeeeeee-eeee-eeee-eeee-000000000001",
-		"00000001-624a-49a5-bab8-4fdc5e51a266",
-		"00000001-624a-49a5-bab8-4fdc5e51a267",
-		"00000001-624a-49a5-bab8-4fdc5e51a268",
-		"00000001-624a-49a5-bab8-4fdc5e51a269",
-		"00000001-624a-49a5-bab8-4fdc5e51a26a",
-		"00000001-624a-49a5-bab8-4fdc5e51a26b",
-		"00000001-624a-49a5-bab8-4fdc5e51a26c",
-		"00000001-624a-49a5-bab8-4fdc5e51a26d",
-		"00000001-624a-49a5-bab8-4fdc5e51a26e",
-		"00000001-624a-49a5-bab8-4fdc5e51a26f",
-		"00000001-6577-4e80-85e7-697cb646ff37",
-		"00000001-8933-4a3a-8634-3328fe806e08",
-		"00000001-8d6a-43cc-b82c-7007664bdf69",
-		"00000001-eeee-eeee-eeee-000000000001",
-		"00000002-624a-49a5-bab8-4fdc5e51a266",
-		"00000002-6577-4e80-85e7-697cb646ff37",
-		"00000002-8933-4a3a-8634-3328fe806e08",
-		"00000003-8933-4a3a-8634-3328fe806e08",
-		"00000003-8d6a-43cc-b82c-7007664bdf69",
-		"00000003-eeee-eeee-eeee-000000000001",
-	}
 	for _, cluster := range clusters {
 		report, err := readReport(path, cluster)
 		if err != nil {
@@ -175,21 +181,71 @@ func getRouterParam(request *http.Request, paramName string) (string, error) {
 	return value, nil
 }
 
-func reportEndpoint(writer http.ResponseWriter, request *http.Request) {
+func nextCluster(clusterName ClusterName) (ClusterName, error) {
+	for i, cluster := range clusters {
+		if cluster == string(clusterName) {
+			nextIndex := (i + 1) / len(cluster)
+			return ClusterName(clusters[nextIndex]), nil
+		}
+	}
+	return "", errors.New("Wrong cluster name '" + string(clusterName) + "'")
+}
+
+func firstReportEndpoint(writer http.ResponseWriter, request *http.Request) {
+	clusterName := ClusterName(clusters[0])
+	log.Info().Str("first cluster", string(clusterName)).Msg(reportForClusterMessage)
+
+	reportForCluster(writer, clusterName)
+}
+
+func nextReportEndpoint(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("get cluster name operation")
 		return
 	}
-	log.Info().Str("lastCluster", string(clusterName)).Msg("report for cluster")
+	log.Info().Str("last cluster", string(clusterName)).Msg(reportForClusterMessage)
+
+	nextClusterName, err := nextCluster(clusterName)
+	if err != nil {
+		log.Error().Err(err).Msg("get next cluster")
+		return
+	}
+	log.Info().Str("next cluster", string(nextClusterName)).Msg(reportForClusterMessage)
+
+	reportForCluster(writer, clusterName)
+}
+
+func reportForCluster(writer http.ResponseWriter, clusterName ClusterName) {
+	report, err := readReportForCluster(clusterName)
+	if err != nil {
+		log.Error().Err(err).Msg("reading report for selected cluster")
+		return
+	}
+
+	r := []byte(report)
+	_, err = writer.Write(r)
+	if err != nil {
+		log.Error().Err(err).Msg("can not write response data")
+	}
 }
 
 func addEndpointsToRouter(router *mux.Router) {
 	apiPrefix := "/"
 	MainEndpoint := ""
+	FirstReportEndpoint := "first-report/"
 	ReportEndpoint := "report/{cluster}"
 	router.HandleFunc(apiPrefix+MainEndpoint, mainEndpoint).Methods(http.MethodGet)
-	router.HandleFunc(apiPrefix+ReportEndpoint, reportEndpoint).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+FirstReportEndpoint, firstReportEndpoint).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+ReportEndpoint, nextReportEndpoint).Methods(http.MethodGet)
+}
+
+func readReportForCluster(clusterName ClusterName) (ClusterReport, error) {
+	report, ok := reports[string(clusterName)]
+	if !ok {
+		return "", errors.New("can not read report")
+	}
+	return ClusterReport(report), nil
 }
 
 func main() {
