@@ -80,23 +80,34 @@ func main() {
 	if err != nil {
 		log.Error().Err(err).Msg("can not open file")
 	}
-	defer file.Close()
+	defer func() {
+		err := file.Close()
+		if err != nil {
+			log.Error().Err(err).Msg("can not close file")
+		}
+	}()
 
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
-	err = writer.Write([]string{"#", "usec"})
+	err = writer.Write([]string{"#", "usec", "error"})
 	if err != nil {
 		log.Error().Err(err).Msg("can not write table header into CSV")
 	}
 
 	for i := 0; i < 10000; i++ {
 		startTime := time.Now()
-		performRequest(client, url, i)
+		err := performRequest(client, url, i)
+		if err != nil {
+			err = writer.Write([]string{strconv.Itoa(i + 1), "0", "1"})
+			if err != nil {
+				log.Error().Err(err).Msg("can not write record into CSV")
+			}
+		}
 		duration := time.Since(startTime)
 		usec := int(duration / time.Microsecond)
 		log.Info().Int("usec", usec).Msg("duration for processing")
-		err = writer.Write([]string{strconv.Itoa(i + 1), strconv.Itoa(usec)})
+		err = writer.Write([]string{strconv.Itoa(i + 1), strconv.Itoa(usec), "0"})
 		if err != nil {
 			log.Error().Err(err).Msg("can not write record into CSV")
 		}
