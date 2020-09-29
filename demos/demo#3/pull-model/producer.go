@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog"
@@ -165,10 +166,22 @@ func readClusterName(writer http.ResponseWriter, request *http.Request) (Cluster
 		return "", err
 	}
 
-	if err != nil {
-		return "", err
-	}
 	return ClusterName(clusterName), nil
+}
+
+// readIndex retrieves cluster index from request
+func readIndex(writer http.ResponseWriter, request *http.Request) (int, error) {
+	index, err := getRouterParam(request, "n")
+	if err != nil {
+		return 0, err
+	}
+
+	i, err := strconv.Atoi(index)
+	if err != nil {
+		return 0, err
+	}
+
+	return i, nil
 }
 
 // getRouterParam retrieves parameter from URL like `/organization/{org_id}`
@@ -216,6 +229,21 @@ func nextReportEndpoint(writer http.ResponseWriter, request *http.Request) {
 	reportForCluster(writer, clusterName)
 }
 
+func nthReportEndpoint(writer http.ResponseWriter, request *http.Request) {
+	index, err := readIndex(writer, request)
+	if err != nil {
+		log.Error().Err(err).Msg("get cluster index operation")
+		return
+	}
+	log.Info().Int("index", index).Msg("index of cluster")
+
+	index = index % len(clusters)
+	clusterName := clusters[index]
+	log.Info().Str("cluster with index", clusterName).Msg(reportForClusterMessage)
+
+	reportForCluster(writer, ClusterName(clusterName))
+}
+
 func reportForCluster(writer http.ResponseWriter, clusterName ClusterName) {
 	report, err := readReportForCluster(clusterName)
 	if err != nil {
@@ -235,9 +263,11 @@ func addEndpointsToRouter(router *mux.Router) {
 	MainEndpoint := ""
 	FirstReportEndpoint := "first-report/"
 	ReportEndpoint := "report/{cluster}"
+	NthReportEndpoint := "report-by-n/{n}"
 	router.HandleFunc(apiPrefix+MainEndpoint, mainEndpoint).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+FirstReportEndpoint, firstReportEndpoint).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+ReportEndpoint, nextReportEndpoint).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+NthReportEndpoint, nthReportEndpoint).Methods(http.MethodGet)
 }
 
 func readReportForCluster(clusterName ClusterName) (ClusterReport, error) {
