@@ -84,7 +84,7 @@ func initStorage(path string) error {
 		if err != nil {
 			return err
 		}
-		log.Info().Str("cluster", cluster).Msg("Read cluster report")
+		log.Info().Str("cluster-1", cluster).Msg("Read cluster report")
 		reports[cluster] = report
 	}
 	return nil
