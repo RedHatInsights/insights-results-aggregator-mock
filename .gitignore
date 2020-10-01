@@ -7,3 +7,4 @@ aggregator
 rest-api-tests
 rules-content
 *.py
+*.csv
