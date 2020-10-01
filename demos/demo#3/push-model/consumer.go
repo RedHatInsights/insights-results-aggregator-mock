@@ -25,7 +25,7 @@ import (
 
 func init() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
-	log.Info().Msg("logger initialized")
+	log.Info().Msg("push model consumer: logger initialized")
 }
 
 func main() {
