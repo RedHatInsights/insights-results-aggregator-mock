@@ -47,7 +47,7 @@ const (
 
 func init() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
-	log.Info().Msg("logger initialized")
+	log.Info().Msg("pull model consumer: logger initialized")
 }
 
 func performRequest(client http.Client, baseurl string, n int) error {

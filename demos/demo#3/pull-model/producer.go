@@ -115,7 +115,7 @@ func initStorage(path string) error {
 
 func init() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
-	log.Info().Msg("logger initialized")
+	log.Info().Msg("pull model producer: logger initialized")
 }
 
 func startHttpServer() error {
