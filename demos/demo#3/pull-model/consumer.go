@@ -39,10 +39,11 @@ type ClusterResponse struct {
 }
 
 const (
-	apiURL              = "http://localhost:8080/"
-	contentTypeHeader   = "Content-Type"
-	contentLengthHeader = "Content-Length"
-	messagesToConsume   = 100000
+	apiURL               = "http://localhost:8080/"
+	contentTypeHeader    = "Content-Type"
+	contentLengthHeader  = "Content-Length"
+	messagesToConsume    = 100000
+	csvWriteErrorMessage = "can not write record into CSV"
 )
 
 func init() {
@@ -118,7 +119,7 @@ func main() {
 		if err != nil {
 			err = writer.Write([]string{strconv.Itoa(i + 1), "0", "1"})
 			if err != nil {
-				log.Error().Err(err).Msg("can not write record into CSV")
+				log.Error().Err(err).Msg(csvWriteErrorMessage)
 			}
 		}
 		duration := time.Since(startTime)
@@ -126,7 +127,7 @@ func main() {
 		log.Info().Int("usec", usec).Msg("duration for processing")
 		err = writer.Write([]string{strconv.Itoa(i + 1), strconv.Itoa(usec), "0"})
 		if err != nil {
-			log.Error().Err(err).Msg("can not write record into CSV")
+			log.Error().Err(err).Msg(csvWriteErrorMessage)
 		}
 	}
 }
