@@ -77,5 +77,8 @@ func receiveHandler(writer http.ResponseWriter, request *http.Request) {
 
 func main() {
 	http.HandleFunc(endpoint, receiveHandler)
-	http.ListenAndServe(apiURL, nil)
+	err := http.ListenAndServe(apiURL, nil)
+	if err != nil {
+		log.Error().Err(err).Msg("start listening on specified port")
+	}
 }
