@@ -170,11 +170,18 @@ func main() {
 		command = strings.ToLower(strings.TrimSpace(os.Args[1]))
 	}
 
-	os.Exit(handleCommand(config, command))
+	os.Exit(handleCommand(config, removeDashes(command)))
+}
+
+// function removeDashes removes one or two dashes from the beginning of a
+// given string.
+func removeDashes(command string) string {
+	command = strings.TrimPrefix(command, "--")
+	command = strings.TrimPrefix(command, "-")
+	return command
 }
 
 func handleCommand(config conf.ConfigStruct, command string) int {
-	// TODO: allow -/-- at the beginning of all commands
 	switch command {
 	case "start-service":
 		logVersionInfo()
