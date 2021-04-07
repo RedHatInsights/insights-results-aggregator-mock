@@ -31,6 +31,23 @@ docker build -t insights-results-aggregator-mock:latest .
 docker run --rm insights-results-aggregator-mock:latest
 ```
 
+## Usage
+
+```
+Usage:
+
+    ./insights-results-aggregator-mock [command]
+
+The commands are:
+
+    <EMPTY>                      starts content service
+    start-service                starts content service
+    help     print-help          prints help
+    config   print-config        prints current configuration set by files & env variables
+    version  print-version-info  prints version info
+    authors  print-authors       prints authors
+```
+
 ## Accessing results
 
 ### Settings for localhost
