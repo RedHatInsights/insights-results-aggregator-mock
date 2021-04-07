@@ -120,17 +120,28 @@ Usage:
 
 The commands are:
 
-    <EMPTY>             starts content service
-    start-service       starts content service
-    help                prints help
-    print-help          prints help
-    print-config        prints current configuration set by files & env variables
-    print-version-info  prints version info
+    <EMPTY>                      starts content service
+    start-service                starts content service
+    help     print-help          prints help
+    config   print-config        prints current configuration set by files & env variables
+    version  print-version-info  prints version info
+    authors  print-authors       prints authors
 
+`
+
+const authorsList = `
+Authors:
+Pavel Tisnovsky <ptisnovs@redhat.com>
 `
 
 func printHelp() int {
 	fmt.Printf(helpMessageTemplate, os.Args[0])
+	return ExitStatusOK
+}
+
+func printAuthors() int {
+	fmt.Println(authorsList)
+
 	return ExitStatusOK
 }
 
@@ -175,10 +186,12 @@ func handleCommand(config conf.ConfigStruct, command string) int {
 		return ExitStatusOK
 	case "help", "print-help":
 		return printHelp()
-	case "print-config":
+	case "config", "print-config":
 		return printConfig(conf.Config)
 	case "version", "print-version-info":
 		return printVersionInfo()
+	case "authors", "print-authors":
+		return printAuthors()
 	default:
 		fmt.Printf("\nCommand '%v' not found\n", command)
 		return printHelp()
