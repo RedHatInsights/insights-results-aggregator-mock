@@ -48,6 +48,8 @@ The commands are:
     authors  print-authors       prints authors
 ```
 
+Note: it is possible to use single dash or double dashes for all commands.
+
 ## Accessing results
 
 ### Settings for localhost
