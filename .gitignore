@@ -6,5 +6,5 @@ coverage.out
 aggregator
 rest-api-tests
 rules-content
-*.py
+issue.py
 *.csv
