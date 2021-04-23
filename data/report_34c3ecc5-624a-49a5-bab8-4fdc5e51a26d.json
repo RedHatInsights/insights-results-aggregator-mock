@@ -29,7 +29,19 @@
       {
         "created_at": "2019-10-29T15:00:00Z",
         "description": "OCP node could behave unexpectedly when it doesn't meet the minimum resource requirements",
-        "details": "Minimum resource requirements for Openshift 4 Nodes are not met, which could cause unexpected behavior.\n\n[Knowledgebase Article](https://docs.openshift.com/container-platform/4.1/installing/installing_bare_metal/installing-bare-metal.html#minimum-resource-requirements_installing-bare-metal)\n",
+        "details": {
+            "nodes": [
+                {
+                    "name": "foo1",
+                    "role": "master",
+                    "memory": 8.16,
+                    "memory_req": 16
+                }
+            ],
+            "link": "https://docs.openshift.com/container-platform/4.1/installing/installing_bare_metal/installing-bare-metal.html#minimum-resource-requirements_installing-bare-metal",
+            "type": "rule",
+            "error_key": "NODES_MINIMUM_REQUIREMENTS_NOT_MET"
+        },
         "reason": "Node{{?pydata.nodes.length>1}}s{{?}} not meeting the minimum requirements:\n{{~ pydata.nodes :node }}\n1. {{=node[\"name\"]}}\n  * Role: {{=node[\"role\"]}}{{?node.memory}}\n  * Minimum memory requirement is {{=node[\"memory_req\"]}}, but the node is configured with {{=node[\"memory\"]}}.{{?}}{{?node.cpu}}\n  * Minimum cpu requirement is {{=node[\"cpu_req\"]}}, but the node is configured with {{=node[\"cpu\"]}}.{{?}}{{~}}",
         "resolution": "Red Hat recommends that you configure your nodes to meet the minimum resource requirements.\n\nMake sure that:\n\n{{~ pydata.nodes :node }}\n1. Node {{=node[\"name\"]}} ({{=node[\"role\"]}}){{?node[\"memory\"]}}\n   * Has enough memory, minimum requirement is {{=node[\"memory_req\"]}}. Currently its only configured with {{=node[\"memory\"]}}GB.{{?}}{{?node.cpu}}\n   * Has enough allocatable cpu, minimum requirement is {{=node[\"cpu_req\"]}}. Currently its only configured with {{=node[\"cpu\"]}}.{{?}}{{~}}\n",
         "total_risk": 2,
