@@ -8,7 +8,10 @@
       {
         "created_at": "2020-01-17T11:10:00Z",
         "description": "The OpenShift cluster will experience upgrade failure when the cluster wide proxy is configured due to a bug",
-        "details": "Due to a known bug in OpenShift 4 the `clusterversion` operator is not respecting the cluster-wide proxy settings.\n\n[Knowledgebase Article](https://access.redhat.com/solutions/4631541)\n",
+        "details": {
+            "type": "rule",
+            "error_key": "BUGZILLA_BUG_1766907"
+        },
         "reason": "On this OCP 4 cluster, a cluster wide proxy is set. Due to a bug, the CVO is not using the proxy. This will lead to a upgrade failure.",
         "resolution": "Red Hat recommends that you to use this workaround:\n1. Set the proxy manually\n~~~\n# oc -n openshift-cluster-version set env deploy cluster-version-operator HTTP_PROXY=xxx HTTPS_PROXY=xxx NO_PROXY=xxx\n~~~\n",
         "total_risk": 2,
