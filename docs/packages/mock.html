@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
- Copyright 2020 Red Hat, Inc
+ Copyright 2021 Red Hat, Inc
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -284,17 +284,28 @@ Usage:
 
 The commands are:
 
-    &lt;EMPTY&gt;             starts content service
-    start-service       starts content service
-    help                prints help
-    print-help          prints help
-    print-config        prints current configuration set by files &amp; env variables
-    print-version-info  prints version info
+    &lt;EMPTY&gt;                      starts content service
+    start-service                starts content service
+    help     print-help          prints help
+    config   print-config        prints current configuration set by files &amp; env variables
+    version  print-version-info  prints version info
+    authors  print-authors       prints authors
 
+`</div><div class="operator"></div>
+
+<div class="keyword">const</div> <div class="ident">authorsList</div> <div class="operator">=</div> <div class="literal">`
+Authors:
+Pavel Tisnovsky &lt;ptisnovs@redhat.com&gt;
 `</div><div class="operator"></div>
 
 <div class="keyword">func</div> <div class="ident">printHelp</div><div class="operator">(</div><div class="operator">)</div> <div class="ident">int</div> <div class="operator">{</div>
 	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Printf</div><div class="operator">(</div><div class="ident">helpMessageTemplate</div><div class="operator">,</div> <div class="ident">os</div><div class="operator">.</div><div class="ident">Args</div><div class="operator">[</div><div class="literal">0</div><div class="operator">]</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">ExitStatusOK</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">printAuthors</div><div class="operator">(</div><div class="operator">)</div> <div class="ident">int</div> <div class="operator">{</div>
+	<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Println</div><div class="operator">(</div><div class="ident">authorsList</div><div class="operator">)</div><div class="operator"></div>
+
 	<div class="keyword">return</div> <div class="ident">ExitStatusOK</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
@@ -323,17 +334,24 @@ The commands are:
 		<div class="ident">command</div> <div class="operator">=</div> <div class="ident">strings</div><div class="operator">.</div><div class="ident">ToLower</div><div class="operator">(</div><div class="ident">strings</div><div class="operator">.</div><div class="ident">TrimSpace</div><div class="operator">(</div><div class="ident">os</div><div class="operator">.</div><div class="ident">Args</div><div class="operator">[</div><div class="literal">1</div><div class="operator">]</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
 
-	<div class="ident">os</div><div class="operator">.</div><div class="ident">Exit</div><div class="operator">(</div><div class="ident">handleCommand</div><div class="operator">(</div><div class="ident">config</div><div class="operator">,</div> <div class="ident">command</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">os</div><div class="operator">.</div><div class="ident">Exit</div><div class="operator">(</div><div class="ident">handleCommand</div><div class="operator">(</div><div class="ident">config</div><div class="operator">,</div> <div class="ident">removeDashes</div><div class="operator">(</div><div class="ident">command</div><div class="operator">)</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
-<div class="keyword">func</div> <div class="ident">handleCommand</div><div class="operator">(</div><div class="ident">config</div> <div class="ident">conf</div><div class="operator">.</div><div class="ident">ConfigStruct</div><div class="operator">,</div> <div class="ident">command</div> <div class="ident">string</div><div class="operator">)</div> <div class="ident">int</div> <div class="operator">{</div>
 </code></pre></td>
       </tr>
       
       <tr class="section">
-	<td class="doc"><p>TODO: allow -/-- at the beginning of all commands</p>
+	<td class="doc"><p>function removeDashes removes one or two dashes from the beginning of a
+given string.</p>
 </td>
-	<td class="code"><pre><code>	<div class="keyword">switch</div> <div class="ident">command</div> <div class="operator">{</div>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">removeDashes</div><div class="operator">(</div><div class="ident">command</div> <div class="ident">string</div><div class="operator">)</div> <div class="ident">string</div> <div class="operator">{</div>
+	<div class="ident">command</div> <div class="operator">=</div> <div class="ident">strings</div><div class="operator">.</div><div class="ident">TrimPrefix</div><div class="operator">(</div><div class="ident">command</div><div class="operator">,</div> <div class="literal">&#34;--&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">command</div> <div class="operator">=</div> <div class="ident">strings</div><div class="operator">.</div><div class="ident">TrimPrefix</div><div class="operator">(</div><div class="ident">command</div><div class="operator">,</div> <div class="literal">&#34;-&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">command</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">handleCommand</div><div class="operator">(</div><div class="ident">config</div> <div class="ident">conf</div><div class="operator">.</div><div class="ident">ConfigStruct</div><div class="operator">,</div> <div class="ident">command</div> <div class="ident">string</div><div class="operator">)</div> <div class="ident">int</div> <div class="operator">{</div>
+	<div class="keyword">switch</div> <div class="ident">command</div> <div class="operator">{</div>
 	<div class="keyword">case</div> <div class="literal">&#34;start-service&#34;</div><div class="operator">:</div>
 		<div class="ident">logVersionInfo</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 
@@ -344,10 +362,12 @@ The commands are:
 		<div class="keyword">return</div> <div class="ident">ExitStatusOK</div><div class="operator"></div>
 	<div class="keyword">case</div> <div class="literal">&#34;help&#34;</div><div class="operator">,</div> <div class="literal">&#34;print-help&#34;</div><div class="operator">:</div>
 		<div class="keyword">return</div> <div class="ident">printHelp</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
-	<div class="keyword">case</div> <div class="literal">&#34;print-config&#34;</div><div class="operator">:</div>
+	<div class="keyword">case</div> <div class="literal">&#34;config&#34;</div><div class="operator">,</div> <div class="literal">&#34;print-config&#34;</div><div class="operator">:</div>
 		<div class="keyword">return</div> <div class="ident">printConfig</div><div class="operator">(</div><div class="ident">conf</div><div class="operator">.</div><div class="ident">Config</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">case</div> <div class="literal">&#34;version&#34;</div><div class="operator">,</div> <div class="literal">&#34;print-version-info&#34;</div><div class="operator">:</div>
 		<div class="keyword">return</div> <div class="ident">printVersionInfo</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">case</div> <div class="literal">&#34;authors&#34;</div><div class="operator">,</div> <div class="literal">&#34;print-authors&#34;</div><div class="operator">:</div>
+		<div class="keyword">return</div> <div class="ident">printAuthors</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">default</div><div class="operator">:</div>
 		<div class="ident">fmt</div><div class="operator">.</div><div class="ident">Printf</div><div class="operator">(</div><div class="literal">&#34;\nCommand &#39;%v&#39; not found\n&#34;</div><div class="operator">,</div> <div class="ident">command</div><div class="operator">)</div><div class="operator"></div>
 		<div class="keyword">return</div> <div class="ident">printHelp</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
