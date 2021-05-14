@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
- Copyright 2020 Red Hat, Inc
+ Copyright 2021 Red Hat, Inc
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -132,7 +132,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 */</div>
 
-<div class="keyword">package</div> <div class="ident">storage</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>Package storage contains an implementation of interface between Go code and
+(almost any) SQL database like PostgreSQL, SQLite, or MariaDB. An implementation
+named DBStorage is constructed via New function and it is mandatory to call Close
+for any opened connection to database. The storage might be initialized by Init
+method if database schema is empty.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">package</div> <div class="ident">storage</div><div class="operator"></div>
 
 <div class="keyword">import</div> <div class="operator">(</div>
 	<div class="literal">&#34;errors&#34;</div><div class="operator"></div>
@@ -238,7 +248,15 @@ to store mock data.</p>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="keyword">return</div> <div class="literal">&#34;&#34;</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
-	<div class="ident">report</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">ioutil</div><div class="operator">.</div><div class="ident">ReadFile</div><div class="operator">(</div><div class="ident">absPath</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>disable &quot;G304 (CWE-22): Potential file inclusion via variable&quot;</p>
+
+<h1>nosec G304</h1>
+</td>
+	<td class="code"><pre><code>	<div class="ident">report</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">ioutil</div><div class="operator">.</div><div class="ident">ReadFile</div><div class="operator">(</div><div class="ident">absPath</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="keyword">return</div> <div class="literal">&#34;&#34;</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
@@ -252,10 +270,39 @@ to store mock data.</p>
 <div class="keyword">func</div> <div class="ident">initStorage</div><div class="operator">(</div><div class="ident">path</div> <div class="ident">string</div><div class="operator">)</div> <div class="ident">error</div> <div class="operator">{</div>
 	<div class="ident">clusters</div> <div class="operator">:=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">string</div><div class="operator">{</div>
 		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a267&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a268&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a269&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26a&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26b&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26c&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26d&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26e&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26f&#34;</div><div class="operator">,</div>
 		<div class="literal">&#34;74ae54aa-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">,</div>
 		<div class="literal">&#34;a7467445-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">,</div>
 		<div class="literal">&#34;ee7d2bf4-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">,</div>
 		<div class="literal">&#34;eeeeeeee-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a267&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a268&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a269&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26a&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26b&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26c&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26d&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26e&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26f&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000001-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000002-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000002-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000002-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000003-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000003-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">,</div>
+		<div class="literal">&#34;00000003-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">,</div>
 	<div class="operator">}</div><div class="operator"></div>
 	<div class="keyword">for</div> <div class="ident">_</div><div class="operator">,</div> <div class="ident">cluster</div> <div class="operator">:=</div> <div class="keyword">range</div> <div class="ident">clusters</div> <div class="operator">{</div>
 		<div class="ident">report</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">readReport</div><div class="operator">(</div><div class="ident">path</div><div class="operator">,</div> <div class="ident">cluster</div><div class="operator">)</div><div class="operator"></div>
@@ -331,6 +378,25 @@ tasks necessary for further service operation.</p>
 	<div class="keyword">return</div> <div class="ident">orgs</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
+<div class="keyword">func</div> <div class="ident">clustersForOrganization11789772</div><div class="operator">(</div><div class="operator">)</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div> <div class="operator">{</div>
+	<div class="ident">clusters</div> <div class="operator">:=</div> <div class="ident">make</div><div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">,</div> <div class="literal">0</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a267&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a268&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a269&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26a&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26b&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26c&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26d&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26e&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a26f&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;74ae54aa-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;a7467445-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;ee7d2bf4-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;eeeeeeee-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">clusters</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
 </code></pre></td>
       </tr>
       
@@ -343,11 +409,30 @@ tasks necessary for further service operation.</p>
 	<div class="keyword">case</div> <div class="literal">11940171</div><div class="operator">:</div>
 		<div class="keyword">return</div> <div class="ident">clusters</div><div class="operator">,</div> <div class="ident">errors</div><div class="operator">.</div><div class="ident">New</div><div class="operator">(</div><div class="literal">&#34;You have no permissions to get or change info about this organization&#34;</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">case</div> <div class="literal">11789772</div><div class="operator">:</div>
-		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;34c3ecc5-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">)</div><div class="operator"></div>
-		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;74ae54aa-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">)</div><div class="operator"></div>
-		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;a7467445-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">)</div><div class="operator"></div>
-		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;ee7d2bf4-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">)</div><div class="operator"></div>
-		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;eeeeeeee-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">return</div> <div class="ident">clustersForOrganization11789772</div><div class="operator">(</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+	<div class="keyword">case</div> <div class="literal">1</div><div class="operator">:</div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a267&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a268&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a269&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26a&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26b&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26c&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26d&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26e&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-624a-49a5-bab8-4fdc5e51a26f&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000001-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">case</div> <div class="literal">2</div><div class="operator">:</div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000002-624a-49a5-bab8-4fdc5e51a266&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000002-6577-4e80-85e7-697cb646ff37&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000002-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">case</div> <div class="literal">3</div><div class="operator">:</div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000003-8933-4a3a-8634-3328fe806e08&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000003-8d6a-43cc-b82c-7007664bdf69&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusters</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">,</div> <div class="literal">&#34;00000003-eeee-eeee-eeee-000000000001&#34;</div><div class="operator">)</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
 
 	<div class="keyword">return</div> <div class="ident">clusters</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
@@ -437,6 +522,8 @@ please note that these clusters have special name:
 	<td class="doc"><p>chooseReport for &quot;changing cluster&quot;</p>
 </td>
 	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">chooseReport</div><div class="operator">(</div><div class="ident">variants</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">string</div><div class="operator">)</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div> <div class="operator">{</div>
+	<div class="keyword">const</div> <div class="ident">operationName</div> <div class="operator">=</div> <div class="literal">&#34;changingCluster&#34;</div><div class="operator"></div>
+
 </code></pre></td>
       </tr>
       
@@ -445,7 +532,7 @@ please note that these clusters have special name:
 </td>
 	<td class="code"><pre><code>	<div class="ident">currentTime</div> <div class="operator">:=</div> <div class="ident">time</div><div class="operator">.</div><div class="ident">Now</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
 	<div class="ident">minute</div> <div class="operator">:=</div> <div class="ident">currentTime</div><div class="operator">.</div><div class="ident">Minute</div><div class="operator">(</div><div class="operator">)</div><div class="operator"></div>
-	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Int</div><div class="operator">(</div><div class="literal">&#34;Minute in hour&#34;</div><div class="operator">,</div> <div class="ident">minute</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;changingCluster&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Int</div><div class="operator">(</div><div class="literal">&#34;Minute in hour&#34;</div><div class="operator">,</div> <div class="ident">minute</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">operationName</div><div class="operator">)</div><div class="operator"></div>
 
 </code></pre></td>
       </tr>
@@ -463,8 +550,8 @@ please note that these clusters have special name:
 	<td class="doc"><p>and choose the report according to the index</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">cluster</div> <div class="operator">:=</div> <div class="ident">variants</div><div class="operator">[</div><div class="ident">i</div><div class="operator">]</div><div class="operator"></div>
-	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Int</div><div class="operator">(</div><div class="literal">&#34;Index&#34;</div><div class="operator">,</div> <div class="ident">i</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;changingCluster&#34;</div><div class="operator">)</div><div class="operator"></div>
-	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Str</div><div class="operator">(</div><div class="literal">&#34;Cluster&#34;</div><div class="operator">,</div> <div class="ident">cluster</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;changingCluster&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Int</div><div class="operator">(</div><div class="literal">&#34;Index&#34;</div><div class="operator">,</div> <div class="ident">i</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">operationName</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Str</div><div class="operator">(</div><div class="literal">&#34;Cluster&#34;</div><div class="operator">,</div> <div class="ident">cluster</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">operationName</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">(</div><div class="ident">cluster</div><div class="operator">)</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
@@ -483,6 +570,12 @@ selected cluster for given organization</p>
 	<div class="keyword">switch</div> <div class="ident">orgID</div> <div class="operator">{</div>
 	<div class="keyword">case</div> <div class="literal">11940171</div><div class="operator">:</div>
 		<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterReport</div><div class="operator">(</div><div class="ident">report</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">errors</div><div class="operator">.</div><div class="ident">New</div><div class="operator">(</div><div class="literal">&#34;You have no permissions to get or change info about this organization&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">case</div> <div class="literal">1</div><div class="operator">:</div>
+		<div class="keyword">fallthrough</div><div class="operator"></div>
+	<div class="keyword">case</div> <div class="literal">2</div><div class="operator">:</div>
+		<div class="keyword">fallthrough</div><div class="operator"></div>
+	<div class="keyword">case</div> <div class="literal">3</div><div class="operator">:</div>
+		<div class="keyword">fallthrough</div><div class="operator"></div>
 	<div class="keyword">case</div> <div class="literal">11789772</div><div class="operator">:</div>
 		<div class="ident">report</div> <div class="operator">=</div> <div class="ident">getReportForCluster</div><div class="operator">(</div><div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>

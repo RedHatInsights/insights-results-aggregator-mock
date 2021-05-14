@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
- Copyright 2020 Red Hat, Inc
+ Copyright 2021 Red Hat, Inc
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -136,11 +136,13 @@ limitations under the License.
 <div class="keyword">package</div> <div class="ident">server</div><div class="operator"></div>
 
 <div class="keyword">import</div> <div class="operator">(</div>
+	<div class="literal">&#34;encoding/json&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;errors&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;net/http&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;path/filepath&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;strconv&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;strings&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;time&#34;</div><div class="operator"></div>
 
 	<div class="literal">&#34;github.com/RedHatInsights/insights-operator-utils/responses&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;github.com/gorilla/mux&#34;</div><div class="operator"></div>
@@ -150,6 +152,8 @@ limitations under the License.
 <div class="operator">)</div><div class="operator"></div>
 
 <div class="keyword">const</div> <div class="ident">failureClusterIDPrefix</div> <div class="operator">=</div> <div class="literal">&#34;ffffffff-ffff-ffff-ffff-&#34;</div><div class="operator"></div>
+
+<div class="keyword">const</div> <div class="ident">unableToReadReportErrorMessage</div> <div class="operator">=</div> <div class="literal">&#34;Unable to read report for cluster&#34;</div><div class="operator"></div>
 
 </code></pre></td>
       </tr>
@@ -302,7 +306,10 @@ and check it for being valid and positive integer, otherwise returns error</p>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;Unable to get list of clusters&#34;</div><div class="operator">)</div><div class="operator"></div>
 		<div class="ident">handleServerError</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
-		<div class="ident">responses</div><div class="operator">.</div><div class="ident">SendForbidden</div><div class="operator">(</div><div class="ident">writer</div><div class="operator">,</div> <div class="ident">err</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">responses</div><div class="operator">.</div><div class="ident">SendForbidden</div><div class="operator">(</div><div class="ident">writer</div><div class="operator">,</div> <div class="ident">err</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+			<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;Unable send forbidden response&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
 		<div class="keyword">return</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
 	<div class="ident">err</div> <div class="operator">=</div> <div class="ident">responses</div><div class="operator">.</div><div class="ident">SendOK</div><div class="operator">(</div><div class="ident">writer</div><div class="operator">,</div> <div class="ident">responses</div><div class="operator">.</div><div class="ident">BuildOkResponseWithData</div><div class="operator">(</div><div class="literal">&#34;clusters&#34;</div><div class="operator">,</div> <div class="ident">clusters</div><div class="operator">)</div><div class="operator">)</div><div class="operator"></div>
@@ -338,13 +345,124 @@ and check it for being valid and positive integer, otherwise returns error</p>
 	<div class="operator">}</div><div class="operator"></div>
 	<div class="ident">report</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">server</div><div class="operator">.</div><div class="ident">Storage</div><div class="operator">.</div><div class="ident">ReadReportForCluster</div><div class="operator">(</div><div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
-		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;Unable to read report for cluster&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">unableToReadReportErrorMessage</div><div class="operator">)</div><div class="operator"></div>
 		<div class="ident">handleServerError</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
 		<div class="keyword">return</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
 
 	<div class="ident">r</div> <div class="operator">:=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">byte</div><div class="operator">(</div><div class="ident">report</div><div class="operator">)</div><div class="operator"></div>
 	<div class="ident">_</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">=</div> <div class="ident">writer</div><div class="operator">.</div><div class="ident">Write</div><div class="operator">(</div><div class="ident">r</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">responseDataError</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>ClusterList is a data structure that store list of cluster IDs (names).</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">type</div> <div class="ident">ClusterList</div> <div class="keyword">struct</div> <div class="operator">{</div>
+	<div class="ident">Clusters</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">string</div> <div class="literal">`json:&#34;clusters&#34;`</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>ClusterReports is a data structure containing list of clusters, list of
+errors and dictionary with results per cluster.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">type</div> <div class="ident">ClusterReports</div> <div class="keyword">struct</div> <div class="operator">{</div>
+	<div class="ident">ClusterList</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div>               <div class="literal">`json:&#34;clusters&#34;`</div><div class="operator"></div>
+	<div class="ident">Errors</div>      <div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div>               <div class="literal">`json:&#34;errors&#34;`</div><div class="operator"></div>
+	<div class="ident">Reports</div>     <div class="keyword">map</div><div class="operator">[</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">]</div><div class="keyword">interface</div><div class="operator">{</div><div class="operator">}</div> <div class="literal">`json:&#34;reports&#34;`</div><div class="operator"></div>
+	<div class="ident">GeneratedAt</div> <div class="ident">string</div>                            <div class="literal">`json:&#34;generated_at&#34;`</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="operator">(</div><div class="ident">server</div> <div class="operator">*</div><div class="ident">HTTPServer</div><div class="operator">)</div> <div class="ident">readReportForAllClustersInOrg</div><div class="operator">(</div><div class="ident">writer</div> <div class="ident">http</div><div class="operator">.</div><div class="ident">ResponseWriter</div><div class="operator">,</div> <div class="ident">request</div> <div class="operator">*</div><div class="ident">http</div><div class="operator">.</div><div class="ident">Request</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">organizationID</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">readOrganizationID</div><div class="operator">(</div><div class="ident">writer</div><div class="operator">,</div> <div class="ident">request</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>everything has been handled already</p>
+</td>
+	<td class="code"><pre><code>		<div class="keyword">return</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Int</div><div class="operator">(</div><div class="literal">&#34;OrgID&#34;</div><div class="operator">,</div> <div class="ident">int</div><div class="operator">(</div><div class="ident">organizationID</div><div class="operator">)</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;Organization ID to get list of results&#34;</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="keyword">var</div> <div class="ident">generatedReports</div> <div class="ident">ClusterReports</div><div class="operator"></div>
+	<div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">GeneratedAt</div> <div class="operator">=</div> <div class="ident">time</div><div class="operator">.</div><div class="ident">Now</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">UTC</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Format</div><div class="operator">(</div><div class="ident">time</div><div class="operator">.</div><div class="ident">RFC3339</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Reports</div> <div class="operator">=</div> <div class="ident">make</div><div class="operator">(</div><div class="keyword">map</div><div class="operator">[</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">]</div><div class="keyword">interface</div><div class="operator">{</div><div class="operator">}</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="ident">bytes</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">json</div><div class="operator">.</div><div class="ident">MarshalIndent</div><div class="operator">(</div><div class="ident">generatedReports</div><div class="operator">,</div> <div class="literal">&#34;&#34;</div><div class="operator">,</div> <div class="literal">&#34;\t&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">responseDataError</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">return</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="ident">_</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">=</div> <div class="ident">writer</div><div class="operator">.</div><div class="ident">Write</div><div class="operator">(</div><div class="ident">bytes</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">responseDataError</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="operator">(</div><div class="ident">server</div> <div class="operator">*</div><div class="ident">HTTPServer</div><div class="operator">)</div> <div class="ident">readReportForClusters</div><div class="operator">(</div><div class="ident">writer</div> <div class="ident">http</div><div class="operator">.</div><div class="ident">ResponseWriter</div><div class="operator">,</div> <div class="ident">request</div> <div class="operator">*</div><div class="ident">http</div><div class="operator">.</div><div class="ident">Request</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="keyword">var</div> <div class="ident">clusterList</div> <div class="ident">ClusterList</div><div class="operator"></div>
+	<div class="keyword">var</div> <div class="ident">generatedReports</div> <div class="ident">ClusterReports</div><div class="operator"></div>
+	<div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">GeneratedAt</div> <div class="operator">=</div> <div class="ident">time</div><div class="operator">.</div><div class="ident">Now</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">UTC</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Format</div><div class="operator">(</div><div class="ident">time</div><div class="operator">.</div><div class="ident">RFC3339</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Reports</div> <div class="operator">=</div> <div class="ident">make</div><div class="operator">(</div><div class="keyword">map</div><div class="operator">[</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">]</div><div class="keyword">interface</div><div class="operator">{</div><div class="operator">}</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">json</div><div class="operator">.</div><div class="ident">NewDecoder</div><div class="operator">(</div><div class="ident">request</div><div class="operator">.</div><div class="ident">Body</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Decode</div><div class="operator">(</div><div class="operator">&amp;</div><div class="ident">clusterList</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;getting list of clusters&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">http</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="ident">writer</div><div class="operator">,</div> <div class="ident">err</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">http</div><div class="operator">.</div><div class="ident">StatusBadRequest</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">return</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="keyword">for</div> <div class="ident">_</div><div class="operator">,</div> <div class="ident">clusterName</div> <div class="operator">:=</div> <div class="keyword">range</div> <div class="ident">clusterList</div><div class="operator">.</div><div class="ident">Clusters</div> <div class="operator">{</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Str</div><div class="operator">(</div><div class="literal">&#34;cluster name&#34;</div><div class="operator">,</div> <div class="ident">clusterName</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;result for cluster&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">clusterName</div> <div class="operator">:=</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator">(</div><div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">reportStr</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">server</div><div class="operator">.</div><div class="ident">Storage</div><div class="operator">.</div><div class="ident">ReadReportForCluster</div><div class="operator">(</div><div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+			<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">unableToReadReportErrorMessage</div><div class="operator">)</div><div class="operator"></div>
+			<div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Errors</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Errors</div><div class="operator">,</div> <div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>if error happen, simply go to the next cluster</p>
+</td>
+	<td class="code"><pre><code>			<div class="keyword">continue</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+		<div class="keyword">var</div> <div class="ident">report</div> <div class="keyword">interface</div><div class="operator">{</div><div class="operator">}</div><div class="operator"></div>
+		<div class="ident">err</div> <div class="operator">=</div> <div class="ident">json</div><div class="operator">.</div><div class="ident">Unmarshal</div><div class="operator">(</div><div class="operator">[</div><div class="operator">]</div><div class="ident">byte</div><div class="operator">(</div><div class="ident">reportStr</div><div class="operator">)</div><div class="operator">,</div> <div class="operator">&amp;</div><div class="ident">report</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+			<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;Unable to unmarshal report for cluster&#34;</div><div class="operator">)</div><div class="operator"></div>
+			<div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Errors</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Errors</div><div class="operator">,</div> <div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>if error happen, simply go to the next cluster</p>
+</td>
+	<td class="code"><pre><code>			<div class="keyword">continue</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+		<div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">ClusterList</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">ClusterList</div><div class="operator">,</div> <div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Reports</div><div class="operator">[</div><div class="ident">clusterName</div><div class="operator">]</div> <div class="operator">=</div> <div class="ident">report</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="ident">bytes</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">json</div><div class="operator">.</div><div class="ident">MarshalIndent</div><div class="operator">(</div><div class="ident">generatedReports</div><div class="operator">,</div> <div class="literal">&#34;&#34;</div><div class="operator">,</div> <div class="literal">&#34;\t&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">responseDataError</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">return</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="ident">_</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">=</div> <div class="ident">writer</div><div class="operator">.</div><div class="ident">Write</div><div class="operator">(</div><div class="ident">bytes</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">responseDataError</div><div class="operator">)</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
@@ -375,7 +493,7 @@ and check it for being valid and positive integer, otherwise returns error</p>
 
 	<div class="ident">report</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">server</div><div class="operator">.</div><div class="ident">Storage</div><div class="operator">.</div><div class="ident">ReadReportForOrganizationAndCluster</div><div class="operator">(</div><div class="ident">organizationID</div><div class="operator">,</div> <div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
-		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;Unable to read report for cluster&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">unableToReadReportErrorMessage</div><div class="operator">)</div><div class="operator"></div>
 		<div class="ident">handleServerError</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
 		<div class="keyword">return</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
