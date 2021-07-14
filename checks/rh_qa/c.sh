@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ADDRESS=https://ci.cloud.redhat.com/api/insights-results-aggregator
+ADDRESS=https://ci.console.redhat.com/api/insights-results-aggregator
 
 curl -k -v -u "insights-qa:redhatqa $ADDRESS/v1/" > main.json
 curl -k -v -u "insights-qa:redhatqa $ADDRESS/v1/groups" > groups.json
