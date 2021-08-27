@@ -20,6 +20,7 @@ import (
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
+// RuleHits represents mocked data to be consumed by Insights Advisor
 var RuleHits []types.RuleHit = []types.RuleHit{
 	types.RuleHit{"ccx_rules_ocp.external.rules.nodes_requirements_check.report", "NODES_MINIMUM_REQUIREMENTS_NOT_MET", "00000001-624a-49a5-bab8-4fdc5e51a266"},
 	types.RuleHit{"ccx_rules_ocp.external.rules.nodes_requirements_check.report", "NODES_MINIMUM_REQUIREMENTS_NOT_MET", "00000001-6577-4e80-85e7-697cb646ff37"},
