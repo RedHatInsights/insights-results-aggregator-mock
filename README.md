@@ -31,6 +31,8 @@ Mock service mimicking Insights Results Aggregator
     * [Cluster that returns no results (ie just empty report)](#cluster-that-returns-no-results-ie-just-empty-report)
     * [Clusters that return rules that change every 15 minutes](#clusters-that-return-rules-that-change-every-15-minutes)
     * [List of clusters that return improper results and/or failure](#list-of-clusters-that-return-improper-results-andor-failure)
+* [List of clusters hitting specified rule](#list-of-clusters-hitting-specified-rule)
+    * [An example of response:](#an-example-of-response)
 
 <!-- vim-markdown-toc -->
 
@@ -303,4 +305,49 @@ for cluster in $clusters
 do
     curl -k -v $ADDRESS/report/${cluster}
 done
+```
+
+## List of clusters hitting specified rule
+
+```
+curl 'localhost:8080/api/v1/rule/ccx_rules_ocp.external.rules.nodes_requirements_check.report|NODES_MINIMUM_REQUIREMENTS_NOT_MET/clusters_detail/'
+```
+
+### An example of response:
+
+```
+{
+        "meta": {
+                "count": 24,
+                "component": "ccx_rules_ocp.external.rules.nodes_requirements_check.report",
+                "error_key": "NODES_MINIMUM_REQUIREMENTS_NOT_MET",
+                "generated_at": "2021-08-27T12:12:18Z"
+        },
+        "data": [
+                "00000001-624a-49a5-bab8-4fdc5e51a266",
+                "00000001-6577-4e80-85e7-697cb646ff37",
+                "00000001-8933-4a3a-8634-3328fe806e08",
+                "00000001-8d6a-43cc-b82c-7007664bdf69",
+                "00000001-0000-0000-0000-000000000000",
+                "00000001-1111-1111-1111-000000000000",
+                "00000001-2222-2222-2222-000000000000",
+                "00000001-3333-3333-3333-000000000000",
+                "00000001-4444-4444-4444-000000000000",
+                "00000001-5555-5555-5555-000000000000",
+                "00000001-6666-6666-6666-000000000000",
+                "00000001-7777-7777-7777-000000000000",
+                "00000001-8888-8888-8888-000000000000",
+                "00000001-9999-9999-9999-000000000000",
+                "00000001-aaaa-aaaa-aaaa-000000000000",
+                "00000001-bbbb-bbbb-bbbb-000000000000",
+                "00000001-cccc-cccc-cccc-000000000000",
+                "00000001-dddd-dddd-dddd-000000000000",
+                "00000001-ffff-ffff-ffff-000000000000",
+                "00000001-ffff-ffff-ffff-000000000000",
+                "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+                "74ae54aa-6577-4e80-85e7-697cb646ff37",
+                "a7467445-8d6a-43cc-b82c-7007664bdf69",
+                "ee7d2bf4-8933-4a3a-8634-3328fe806e08"
+        ]
+}
 ```

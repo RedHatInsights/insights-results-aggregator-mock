@@ -19,8 +19,10 @@ package server
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -29,6 +31,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
 
+	"github.com/RedHatInsights/insights-results-aggregator-mock/data"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
@@ -44,6 +47,19 @@ func readOrganizationID(writer http.ResponseWriter, request *http.Request) (type
 		return 0, err
 	}
 	return types.OrgID(organizationID), nil
+}
+
+// readRuleSelector retrieves rule selector from request
+func readRuleSelector(writer http.ResponseWriter, request *http.Request) (types.RuleSelector, error) {
+	ruleSelector, err := getRouterParam(request, "rule_selector")
+	if err != nil {
+		return "", err
+	}
+
+	if err != nil {
+		return "", err
+	}
+	return types.RuleSelector(ruleSelector), nil
 }
 
 // readClusterName retrieves cluster name from request
@@ -301,6 +317,106 @@ func (server *HTTPServer) readReportForOrganizationAndCluster(writer http.Respon
 
 	r := []byte(report)
 	_, err = writer.Write(r)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
+}
+
+func parseRuleSelector(ruleSelector types.RuleSelector) (types.Component, types.ErrorKey, error) {
+	splitedRuleID := strings.Split(string(ruleSelector), "|")
+
+	if len(splitedRuleID) != 2 {
+		err := fmt.Errorf("invalid rule ID, it must contain only rule ID and error key separated by |")
+		log.Error().Err(err)
+		return types.Component(""), types.ErrorKey(""), err
+	}
+
+	IDValidator := regexp.MustCompile(`^[a-zA-Z_0-9.]+$`)
+
+	isRuleIDValid := IDValidator.MatchString(splitedRuleID[0])
+	isErrorKeyValid := IDValidator.MatchString(splitedRuleID[1])
+
+	if !isRuleIDValid || !isErrorKeyValid {
+		err := fmt.Errorf("invalid rule ID, each part of ID must contain only latin characters, number, underscores or dots")
+		log.Error().Err(err)
+		return types.Component(""), types.ErrorKey(""), err
+	}
+
+	return types.Component(splitedRuleID[0]), types.ErrorKey(splitedRuleID[1]), nil
+}
+
+func readClustersHittingRule(component types.Component, errorKey types.ErrorKey) []types.ClusterName {
+	var clusterList []types.ClusterName
+
+	// TODO: quick and dirty linear search should be imroved later if required
+	for _, ruleHit := range data.RuleHits {
+		if ruleHit.Component == component && ruleHit.ErrorKey == errorKey {
+			clusterList = append(clusterList, ruleHit.Cluster)
+		}
+	}
+
+	return clusterList
+}
+
+// HittingClustersMetadata used to store metadata of hitting clusters
+type HittingClustersMetadata struct {
+	Count       int             `json:"count"`
+	Component   types.Component `json:"component"`
+	ErrorKey    types.ErrorKey  `json:"error_key"`
+	GeneratedAt string          `json:"generated_at"`
+}
+
+// HittingClusters is a data structure containing list of clusters
+// hitting the given rule.
+type HittingClusters struct {
+	Metadata    HittingClustersMetadata `json:"meta"`
+	ClusterList []types.ClusterName     `json:"data"`
+}
+
+// ruleClusterDetailEndpoint methods implements endpoint that should return a list of all the clusters IDs affected by this rule
+func (server *HTTPServer) ruleClusterDetailEndpoint(writer http.ResponseWriter, request *http.Request) {
+	// read the selector
+	ruleSelector, err := readRuleSelector(writer, request)
+	if err != nil {
+		log.Error().Err(err).Msg("unable to read rule selector")
+		// everything has been handled already
+		return
+	}
+
+	// parse the selector
+	component, errorKey, err := parseRuleSelector(ruleSelector)
+	if err != nil {
+		log.Error().Err(err).Msg("unable to parse rule selector")
+		// everything has been handled already
+		return
+	}
+
+	// read all clusters hitting given rule
+	log.Info().
+		Str("component", string(component)).
+		Str("error key", string(errorKey)).
+		Msg("Reading clusters hitting given rule")
+	clusters := readClustersHittingRule(component, errorKey)
+	log.Info().Int("cluster count", len(clusters)).Msg("Clusters hitting the rule")
+
+	// prepare response
+	var hittingClusters HittingClusters
+
+	// first fill-in metadata
+	hittingClusters.Metadata.GeneratedAt = time.Now().UTC().Format(time.RFC3339)
+	hittingClusters.Metadata.Count = len(clusters)
+	hittingClusters.Metadata.Component = component
+	hittingClusters.Metadata.ErrorKey = errorKey
+
+	// second fill-in list of clusters
+	hittingClusters.ClusterList = clusters
+
+	bytes, err := json.MarshalIndent(hittingClusters, "", "\t")
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+		return
+	}
+	_, err = writer.Write(bytes)
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}
