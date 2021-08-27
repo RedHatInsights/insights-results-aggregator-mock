@@ -20,7 +20,7 @@ import (
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
-var ruleHits []types.RuleHit = []types.RuleHit{
+var RuleHits []types.RuleHit = []types.RuleHit{
 	types.RuleHit{"ccx_rules_ocp.external.rules.nodes_requirements_check.report", "NODES_MINIMUM_REQUIREMENTS_NOT_MET", "00000001-624a-49a5-bab8-4fdc5e51a266"},
 	types.RuleHit{"ccx_rules_ocp.external.rules.nodes_requirements_check.report", "NODES_MINIMUM_REQUIREMENTS_NOT_MET", "00000001-6577-4e80-85e7-697cb646ff37"},
 	types.RuleHit{"ccx_rules_ocp.external.rules.nodes_requirements_check.report", "NODES_MINIMUM_REQUIREMENTS_NOT_MET", "00000001-8933-4a3a-8634-3328fe806e08"},
@@ -72,7 +72,4 @@ var ruleHits []types.RuleHit = []types.RuleHit{
 
 	types.RuleHit{"ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report", "AUTH_OPERATOR_PROXY_ERROR", "00000001-8d6a-43cc-b82c-7007664bdf69"},
 	types.RuleHit{"ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report", "AUTH_OPERATOR_PROXY_ERROR", "00000001-3333-3333-3333-000000000000"},
-}
-
-func main() {
 }
