@@ -101,6 +101,9 @@ type DisabledRuleResponse struct {
 // RuleID represents type for rule id
 type RuleID string
 
+// Component represent name of component (of rule)
+type Component string
+
 // ErrorKey represents type for error key
 type ErrorKey string
 
@@ -147,6 +150,13 @@ type RuleWithContent struct {
 	Active      bool      `json:"active"`
 	Generic     string    `json:"generic"`
 	Tags        []string  `json:"tags"`
+}
+
+// RuleHit represents one rule hit for one defined cluster
+type RuleHit struct {
+	Component Component
+	ErrorKey  ErrorKey
+	Cluster   ClusterName
 }
 
 // KafkaOffset type for kafka offset
