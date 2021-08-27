@@ -7,6 +7,37 @@ Mock service mimicking Insights Results Aggregator
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/RedHatInsights/insights-results-aggregator-mock)
 [![License](https://img.shields.io/badge/license-Apache-blue)](https://github.com/RedHatInsights/insights-results-aggregator-mock/blob/master/LICENSE)
 
+<!-- vim-markdown-toc GFM -->
+
+* [Description](#description)
+* [Howto build the service](#howto-build-the-service)
+* [Howto start the service](#howto-start-the-service)
+* [Generate the image for Docker](#generate-the-image-for-docker)
+* [Running in Docker](#running-in-docker)
+* [Usage](#usage)
+* [Accessing results](#accessing-results)
+    * [Settings for localhost](#settings-for-localhost)
+    * [Basic endpoints](#basic-endpoints)
+    * [Clusters per organization](#clusters-per-organization)
+    * [Report for organization + cluster](#report-for-organization--cluster)
+    * [Report for one particular cluster](#report-for-one-particular-cluster)
+    * [Getting report for several clusters](#getting-report-for-several-clusters)
+* [List of cluster IDs that can be accesses by this service](#list-of-cluster-ids-that-can-be-accesses-by-this-service)
+    * [Clusters that return 'static' rule results](#clusters-that-return-static-rule-results)
+        * [Organization ID `11789772`](#organization-id-11789772)
+        * [Organization ID `1`](#organization-id-1)
+        * [Organization ID `2`](#organization-id-2)
+        * [Organization ID `3`](#organization-id-3)
+    * [Cluster that returns no results (ie just empty report)](#cluster-that-returns-no-results-ie-just-empty-report)
+    * [Clusters that return rules that change every 15 minutes](#clusters-that-return-rules-that-change-every-15-minutes)
+    * [List of clusters that return improper results and/or failure](#list-of-clusters-that-return-improper-results-andor-failure)
+
+<!-- vim-markdown-toc -->
+
+## Description
+
+Mock service mimicking Insights Results Aggregator / SmartProxy REST API
+
 ## Howto build the service
 
 ```
