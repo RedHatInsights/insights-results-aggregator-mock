@@ -101,6 +101,9 @@ type DisabledRuleResponse struct {
 // RuleID represents type for rule id
 type RuleID string
 
+// RuleSelector represents component + error key
+type RuleSelector string
+
 // Component represent name of component (of rule)
 type Component string
 
