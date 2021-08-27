@@ -31,6 +31,7 @@ Mock service mimicking Insights Results Aggregator
     * [Cluster that returns no results (ie just empty report)](#cluster-that-returns-no-results-ie-just-empty-report)
     * [Clusters that return rules that change every 15 minutes](#clusters-that-return-rules-that-change-every-15-minutes)
     * [List of clusters that return improper results and/or failure](#list-of-clusters-that-return-improper-results-andor-failure)
+* [List of clusters hitting specified rule](#list-of-clusters-hitting-specified-rule)
 
 <!-- vim-markdown-toc -->
 
@@ -303,4 +304,10 @@ for cluster in $clusters
 do
     curl -k -v $ADDRESS/report/${cluster}
 done
+```
+
+## List of clusters hitting specified rule
+
+```
+curl 'localhost:8080/api/v1/rule/ccx_rules_ocp.external.rules.nodes_requirements_check.report|NODES_MINIMUM_REQUIREMENTS_NOT_MET/clusters_detail/'
 ```
