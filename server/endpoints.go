@@ -63,7 +63,7 @@ const (
 	// EnableRuleForClusterEndpoint re-enables a rule for specified cluster
 	EnableRuleForClusterEndpoint = "clusters/{cluster}/rules/{rule_id}/enable"
 	// RuleClusterDetailEndpoint should return a list of all the clusters IDs affected by this rule
-	RuleClusterDetailEndpoint = "/rule/{rule_selector}/clusters_detail/"
+	RuleClusterDetailEndpoint = "rule/{rule_selector}/clusters_detail/"
 	// MetricsEndpoint returns prometheus metrics
 	MetricsEndpoint = "metrics"
 )
