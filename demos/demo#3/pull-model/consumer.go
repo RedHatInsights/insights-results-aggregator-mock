@@ -98,19 +98,21 @@ func main() {
 	if err != nil {
 		log.Error().Err(err).Msg("can not open file")
 	}
-	defer func() {
-		err := file.Close()
-		if err != nil {
-			log.Error().Err(err).Msg("can not close file")
-		}
-	}()
 
 	writer := csv.NewWriter(file)
-	defer writer.Flush()
 
 	err = writer.Write([]string{"#", "usec", "error"})
 	if err != nil {
 		log.Error().Err(err).Msg("can not write table header into CSV")
+	}
+
+	// flush all the buffers
+	writer.Flush()
+
+	// close the file with CSV data
+	err := file.Close()
+	if err != nil {
+		log.Error().Err(err).Msg("can not close file")
 	}
 
 	for i := 0; i < messagesToConsume; i++ {
