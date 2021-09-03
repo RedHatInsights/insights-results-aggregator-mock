@@ -138,8 +138,10 @@ limitations under the License.
 <div class="keyword">import</div> <div class="operator">(</div>
 	<div class="literal">&#34;encoding/json&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;errors&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;fmt&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;net/http&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;path/filepath&#34;</div><div class="operator"></div>
+	<div class="literal">&#34;regexp&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;strconv&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;strings&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;time&#34;</div><div class="operator"></div>
@@ -148,6 +150,7 @@ limitations under the License.
 	<div class="literal">&#34;github.com/gorilla/mux&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;github.com/rs/zerolog/log&#34;</div><div class="operator"></div>
 
+	<div class="literal">&#34;github.com/RedHatInsights/insights-results-aggregator-mock/data&#34;</div><div class="operator"></div>
 	<div class="literal">&#34;github.com/RedHatInsights/insights-results-aggregator-mock/types&#34;</div><div class="operator"></div>
 <div class="operator">)</div><div class="operator"></div>
 
@@ -168,6 +171,24 @@ if it's not possible, it writes http error to the writer and returns error</p>
 		<div class="keyword">return</div> <div class="literal">0</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
 	<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">OrgID</div><div class="operator">(</div><div class="ident">organizationID</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>readRuleSelector retrieves rule selector from request</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="ident">readRuleSelector</div><div class="operator">(</div><div class="ident">writer</div> <div class="ident">http</div><div class="operator">.</div><div class="ident">ResponseWriter</div><div class="operator">,</div> <div class="ident">request</div> <div class="operator">*</div><div class="ident">http</div><div class="operator">.</div><div class="ident">Request</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">types</div><div class="operator">.</div><div class="ident">RuleSelector</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">ruleSelector</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">getRouterParam</div><div class="operator">(</div><div class="ident">request</div><div class="operator">,</div> <div class="literal">&#34;rule_selector&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="keyword">return</div> <div class="literal">&#34;&#34;</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="keyword">return</div> <div class="literal">&#34;&#34;</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleSelector</div><div class="operator">(</div><div class="ident">ruleSelector</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
 <div class="operator">}</div><div class="operator"></div>
 
 </code></pre></td>
@@ -500,6 +521,166 @@ errors and dictionary with results per cluster.</p>
 
 	<div class="ident">r</div> <div class="operator">:=</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">byte</div><div class="operator">(</div><div class="ident">report</div><div class="operator">)</div><div class="operator"></div>
 	<div class="ident">_</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">=</div> <div class="ident">writer</div><div class="operator">.</div><div class="ident">Write</div><div class="operator">(</div><div class="ident">r</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">responseDataError</div><div class="operator">)</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">parseRuleSelector</div><div class="operator">(</div><div class="ident">ruleSelector</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">RuleSelector</div><div class="operator">)</div> <div class="operator">(</div><div class="ident">types</div><div class="operator">.</div><div class="ident">Component</div><div class="operator">,</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ErrorKey</div><div class="operator">,</div> <div class="ident">error</div><div class="operator">)</div> <div class="operator">{</div>
+	<div class="ident">splitedRuleID</div> <div class="operator">:=</div> <div class="ident">strings</div><div class="operator">.</div><div class="ident">Split</div><div class="operator">(</div><div class="ident">string</div><div class="operator">(</div><div class="ident">ruleSelector</div><div class="operator">)</div><div class="operator">,</div> <div class="literal">&#34;|&#34;</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="keyword">if</div> <div class="ident">len</div><div class="operator">(</div><div class="ident">splitedRuleID</div><div class="operator">)</div> <div class="operator">!=</div> <div class="literal">2</div> <div class="operator">{</div>
+		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">fmt</div><div class="operator">.</div><div class="ident">Errorf</div><div class="operator">(</div><div class="literal">&#34;invalid rule ID, it must contain only rule ID and error key separated by |&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">Component</div><div class="operator">(</div><div class="literal">&#34;&#34;</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ErrorKey</div><div class="operator">(</div><div class="literal">&#34;&#34;</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="ident">IDValidator</div> <div class="operator">:=</div> <div class="ident">regexp</div><div class="operator">.</div><div class="ident">MustCompile</div><div class="operator">(</div><div class="literal">`^[a-zA-Z_0-9.]&#43;$`</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="ident">isRuleIDValid</div> <div class="operator">:=</div> <div class="ident">IDValidator</div><div class="operator">.</div><div class="ident">MatchString</div><div class="operator">(</div><div class="ident">splitedRuleID</div><div class="operator">[</div><div class="literal">0</div><div class="operator">]</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">isErrorKeyValid</div> <div class="operator">:=</div> <div class="ident">IDValidator</div><div class="operator">.</div><div class="ident">MatchString</div><div class="operator">(</div><div class="ident">splitedRuleID</div><div class="operator">[</div><div class="literal">1</div><div class="operator">]</div><div class="operator">)</div><div class="operator"></div>
+
+	<div class="keyword">if</div> <div class="operator">!</div><div class="ident">isRuleIDValid</div> <div class="operator">||</div> <div class="operator">!</div><div class="ident">isErrorKeyValid</div> <div class="operator">{</div>
+		<div class="ident">err</div> <div class="operator">:=</div> <div class="ident">fmt</div><div class="operator">.</div><div class="ident">Errorf</div><div class="operator">(</div><div class="literal">&#34;invalid rule ID, each part of ID must contain only latin characters, number, underscores or dots&#34;</div><div class="operator">)</div><div class="operator"></div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">Component</div><div class="operator">(</div><div class="literal">&#34;&#34;</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ErrorKey</div><div class="operator">(</div><div class="literal">&#34;&#34;</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">err</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="keyword">return</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">Component</div><div class="operator">(</div><div class="ident">splitedRuleID</div><div class="operator">[</div><div class="literal">0</div><div class="operator">]</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ErrorKey</div><div class="operator">(</div><div class="ident">splitedRuleID</div><div class="operator">[</div><div class="literal">1</div><div class="operator">]</div><div class="operator">)</div><div class="operator">,</div> <div class="ident">nil</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+<div class="keyword">func</div> <div class="ident">readClustersHittingRule</div><div class="operator">(</div><div class="ident">component</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">Component</div><div class="operator">,</div> <div class="ident">errorKey</div> <div class="ident">types</div><div class="operator">.</div><div class="ident">ErrorKey</div><div class="operator">)</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div> <div class="operator">{</div>
+	<div class="keyword">var</div> <div class="ident">clusterList</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>TODO: quick and dirty linear search should be imroved later if required</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">for</div> <div class="ident">_</div><div class="operator">,</div> <div class="ident">ruleHit</div> <div class="operator">:=</div> <div class="keyword">range</div> <div class="ident">data</div><div class="operator">.</div><div class="ident">RuleHits</div> <div class="operator">{</div>
+		<div class="keyword">if</div> <div class="ident">ruleHit</div><div class="operator">.</div><div class="ident">Component</div> <div class="operator">==</div> <div class="ident">component</div> <div class="operator">&amp;&amp;</div> <div class="ident">ruleHit</div><div class="operator">.</div><div class="ident">ErrorKey</div> <div class="operator">==</div> <div class="ident">errorKey</div> <div class="operator">{</div>
+			<div class="ident">clusterList</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">clusterList</div><div class="operator">,</div> <div class="ident">ruleHit</div><div class="operator">.</div><div class="ident">Cluster</div><div class="operator">)</div><div class="operator"></div>
+		<div class="operator">}</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+	<div class="keyword">return</div> <div class="ident">clusterList</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>HittingClustersMetadata used to store metadata of hitting clusters</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">type</div> <div class="ident">HittingClustersMetadata</div> <div class="keyword">struct</div> <div class="operator">{</div>
+	<div class="ident">Count</div>       <div class="ident">int</div>             <div class="literal">`json:&#34;count&#34;`</div><div class="operator"></div>
+	<div class="ident">Component</div>   <div class="ident">types</div><div class="operator">.</div><div class="ident">Component</div> <div class="literal">`json:&#34;component&#34;`</div><div class="operator"></div>
+	<div class="ident">ErrorKey</div>    <div class="ident">types</div><div class="operator">.</div><div class="ident">ErrorKey</div>  <div class="literal">`json:&#34;error_key&#34;`</div><div class="operator"></div>
+	<div class="ident">GeneratedAt</div> <div class="ident">string</div>          <div class="literal">`json:&#34;generated_at&#34;`</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>HittingClusters is a data structure containing list of clusters
+hitting the given rule.</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">type</div> <div class="ident">HittingClusters</div> <div class="keyword">struct</div> <div class="operator">{</div>
+	<div class="ident">Metadata</div>    <div class="ident">HittingClustersMetadata</div> <div class="literal">`json:&#34;meta&#34;`</div><div class="operator"></div>
+	<div class="ident">ClusterList</div> <div class="operator">[</div><div class="operator">]</div><div class="ident">types</div><div class="operator">.</div><div class="ident">ClusterName</div>     <div class="literal">`json:&#34;data&#34;`</div><div class="operator"></div>
+<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>ruleClusterDetailEndpoint methods implements endpoint that should return a list of all the clusters IDs affected by this rule</p>
+</td>
+	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">server</div> <div class="operator">*</div><div class="ident">HTTPServer</div><div class="operator">)</div> <div class="ident">ruleClusterDetailEndpoint</div><div class="operator">(</div><div class="ident">writer</div> <div class="ident">http</div><div class="operator">.</div><div class="ident">ResponseWriter</div><div class="operator">,</div> <div class="ident">request</div> <div class="operator">*</div><div class="ident">http</div><div class="operator">.</div><div class="ident">Request</div><div class="operator">)</div> <div class="operator">{</div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>read the selector</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">ruleSelector</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">readRuleSelector</div><div class="operator">(</div><div class="ident">writer</div><div class="operator">,</div> <div class="ident">request</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;unable to read rule selector&#34;</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>everything has been handled already</p>
+</td>
+	<td class="code"><pre><code>		<div class="keyword">return</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>parse the selector</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">component</div><div class="operator">,</div> <div class="ident">errorKey</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">parseRuleSelector</div><div class="operator">(</div><div class="ident">ruleSelector</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;unable to parse rule selector&#34;</div><div class="operator">)</div><div class="operator"></div>
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>everything has been handled already</p>
+</td>
+	<td class="code"><pre><code>		<div class="keyword">return</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>read all clusters hitting given rule</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div>
+		<div class="ident">Str</div><div class="operator">(</div><div class="literal">&#34;component&#34;</div><div class="operator">,</div> <div class="ident">string</div><div class="operator">(</div><div class="ident">component</div><div class="operator">)</div><div class="operator">)</div><div class="operator">.</div>
+		<div class="ident">Str</div><div class="operator">(</div><div class="literal">&#34;error key&#34;</div><div class="operator">,</div> <div class="ident">string</div><div class="operator">(</div><div class="ident">errorKey</div><div class="operator">)</div><div class="operator">)</div><div class="operator">.</div>
+		<div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;Reading clusters hitting given rule&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">clusters</div> <div class="operator">:=</div> <div class="ident">readClustersHittingRule</div><div class="operator">(</div><div class="ident">component</div><div class="operator">,</div> <div class="ident">errorKey</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">log</div><div class="operator">.</div><div class="ident">Info</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Int</div><div class="operator">(</div><div class="literal">&#34;cluster count&#34;</div><div class="operator">,</div> <div class="ident">len</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">)</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;Clusters hitting the rule&#34;</div><div class="operator">)</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>prepare response</p>
+</td>
+	<td class="code"><pre><code>	<div class="keyword">var</div> <div class="ident">hittingClusters</div> <div class="ident">HittingClusters</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>first fill-in metadata</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">hittingClusters</div><div class="operator">.</div><div class="ident">Metadata</div><div class="operator">.</div><div class="ident">GeneratedAt</div> <div class="operator">=</div> <div class="ident">time</div><div class="operator">.</div><div class="ident">Now</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">UTC</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Format</div><div class="operator">(</div><div class="ident">time</div><div class="operator">.</div><div class="ident">RFC3339</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">hittingClusters</div><div class="operator">.</div><div class="ident">Metadata</div><div class="operator">.</div><div class="ident">Count</div> <div class="operator">=</div> <div class="ident">len</div><div class="operator">(</div><div class="ident">clusters</div><div class="operator">)</div><div class="operator"></div>
+	<div class="ident">hittingClusters</div><div class="operator">.</div><div class="ident">Metadata</div><div class="operator">.</div><div class="ident">Component</div> <div class="operator">=</div> <div class="ident">component</div><div class="operator"></div>
+	<div class="ident">hittingClusters</div><div class="operator">.</div><div class="ident">Metadata</div><div class="operator">.</div><div class="ident">ErrorKey</div> <div class="operator">=</div> <div class="ident">errorKey</div><div class="operator"></div>
+
+</code></pre></td>
+      </tr>
+      
+      <tr class="section">
+	<td class="doc"><p>second fill-in list of clusters</p>
+</td>
+	<td class="code"><pre><code>	<div class="ident">hittingClusters</div><div class="operator">.</div><div class="ident">ClusterList</div> <div class="operator">=</div> <div class="ident">clusters</div><div class="operator"></div>
+
+	<div class="ident">bytes</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">:=</div> <div class="ident">json</div><div class="operator">.</div><div class="ident">MarshalIndent</div><div class="operator">(</div><div class="ident">hittingClusters</div><div class="operator">,</div> <div class="literal">&#34;&#34;</div><div class="operator">,</div> <div class="literal">&#34;\t&#34;</div><div class="operator">)</div><div class="operator"></div>
+	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
+		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">responseDataError</div><div class="operator">)</div><div class="operator"></div>
+		<div class="keyword">return</div><div class="operator"></div>
+	<div class="operator">}</div><div class="operator"></div>
+	<div class="ident">_</div><div class="operator">,</div> <div class="ident">err</div> <div class="operator">=</div> <div class="ident">writer</div><div class="operator">.</div><div class="ident">Write</div><div class="operator">(</div><div class="ident">bytes</div><div class="operator">)</div><div class="operator"></div>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="ident">responseDataError</div><div class="operator">)</div><div class="operator"></div>
 	<div class="operator">}</div><div class="operator"></div>
