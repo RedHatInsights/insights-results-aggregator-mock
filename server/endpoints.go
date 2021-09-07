@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2021 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -64,6 +64,36 @@ const (
 	EnableRuleForClusterEndpoint = "clusters/{cluster}/rules/{rule_id}/enable"
 	// RuleClusterDetailEndpoint should return a list of all the clusters IDs affected by this rule
 	RuleClusterDetailEndpoint = "rule/{rule_selector}/clusters_detail/"
+
+	// Endpoints to acknowledge rule and to manipulate with
+	// acknowledgements.
+
+	// AckListEndpoint list acks from this account where the rule is
+	// active. Will return an empty list if this account has no acks.
+	AckListEndpoint = "ack"
+
+	// AckAcknowledgePostEndpoint acknowledges (and therefore hides) a rule
+	// from view in an account. If there's already an acknowledgement of
+	// this rule by this account, then return that. Otherwise, a new ack is
+	// created.
+	AckAcknowledgePostEndpoint = "ack"
+
+	// AckGetEndpoint acknowledges (and therefore hides) a rule from view
+	// in an account. This view handles listing, retrieving, creating and
+	// deleting acks. Acks are created and deleted by Insights rule ID, not
+	// by their own ack ID.
+	AckGetEndpoint = "ack/{rule_selector}"
+
+	// AckUpdateEndpoint updates an acknowledgement for a rule, by rule ID.
+	// A new justification can be supplied. The username is taken from the
+	// authenticated request. The updated ack is returned.
+	AckUpdateEndpoint = "ack/{rule_selector}"
+
+	// AckDeleteEndpoint deletes an acknowledgement for a rule, by its rule
+	// ID. If the ack existed, it is deleted and a 204 is returned.
+	// Otherwise, a 404 is returned.
+	AckDeleteEndpoint = "ack/{rule_selector}"
+
 	// MetricsEndpoint returns prometheus metrics
 	MetricsEndpoint = "metrics"
 )
