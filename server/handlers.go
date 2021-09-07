@@ -56,6 +56,8 @@ func readRuleSelector(writer http.ResponseWriter, request *http.Request) (types.
 		return "", err
 	}
 
+	// check if the rule selector seems to be correct
+	_, _, err = parseRuleSelector(types.RuleSelector(ruleSelector))
 	if err != nil {
 		return "", err
 	}
@@ -377,6 +379,8 @@ type HittingClusters struct {
 func (server *HTTPServer) ruleClusterDetailEndpoint(writer http.ResponseWriter, request *http.Request) {
 	// read the selector
 	ruleSelector, err := readRuleSelector(writer, request)
+
+	// check for missing/improper selector
 	if err != nil {
 		log.Error().Err(err).Msg("unable to read rule selector")
 		// everything has been handled already
