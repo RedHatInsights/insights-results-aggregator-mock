@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2021 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -107,6 +107,15 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	router.HandleFunc(apiPrefix+ClustersEndpoint, server.readReportForClusters).Methods(http.MethodGet, http.MethodPost, http.MethodOptions)
 	router.HandleFunc(apiPrefix+ClustersInOrgEndpoint, server.readReportForAllClustersInOrg).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+RuleClusterDetailEndpoint, server.ruleClusterDetailEndpoint).Methods(http.MethodGet)
+
+	// Acknowledgement-related endpoints. Please look into acks_handlers.go
+	// and acks_utils.go for more information about these endpoints
+	// prepared to be compatible with RHEL Insights Advisor.
+	router.HandleFunc(apiPrefix+AckListEndpoint, server.readAckList).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+AckAcknowledgePostEndpoint, server.acknowledgePost).Methods(http.MethodPost)
+	router.HandleFunc(apiPrefix+AckGetEndpoint, server.getAcknowledge).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+AckUpdateEndpoint, server.updateAcknowledge).Methods(http.MethodPut)
+	router.HandleFunc(apiPrefix+AckDeleteEndpoint, server.deleteAcknowledge).Methods(http.MethodDelete)
 
 	// OpenAPI specs
 	router.HandleFunc(openAPIURL, server.serveAPISpecFile).Methods(http.MethodGet)

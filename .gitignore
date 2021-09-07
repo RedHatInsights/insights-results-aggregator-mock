@@ -8,3 +8,4 @@ rest-api-tests
 rules-content
 issue.py
 *.csv
+mock

@@ -7,6 +7,7 @@ Mock service mimicking Insights Results Aggregator
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/RedHatInsights/insights-results-aggregator-mock)
 [![License](https://img.shields.io/badge/license-Apache-blue)](https://github.com/RedHatInsights/insights-results-aggregator-mock/blob/master/LICENSE)
 
+
 <!-- vim-markdown-toc GFM -->
 
 * [Description](#description)
@@ -33,8 +34,23 @@ Mock service mimicking Insights Results Aggregator
     * [List of clusters that return improper results and/or failure](#list-of-clusters-that-return-improper-results-andor-failure)
 * [List of clusters hitting specified rule](#list-of-clusters-hitting-specified-rule)
     * [An example of response:](#an-example-of-response)
+* [Endpoint to ack rule](#endpoint-to-ack-rule)
+    * [List of acked rules](#list-of-acked-rules)
+    * [Ack rule with specified justification](#ack-rule-with-specified-justification)
+        * [Ack new rule](#ack-new-rule)
+        * [Ack existing rule](#ack-existing-rule)
+    * [Ack rule](#ack-rule)
+        * [Ack new rule](#ack-new-rule-1)
+        * [Ack existing rule](#ack-existing-rule-1)
+    * [Update rule](#update-rule)
+        * [Update existing rule](#update-existing-rule)
+        * [Update non existing rule](#update-non-existing-rule)
+    * [Delete rule](#delete-rule)
+        * [Delete existing rule](#delete-existing-rule)
+        * [Delete nonexisting rule](#delete-nonexisting-rule)
 
 <!-- vim-markdown-toc -->
+
 
 ## Description
 
@@ -350,4 +366,271 @@ curl 'localhost:8080/api/v1/rule/ccx_rules_ocp.external.rules.nodes_requirements
                 "ee7d2bf4-8933-4a3a-8634-3328fe806e08"
         ]
 }
+```
+
+## Endpoint to ack rule
+
+
+
+### List of acked rules
+
+List acks from this account where the rule is active. Will return an empty list if this account has no acks.
+
+Request to the service:
+
+```
+curl localhost:8080/api/v1/ack
+```
+
+Response from the service:
+
+```
+{
+        "meta": {
+                "count": 5
+        },
+        "data": [
+                {
+                        "rule": "ccx_rules_ocp.external.rules.nodes_kubelet_version_check.report|NODE_KUBELET_VERSION",
+                        "justification": "Justification3",
+                        "created_by": "tester3",
+                        "created_at": "2021-09-04T17:11:35.130Z",
+                        "updated_at": "2021-09-04T17:11:35.130Z"
+                },
+                {
+                        "rule": "ccx_rules_ocp.external.rules.samples_op_failed_image_import_check.report|SAMPLES_FAILED_IMAGE_IMPORT_ERR",
+                        "justification": "Justification4",
+                        "created_by": "tester4",
+                        "created_at": "2021-09-04T17:11:35.130Z",
+                        "updated_at": "2021-09-04T17:11:35.130Z"
+                },
+                {
+                        "rule": "ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR",
+                        "justification": "Justification5",
+                        "created_by": "tester5",
+                        "created_at": "2021-09-04T17:11:35.130Z",
+                        "updated_at": "2021-09-04T17:11:35.130Z"
+                },
+                {
+                        "rule": "ccx_rules_ocp.external.rules.nodes_requirements_check.report|NODES_MINIMUM_REQUIREMENTS_NOT_MET",
+                        "justification": "Justification1",
+                        "created_by": "tester1",
+                        "created_at": "2021-09-04T17:11:35.130Z",
+                        "updated_at": "2021-09-04T17:11:35.130Z"
+                },
+                {
+                        "rule": "ccx_rules_ocp.external.bug_rules.bug_1766907.report|BUGZILLA_BUG_1766907",
+                        "justification": "Justification2",
+                        "created_by": "tester2",
+                        "created_at": "2021-09-04T17:11:35.130Z",
+                        "updated_at": "2021-09-04T17:11:35.130Z"
+                }
+        ]
+}
+```
+
+### Ack rule with specified justification
+
+Acknowledges (and therefore hides) a rule from view in an account. If there's
+already an acknowledgement of this rule by this account, then return that.
+Otherwise, a new ack is created.
+
+#### Ack new rule
+
+Request to the service:
+
+```
+curl -v -X POST -H "Content-Type: application/json" --data '{"rule_id":"foo|bar", "justification":"xyzzy"}' "localhost:8080/api/v1/ack"
+```
+
+Response from the service:
+
+```
+< HTTP/1.1 201 Created
+< Content-Type: application/json; charset=utf-8
+< Date: Sun, 05 Sep 2021 14:29:33 GMT
+< Content-Length: 168
+< 
+{
+        "rule": "foo|bar",
+        "justification": "xyzzy",
+        "created_by": "onlineTester",
+        "created_at": "2021-09-05T16:29:33+02:00",
+        "updated_at": "2021-09-05T16:29:33+02:00"
+}
+```
+
+#### Ack existing rule
+
+Request to the service:
+
+```
+curl -v -X POST -H "Content-Type: application/json" --data '{"rule_id":"existing|rule", "justification":"xyzzy"}' "localhost:8080/api/v1/ack"
+```
+
+Response from the service:
+
+```
+< HTTP/1.1 200 OK
+< Content-Type: application/json; charset=utf-8
+< Date: Sun, 05 Sep 2021 14:35:51 GMT
+< Content-Length: 168
+< 
+{
+        "rule": "foo|bar",
+        "justification": "xyzzy",
+        "created_by": "onlineTester",
+        "created_at": "2021-09-05T16:35:25+02:00",
+        "updated_at": "2021-09-05T16:35:25+02:00"
+}
+
+```
+
+
+
+### Ack rule
+
+Acks acknowledge (and therefore hide) a rule from view in an account. This view
+handles listing, retrieving, creating and deleting acks. Acks are created and
+deleted by Insights rule ID, not by their own ack ID.
+
+#### Ack new rule
+
+Request to the service:
+
+```
+curl -v "localhost:8080/api/v1/ack/new|rule"
+```
+
+Response from the service:
+
+```
+< HTTP/1.1 200 OK
+< Content-Type: application/json; charset=utf-8
+< Date: Sat, 04 Sep 2021 18:46:20 GMT
+< Content-Length: 165
+< 
+{
+        "rule": "new|rule",
+        "justification": "?",
+        "created_by": "onlineTester",
+        "created_at": "2021-09-04T20:46:20+02:00",
+        "updated_at": "2021-09-04T20:46:20+02:00"
+}
+```
+
+#### Ack existing rule
+
+Request to the service:
+
+```
+curl -v "localhost:8080/api/v1/ack/ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR"
+```
+
+Response from the service:
+
+```
+< HTTP/1.1 200 OK
+< Content-Type: application/json; charset=utf-8
+< Date: Sat, 04 Sep 2021 18:32:58 GMT
+< Content-Length: 260
+< 
+{
+        "rule": "ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR",
+        "justification": "Justification5",
+        "created_by": "onlineTester",
+        "created_at": "2021-09-04T17:11:35.130Z",
+        "updated_at": "2021-09-04T20:32:58+02:00"
+
+```
+
+Please note that just `updated_at` attribute is changed in this situation.
+
+### Update rule
+
+#### Update existing rule
+
+Request to the service:
+
+```
+curl -v-X PUT -H "Content-Type: application/json" --data '{"justification":"xyzzy"}' "localhost:8080/api/v1/ack/existing|rule"
+```
+
+Response from the service:
+
+```
+< HTTP/1.1 200 OK
+< Date: Sun, 05 Sep 2021 05:47:46 GMT
+< Content-Length: 169
+< Content-Type: text/plain; charset=utf-8
+< 
+{
+        "rule": "existing|rule",
+        "justification": "xyzzy",
+        "created_by": "onlineTester",
+        "created_at": "2021-09-05T07:45:00+02:00",
+        "updated_at": "2021-09-05T07:47:46+02:00"
+}
+```
+
+#### Update non existing rule
+
+Update an acknowledgement for a rule, by rule ID. A new justification can be
+supplied. The username is taken from the authenticated request. The updated ack
+is returned.
+
+Request to the service:
+
+```
+curl -v -X PUT -H "Content-Type: application/json" --data '{"justification":"xyzzy"}' "localhost:8080/api/v1/ack/new|rule"
+```
+
+Response from the service:
+
+```
+< HTTP/1.1 404 Not Found
+< Content-Type: text/plain; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Date: Sun, 05 Sep 2021 06:13:27 GMT
+< Content-Length: 51
+< 
+rule not found -> justification can not be changed
+```
+
+### Delete rule
+
+Delete an acknowledgement for a rule, by its rule ID. If the ack existed, it is
+deleted and a 204 is returned. Otherwise, a 404 is returned.
+
+#### Delete existing rule
+
+Request to the service:
+
+```
+curl-v -X DELETE "localhost:8080/api/v1/ack/ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR"
+```
+
+Response from the service:
+
+```
+< HTTP/1.1 204 No Content
+< Date: Sat, 04 Sep 2021 17:44:32 GMT
+< 
+```
+
+#### Delete nonexisting rule
+
+Request to the service:
+
+```
+curl-v -X DELETE "localhost:8080/api/v1/ack/foobar|foobar"
+```
+
+Response from the service:
+
+```
+< HTTP/1.1 404 Not Found
+< Date: Sat, 04 Sep 2021 17:44:35 GMT
+< Content-Length: 0
+< 
 ```

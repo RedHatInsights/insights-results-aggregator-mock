@@ -168,6 +168,42 @@ type KafkaOffset int64
 // DBDriver type for db driver enum
 type DBDriver int
 
+// Acknowledge represents user acknowledgement of given rule
+type Acknowledge struct {
+	Acknowledged  bool   `json:"-"` // let's skip this one in responses
+	Rule          string `json:"rule"`
+	Justification string `json:"justification"`
+	CreatedBy     string `json:"created_by"`
+	CreatedAt     string `json:"created_at"`
+	UpdatedAt     string `json:"updated_at"`
+}
+
+// AcknowledgementsMetadata contains metadata about list of acknowledgements
+type AcknowledgementsMetadata struct {
+	Count int `json:"count"`
+}
+
+// AcknowledgementsResponse is structure returned to client in JSON
+// serialization format
+type AcknowledgementsResponse struct {
+	Metadata AcknowledgementsMetadata `json:"meta"`
+	Data     []Acknowledge            `json:"data"`
+}
+
+// AcknowledgementJustification data structure represents body of request with
+// specified justification of given acknowledgement
+type AcknowledgementJustification struct {
+	Value string `json:"justification"`
+}
+
+// AcknowledgementRuleSelectorJustification data structure represents body of
+// request with specified rule selector and justification of given
+// acknowledgement
+type AcknowledgementRuleSelectorJustification struct {
+	RuleSelector RuleSelector `json:"rule_id"`
+	Value        string       `json:"justification"`
+}
+
 const (
 	// DBDriverSQLite3 shows that db driver is sqlite
 	DBDriverSQLite3 DBDriver = iota
