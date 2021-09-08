@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 )
 
+// ParseContent function parses JSON file with rules contents.
 func ParseContent(filePath string) ([]RuleContent, error) {
 	var ruleContent []RuleContent
 
