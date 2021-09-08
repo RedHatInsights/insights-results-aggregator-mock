@@ -40,6 +40,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 
+	"github.com/RedHatInsights/insights-results-aggregator-mock/content"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/groups"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/server"
 )
@@ -56,9 +57,10 @@ type PathsConfiguration struct {
 
 // ConfigStruct is a structure holding the whole service configuration
 type ConfigStruct struct {
-	Server server.Configuration `mapstructure:"server" toml:"server"`
-	Groups groups.Configuration `mapstructure:"groups" toml:"groups"`
-	Paths  PathsConfiguration   `mapstructure:"paths" toml:"paths"`
+	Server  server.Configuration  `mapstructure:"server" toml:"server"`
+	Content content.Configuration `mapstructure:"content" toml:"content"`
+	Groups  groups.Configuration  `mapstructure:"groups" toml:"groups"`
+	Paths   PathsConfiguration    `mapstructure:"paths" toml:"paths"`
 }
 
 // Config has exactly the same structure as *.toml file
@@ -135,6 +137,16 @@ func GetGroupsConfiguration() groups.Configuration {
 	}
 
 	return Config.Groups
+}
+
+// GetContentConfiguration returns groups configuration
+func GetContentConfiguration() content.Configuration {
+	err := checkIfFileExists(Config.Content.Path)
+	if err != nil {
+		log.Fatal().Err(err).Msg("The content file is not defined")
+	}
+
+	return Config.Content
 }
 
 // checkIfFileExists returns nil if path doesn't exist or isn't a file,

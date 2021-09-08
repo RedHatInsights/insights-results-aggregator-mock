@@ -19,6 +19,7 @@ Mock service mimicking Insights Results Aggregator
 * [Accessing results](#accessing-results)
     * [Settings for localhost](#settings-for-localhost)
     * [Basic endpoints](#basic-endpoints)
+    * [Rule content](#rule-content)
     * [Groups](#groups)
     * [Clusters per organization](#clusters-per-organization)
     * [Report for organization + cluster](#report-for-organization--cluster)
@@ -113,8 +114,15 @@ ADDRESS=localhost:8080/api/v1
 ```
 curl -k -v $ADDRESS/
 curl -k -v $ADDRESS/groups
+curl -k -v $ADDRESS/content
 curl -k -v $ADDRESS/organizations
 curl -k -v $ADDRESS/clusters
+```
+
+### Rule content
+
+```
+curl -k -v $ADDRESS/content
 ```
 
 ### Groups

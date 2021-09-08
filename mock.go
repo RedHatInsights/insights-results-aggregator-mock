@@ -26,6 +26,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/RedHatInsights/insights-results-aggregator-mock/conf"
+	"github.com/RedHatInsights/insights-results-aggregator-mock/content"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/groups"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/server"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/storage"
@@ -64,6 +65,7 @@ var (
 func startService(config conf.ConfigStruct) int {
 	serverCfg := conf.GetServerConfiguration()
 	groupsCfg := conf.GetGroupsConfiguration()
+	contentCfg := conf.GetContentConfiguration()
 
 	groups, err := groups.ParseGroupConfigFile(groupsCfg.ConfigPath)
 	if err != nil {
@@ -71,13 +73,20 @@ func startService(config conf.ConfigStruct) int {
 		return ExitStatusServerError
 	}
 
+	content, err := content.ParseContent(contentCfg.Path)
+	if err != nil {
+		log.Error().Err(err).Msg("Content init error")
+		return ExitStatusServerError
+	}
+	log.Info().Int("count", len(content)).Msg("Content read")
+
 	storage, err := storage.New(config.Paths.MockDataPath)
 	if err != nil {
 		log.Error().Err(err).Msg("Storage init error")
 		return ExitStatusServerError
 	}
 
-	serverInstance = server.New(serverCfg, storage, groups)
+	serverInstance = server.New(serverCfg, storage, groups, content)
 
 	err = serverInstance.Start()
 	if err != nil {

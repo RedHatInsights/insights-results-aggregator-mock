@@ -27,6 +27,10 @@ const (
 
 	// GroupsEndpoint defines suffix of the groups request endpoint
 	GroupsEndpoint = "groups"
+
+	// ContentEndpoint defines suffix of the content request endpoint
+	ContentEndpoint = "content"
+
 	// DeleteOrganizationsEndpoint deletes all {organizations}(comma separated array). DEBUG only
 	DeleteOrganizationsEndpoint = "organizations/{organizations}"
 	// DeleteClustersEndpoint deletes all {clusters}(comma separated array). DEBUG only

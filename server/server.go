@@ -33,6 +33,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
 
+	"github.com/RedHatInsights/insights-results-aggregator-mock/content"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/groups"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/storage"
 )
@@ -44,14 +45,19 @@ type HTTPServer struct {
 	Groups     map[string]groups.Group
 	Serv       *http.Server
 	groupsList []groups.Group
+	Content    []content.RuleContent
 }
 
 // New constructs new implementation of Server interface
-func New(config Configuration, storage storage.Storage, groups map[string]groups.Group) *HTTPServer {
+func New(config Configuration,
+	storage storage.Storage,
+	groups map[string]groups.Group,
+	content []content.RuleContent) *HTTPServer {
 	return &HTTPServer{
 		Config:  config,
 		Storage: storage,
 		Groups:  groups,
+		Content: content,
 	}
 }
 
@@ -100,6 +106,7 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	// common REST API endpoints
 	router.HandleFunc(apiPrefix+MainEndpoint, server.mainEndpoint).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+GroupsEndpoint, server.listOfGroups).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc(apiPrefix+ContentEndpoint, server.serveContent).Methods(http.MethodGet, http.MethodOptions)
 
 	router.HandleFunc(apiPrefix+OrganizationsEndpoint, server.listOfOrganizations).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+ClustersForOrganizationEndpoint, server.listOfClustersForOrganization).Methods(http.MethodGet)
