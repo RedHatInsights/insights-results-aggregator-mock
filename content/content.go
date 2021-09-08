@@ -25,6 +25,8 @@ import (
 func ParseContent(filePath string) ([]RuleContent, error) {
 	var ruleContent []RuleContent
 
+	// disable "G304 (CWE-22): Potential file inclusion via variable"
+	// #nosec G304
 	jsonFile, err := os.Open(filePath)
 	if err != nil {
 		return ruleContent, err
