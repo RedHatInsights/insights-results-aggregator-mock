@@ -39,10 +39,11 @@ import (
 
 // HTTPServer in an implementation of Server interface
 type HTTPServer struct {
-	Config  Configuration
-	Storage storage.Storage
-	Groups  map[string]groups.Group
-	Serv    *http.Server
+	Config     Configuration
+	Storage    storage.Storage
+	Groups     map[string]groups.Group
+	Serv       *http.Server
+	groupsList []groups.Group
 }
 
 // New constructs new implementation of Server interface

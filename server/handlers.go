@@ -32,6 +32,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/RedHatInsights/insights-results-aggregator-mock/data"
+	"github.com/RedHatInsights/insights-results-aggregator-mock/groups"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
@@ -131,14 +132,25 @@ func (server *HTTPServer) serveAPISpecFile(writer http.ResponseWriter, request *
 
 // listOfGroups returns the list of defined groups
 func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, request *http.Request) {
-	absPath, err := filepath.Abs(server.Config.APISpecFile)
+	log.Info().Msg("List of groups handler")
+
+	// let's mimick Content Service behaviour preciselly
+	if server.groupsList == nil {
+		log.Info().Msg("Initializing group list for the first time")
+		server.groupsList = make([]groups.Group, 0, len(server.Groups))
+
+		for _, group := range server.Groups {
+			server.groupsList = append(server.groupsList, group)
+		}
+	}
+
+	log.Info().Int("items", len(server.groupsList)).Msg("Group list")
+	err := responses.SendOK(writer, responses.BuildOkResponseWithData("groups", server.groupsList))
 	if err != nil {
 		log.Error().Err(err)
 		handleServerError(err)
 		return
 	}
-
-	http.ServeFile(writer, request, absPath)
 }
 
 func (server *HTTPServer) listOfOrganizations(writer http.ResponseWriter, _ *http.Request) {
