@@ -19,6 +19,7 @@ Mock service mimicking Insights Results Aggregator
 * [Accessing results](#accessing-results)
     * [Settings for localhost](#settings-for-localhost)
     * [Basic endpoints](#basic-endpoints)
+    * [Groups](#groups)
     * [Clusters per organization](#clusters-per-organization)
     * [Report for organization + cluster](#report-for-organization--cluster)
     * [Report for one particular cluster](#report-for-one-particular-cluster)
@@ -114,6 +115,50 @@ curl -k -v $ADDRESS/
 curl -k -v $ADDRESS/groups
 curl -k -v $ADDRESS/organizations
 curl -k -v $ADDRESS/clusters
+```
+
+### Groups
+
+```
+curl -k -v $ADDRESS/groups
+```
+
+An example of response (further formatted by `jq`):
+
+```
+{
+  "groups": [
+    {
+      "title": "Security",
+      "description": "Issues related to certificates, user management, security groups, specific port usage, storage permissions, usage of kubeadmin account, exposed keys etc.",
+      "tags": [
+        "security"
+      ]
+    },
+    {
+      "title": "Fault Tolerance",
+      "description": "Load balancer issues, machine api and autoscaler issues, failover issues, nodes down, cluster api/cluster provider issues.",
+      "tags": [
+        "fault_tolerance"
+      ]
+    },
+    {
+      "title": "Performance",
+      "description": "High utilization, proposed tuned profiles, storage issues",
+      "tags": [
+        "performance"
+      ]
+    },
+    {
+      "title": "Service Availability",
+      "description": "Operator degraded, missing functionality due to misconfiguration or resource constraints.",
+      "tags": [
+        "service_availability"
+      ]
+    }
+  ],
+  "status": "ok"
+}
 ```
 
 ### Clusters per organization
