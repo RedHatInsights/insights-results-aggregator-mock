@@ -130,6 +130,16 @@ func (server *HTTPServer) serveAPISpecFile(writer http.ResponseWriter, request *
 	http.ServeFile(writer, request, absPath)
 }
 
+// serveContent method implements the /content endpoint
+func (server *HTTPServer) serveContent(writer http.ResponseWriter, request *http.Request) {
+	err := responses.SendOK(writer, responses.BuildOkResponseWithData("content", server.Content))
+	if err != nil {
+		handleServerError(err)
+		return
+	}
+
+}
+
 // listOfGroups returns the list of defined groups
 func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, request *http.Request) {
 	log.Info().Msg("List of groups handler")
