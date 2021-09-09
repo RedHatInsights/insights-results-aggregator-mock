@@ -34,7 +34,7 @@ function test_rest_api() {
         return 1
     fi
     sleep 1
-    curl http://localhost:8080/api/v1/ || {
+    curl http://localhost:8080/api/insights-results-aggregator/v1/ || {
         echo -e "${COLORS_RED}server is not running(for some reason)${COLORS_RESET}"
         exit 1
     }
