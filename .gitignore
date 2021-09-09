@@ -9,3 +9,4 @@ rules-content
 issue.py
 *.csv
 mock
+real_content.json
