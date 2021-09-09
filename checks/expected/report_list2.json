@@ -7,7 +7,7 @@
 	"errors": null,
 	"reports": {
 		"74ae54aa-6577-4e80-85e7-697cb646ff37": {
-			"reports": {
+			"report": {
 				"data": [
 					{
 						"created_at": "2020-01-17T11:10:00Z",
@@ -313,7 +313,7 @@
 			"status": "ok"
 		},
 		"a7467445-8d6a-43cc-b82c-7007664bdf69": {
-			"reports": {
+			"report": {
 				"data": [
 					{
 						"created_at": "2020-01-17T11:10:00Z",
@@ -622,7 +622,7 @@
 			"status": "ok"
 		},
 		"ee7d2bf4-8933-4a3a-8634-3328fe806e08": {
-			"reports": {
+			"report": {
 				"data": [
 					{
 						"created_at": "2020-04-08T00:42:00Z",
