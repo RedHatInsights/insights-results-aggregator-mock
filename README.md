@@ -121,8 +121,36 @@ curl -k -v $ADDRESS/clusters
 
 ### Rule content
 
+Returns rule content and also group info:
+
 ```
 curl -k -v $ADDRESS/content
+```
+
+An example of response (shortened):
+
+```
+{
+  "content": [
+    {
+      "plugin": {
+        "name": "",
+        "node_id": "",
+        "product_code": "",
+        "python_module": "foo.bar.baz"
+      },
+  ],
+  "groups": [
+    {
+      "title": "Performance",
+      "description": "High utilization, proposed tuned profiles, storage issues",
+      "tags": [
+        "performance"
+      ]
+    },
+  ],
+  "status": "ok"
+}
 ```
 
 ### Groups
