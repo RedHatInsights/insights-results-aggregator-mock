@@ -130,6 +130,25 @@ func (server *HTTPServer) serveAPISpecFile(writer http.ResponseWriter, request *
 	http.ServeFile(writer, request, absPath)
 }
 
+// serveContentWithGroups method implements the /content endpoint that also
+// returns group info
+func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, request *http.Request) {
+	log.Info().Msg("Content with groups handler")
+
+	server.initGroupList()
+
+	// prepare data structure
+	responseData := map[string]interface{}{"status": "ok"}
+	responseData["content"] = server.Content
+	responseData["groups"] = server.groupsList
+
+	err := responses.SendOK(writer, responseData)
+	if err != nil {
+		handleServerError(err)
+		return
+	}
+}
+
 // serveContent method implements the /content endpoint
 func (server *HTTPServer) serveContent(writer http.ResponseWriter, request *http.Request) {
 	err := responses.SendOK(writer, responses.BuildOkResponseWithData("content", server.Content))
@@ -140,10 +159,7 @@ func (server *HTTPServer) serveContent(writer http.ResponseWriter, request *http
 
 }
 
-// listOfGroups returns the list of defined groups
-func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, request *http.Request) {
-	log.Info().Msg("List of groups handler")
-
+func (server *HTTPServer) initGroupList() {
 	// let's mimick Content Service behaviour preciselly
 	if server.groupsList == nil {
 		log.Info().Msg("Initializing group list for the first time")
@@ -155,6 +171,14 @@ func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, request *http
 	}
 
 	log.Info().Int("items", len(server.groupsList)).Msg("Group list")
+}
+
+// listOfGroups returns the list of defined groups
+func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, request *http.Request) {
+	log.Info().Msg("List of groups handler")
+
+	server.initGroupList()
+
 	err := responses.SendOK(writer, responses.BuildOkResponseWithData("groups", server.groupsList))
 	if err != nil {
 		log.Error().Err(err)
