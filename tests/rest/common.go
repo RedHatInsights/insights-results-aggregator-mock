@@ -31,7 +31,7 @@ type ClustersResponse struct {
 
 // common constants used by REST API tests
 const (
-	apiURL              = "http://localhost:8080/api/v1/"
+	apiURL              = "http://localhost:8080/api/insights-results-aggregator/v1/"
 	contentTypeHeader   = "Content-Type"
 	contentLengthHeader = "Content-Length"
 
