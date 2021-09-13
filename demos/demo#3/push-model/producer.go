@@ -213,7 +213,7 @@ func main() {
 	writer.Flush()
 
 	// close the file with CSV data
-	err := file.Close()
+	err = file.Close()
 	if err != nil {
 		log.Error().Err(err).Msg("can not close file")
 	}
