@@ -29,13 +29,13 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// ClusterReport represents cluster report
-type ClusterReport interface{}
+// ClusterReportType represents cluster report
+type ClusterReportType interface{}
 
 // ClusterResponse represents response containing cluster
 type ClusterResponse struct {
-	Report ClusterReport `json:"report"`
-	Status string        `json:"status"`
+	Report ClusterReportType `json:"report"`
+	Status string            `json:"status"`
 }
 
 const (
@@ -110,7 +110,7 @@ func main() {
 	writer.Flush()
 
 	// close the file with CSV data
-	err := file.Close()
+	err = file.Close()
 	if err != nil {
 		log.Error().Err(err).Msg("can not close file")
 	}
