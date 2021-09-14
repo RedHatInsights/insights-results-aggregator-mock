@@ -34,7 +34,7 @@ import (
 
 const (
 	clusterNameMessage = "clsn"
-	apiURL             = "localhost:8080"
+	apiURLBase         = "localhost:8080"
 	resultEndpoint     = "/result"
 	messagesToConsume  = 100000
 )
@@ -188,7 +188,7 @@ func main() {
 		log.Error().Err(err).Msg("initStorage error")
 	}
 
-	connection, err := prepareConnection(apiURL, resultEndpoint)
+	connection, err := prepareConnection(apiURLBase, resultEndpoint)
 	if err != nil {
 		log.Error().Err(err).Msg("dial")
 		return
