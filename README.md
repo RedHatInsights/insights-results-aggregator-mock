@@ -50,6 +50,7 @@ Mock service mimicking Insights Results Aggregator
     * [Delete rule](#delete-rule)
         * [Delete existing rule](#delete-existing-rule)
         * [Delete nonexisting rule](#delete-nonexisting-rule)
+* [Package manifest](#package-manifest)
 
 <!-- vim-markdown-toc -->
 
@@ -715,3 +716,7 @@ Response from the service:
 < Content-Length: 0
 < 
 ```
+
+## Package manifest
+
+Package manifest is available at [docs/manifest.txt](docs/manifest.txt).
