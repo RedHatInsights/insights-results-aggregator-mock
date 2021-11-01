@@ -125,12 +125,12 @@ func (server *HTTPServer) acknowledgePost(writer http.ResponseWriter, request *h
 
 	if err != nil {
 		log.Error().Err(err).Msg("wrong payload provided by client")
-		// return 400
+		// return HTTP code 400 to client
 		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	// we seem to have proper data
+	// we seem to have proper data -> let's display them
 	log.Info().
 		Str("rule", string(parameters.RuleSelector)).
 		Str("value", parameters.Value).
