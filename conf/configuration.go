@@ -152,7 +152,7 @@ func GetContentConfiguration() content.Configuration {
 // checkIfFileExists returns nil if path doesn't exist or isn't a file,
 // otherwise it returns corresponding error
 func checkIfFileExists(path string) error {
-	if len(path) == 0 {
+	if path == "" {
 		return fmt.Errorf("Empty path provided")
 	}
 	fileInfo, err := os.Stat(path)
