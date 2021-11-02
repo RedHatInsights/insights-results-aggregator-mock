@@ -61,7 +61,7 @@ func handleMissingRule(writer http.ResponseWriter, ruleSelector string) {
 }
 
 // addNewRule function add a new rule to existing map of acknowledges.
-func addNewRule(ruleSelector types.RuleSelector, justification string, createdBy string) {
+func addNewRule(ruleSelector types.RuleSelector, justification, createdBy string) {
 	// add new rule
 	acks[ruleSelector] = types.Acknowledge{
 		Acknowledged:  true,
