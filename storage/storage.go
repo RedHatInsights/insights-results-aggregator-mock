@@ -104,7 +104,7 @@ const changingClustersPeriodInMinutes = 15
 
 var reports map[string]string = make(map[string]string)
 
-func readReport(path string, clusterName string) (string, error) {
+func readReport(path, clusterName string) (string, error) {
 	absPath, err := filepath.Abs(path + "/report_" + clusterName + ".json")
 	if err != nil {
 		return "", err
