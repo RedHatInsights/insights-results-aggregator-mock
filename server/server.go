@@ -26,8 +26,7 @@ import (
 
 	// we just have to import this package in order to expose pprof interface in debug mode
 	// disable "G108 (CWE-): Profiling endpoint is automatically exposed on /debug/pprof"
-	// #nosec G108
-	_ "net/http/pprof"
+	_ "net/http/pprof" // #nosec G108
 	"path/filepath"
 
 	"github.com/gorilla/mux"
