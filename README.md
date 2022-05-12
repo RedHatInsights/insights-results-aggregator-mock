@@ -211,6 +211,12 @@ curl -k -v $ADDRESS/organizations/11940171/clusters
 curl -k -v $ADDRESS/report/11789772/34c3ecc5-624a-49a5-bab8-4fdc5e51a266
 ```
 
+or alternatively
+
+```
+curl -k -v $ADDRESS/clusters/11789772/34c3ecc5-624a-49a5-bab8-4fdc5e51a266/report
+```
+
 In this case `11789772` is organization ID and `34c3ecc5-624a-49a5-bab8-4fdc5e51a266` is cluster ID
 
 ### Report for one particular cluster
