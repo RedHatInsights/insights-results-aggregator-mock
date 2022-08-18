@@ -1,5 +1,5 @@
 /*
-Copyright © 2020, 2021 Red Hat, Inc.
+Copyright © 2020, 2021, 2022 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import (
 	"context"
 	"net/http"
 	"strings"
+	"time"
 
 	// we just have to import this package in order to expose pprof interface in debug mode
 	// disable "G108 (CWE-): Profiling endpoint is automatically exposed on /debug/pprof"
@@ -65,7 +66,11 @@ func (server *HTTPServer) Start() error {
 	address := server.Config.Address
 	log.Info().Msgf("Starting HTTP server at '%s'", address)
 	router := server.Initialize(address)
-	server.Serv = &http.Server{Addr: address, Handler: router}
+	server.Serv = &http.Server{
+		Addr:              address,
+		Handler:           router,
+		ReadHeaderTimeout: 3 * time.Second,
+	}
 
 	err := server.Serv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
