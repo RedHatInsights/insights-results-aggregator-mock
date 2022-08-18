@@ -15,6 +15,7 @@ Mock service mimicking Insights Results Aggregator
 * [Howto start the service](#howto-start-the-service)
 * [Generate the image for Docker](#generate-the-image-for-docker)
 * [Running in Docker](#running-in-docker)
+* [Makefile targets](#makefile-targets)
 * [Usage](#usage)
 * [Accessing results](#accessing-results)
     * [Settings for localhost](#settings-for-localhost)
@@ -81,6 +82,34 @@ docker build -t insights-results-aggregator-mock:latest .
 
 ```
 docker run --rm insights-results-aggregator-mock:latest
+```
+
+## Makefile targets
+
+```
+Usage: make <OPTIONS> ... <TARGETS>
+
+Available targets are:
+
+clean                Run go clean
+build                Run go build
+fmt                  Run go fmt -w for all sources
+lint                 Run golint
+vet                  Run go vet. Report likely mistakes in source code
+cyclo                Run gocyclo
+ineffassign          Run ineffassign checker
+shellcheck           Run shellcheck
+errcheck             Run errcheck
+goconst              Run goconst checker
+gosec                Run gosec checker
+abcgo                Run ABC metrics checker
+style                Run all the formatting related commands (fmt, vet, lint, cyclo) + check shell scripts
+run                  Build the project and executes the binary
+test                 Run the unit tests
+cover                Generate HTML pages with code coverage
+coverage             Display code coverage on terminal
+integration_tests    Run all integration tests
+help                 Show this help screen
 ```
 
 ## Usage
