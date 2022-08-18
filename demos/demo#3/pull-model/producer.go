@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2021, 2022 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog"
@@ -123,7 +124,12 @@ func startHttpServer() error {
 	router := mux.NewRouter().StrictSlash(true)
 
 	log.Info().Msgf("Initializing HTTP server at '%s'", address)
-	server := &http.Server{Addr: address, Handler: router}
+	server := &http.Server{
+		Addr:              address,
+		Handler:           router,
+		ReadHeaderTimeout: 3 * time.Second,
+	}
+
 	addEndpointsToRouter(router)
 	log.Info().Msgf("Server has been initiliazed")
 
