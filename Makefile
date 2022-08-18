@@ -65,8 +65,11 @@ test: clean build ## Run the unit tests
 	@go test -coverprofile coverage.out $(shell go list ./... | grep -v tests)
 	@go tool cover -func=coverage.out
 
-cover: test
+cover: test ## Generate HTML pages with code coverage
 	@go tool cover -html=coverage.out
+
+coverage: ## Display code coverage on terminal
+	@go tool cover -func=coverage.out
 
 integration_tests: ## Run all integration tests
 	@echo "Running all integration tests"
