@@ -123,17 +123,3 @@ func regexGetNthMatchOrLogError(regexStr string, nMatch uint, str string) string
 func regexGetFirstMatch(regexStr, str string) (string, error) {
 	return regexGetNthMatch(regexStr, 1, str)
 }
-
-func regexGetNthMatch(regexStr string, nMatch uint, str string) (string, error) {
-	regex := regexp.MustCompile(regexStr)
-	if !regex.MatchString(str) {
-		return "", errors.New("regex doesn't match string")
-	}
-
-	matches := regex.FindStringSubmatch(str)
-	if len(matches) < int(nMatch+1) {
-		return "", errors.New("regexGetNthMatch unable to find match")
-	}
-
-	return matches[nMatch], nil
-}
