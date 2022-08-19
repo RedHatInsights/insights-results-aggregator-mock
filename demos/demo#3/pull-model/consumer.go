@@ -41,7 +41,6 @@ type ClusterResponse struct {
 const (
 	apiURL               = "http://localhost:8080/"
 	contentTypeHeader    = "Content-Type"
-	contentLengthHeader  = "Content-Length"
 	messagesToConsume    = 100000
 	csvWriteErrorMessage = "can not write record into CSV"
 )
