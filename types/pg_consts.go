@@ -13,7 +13,3 @@
 // limitations under the License.
 
 package types
-
-const (
-	pgForeignKeyViolationErrorCode = "23503"
-)
