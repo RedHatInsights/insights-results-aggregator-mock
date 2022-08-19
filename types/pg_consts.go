@@ -15,6 +15,5 @@
 package types
 
 const (
-	pgUndefinedTableErrorCode      = "42P01"
 	pgForeignKeyViolationErrorCode = "23503"
 )
