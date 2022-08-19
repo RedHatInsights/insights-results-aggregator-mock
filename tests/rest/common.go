@@ -92,10 +92,3 @@ func checkGetEndpointByOtherMethods(endpoint string, includingOptions bool) {
 		sendAndExpectStatus(f, 405)
 	}
 }
-
-// checkOkStatusResponse tests whether the response (JSON) contains status attribute set to 'ok'
-func checkOkStatusResponse(f *frisby.Frisby, response ClustersResponse) {
-	if response.Status != "ok" {
-		f.AddError(fmt.Sprintf("Expected status is 'ok', but got '%s' instead", response.Status))
-	}
-}
