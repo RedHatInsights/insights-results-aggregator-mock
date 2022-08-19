@@ -25,7 +25,6 @@ package types
 import (
 	"errors"
 	"fmt"
-	"regexp"
 
 	"github.com/rs/zerolog/log"
 )
