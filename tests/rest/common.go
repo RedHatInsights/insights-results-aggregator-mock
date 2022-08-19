@@ -17,8 +17,6 @@ limitations under the License.
 package tests
 
 import (
-	"encoding/json"
-
 	"github.com/verdverm/frisby"
 )
 
@@ -44,21 +42,6 @@ const (
 // StatusOnlyResponse represents response containing just a status
 type StatusOnlyResponse struct {
 	Status string `json:"status"`
-}
-
-// readStatusFromResponse reads and parses status from response body
-func readStatusFromResponse(f *frisby.Frisby) StatusOnlyResponse {
-	response := StatusOnlyResponse{}
-	text, err := f.Resp.Content()
-	if err != nil {
-		f.AddError(err.Error())
-	} else {
-		err := json.Unmarshal(text, &response)
-		if err != nil {
-			f.AddError(err.Error())
-		}
-	}
-	return response
 }
 
 // sendAndExpectStatus sends the request to the server and checks whether expected HTTP code (status) is returned
