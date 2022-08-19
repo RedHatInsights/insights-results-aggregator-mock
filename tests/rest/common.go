@@ -17,8 +17,6 @@ limitations under the License.
 package tests
 
 import (
-	"encoding/json"
-
 	"github.com/verdverm/frisby"
 )
 
