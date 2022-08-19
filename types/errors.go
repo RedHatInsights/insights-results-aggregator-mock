@@ -106,10 +106,6 @@ func ConvertDBError(err error, itemID interface{}) error {
 }
 */
 
-func regexGetFirstMatch(regexStr, str string) (string, error) {
-	return regexGetNthMatch(regexStr, 1, str)
-}
-
 func regexGetNthMatch(regexStr string, nMatch uint, str string) (string, error) {
 	regex := regexp.MustCompile(regexStr)
 	if !regex.MatchString(str) {
