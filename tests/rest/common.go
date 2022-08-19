@@ -18,7 +18,6 @@ package tests
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/verdverm/frisby"
 )
