@@ -26,8 +26,6 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
-
-	"github.com/rs/zerolog/log"
 )
 
 // ErrOldReport is an error returned if a more recent already
