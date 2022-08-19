@@ -25,7 +25,6 @@ package types
 import (
 	"errors"
 	"fmt"
-	"regexp"
 )
 
 // ErrOldReport is an error returned if a more recent already
@@ -105,17 +104,3 @@ func ConvertDBError(err error, itemID interface{}) error {
 	return err
 }
 */
-
-func regexGetNthMatch(regexStr string, nMatch uint, str string) (string, error) {
-	regex := regexp.MustCompile(regexStr)
-	if !regex.MatchString(str) {
-		return "", errors.New("regex doesn't match string")
-	}
-
-	matches := regex.FindStringSubmatch(str)
-	if len(matches) < int(nMatch+1) {
-		return "", errors.New("regexGetNthMatch unable to find match")
-	}
-
-	return matches[nMatch], nil
-}
