@@ -25,8 +25,6 @@ package types
 import (
 	"errors"
 	"fmt"
-
-	"github.com/rs/zerolog/log"
 )
 
 // ErrOldReport is an error returned if a more recent already
@@ -107,18 +105,4 @@ func ConvertDBError(err error, itemID interface{}) error {
 }
 */
 
-func regexGetNthMatchOrLogError(regexStr string, nMatch uint, str string) string {
-	match, err := regexGetNthMatch(regexStr, nMatch, str)
-	if err != nil {
-		log.Error().
-			Str("regex", regexStr).
-			Str("str", str).
-			Msgf("unable to get first match from string '%v' with regex '%v'", str, regexStr)
-		return ""
-	}
-
-	return match
-}
-func regexGetFirstMatch(regexStr, str string) (string, error) {
-	return regexGetNthMatch(regexStr, 1, str)
 }
