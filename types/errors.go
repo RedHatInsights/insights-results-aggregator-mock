@@ -108,10 +108,6 @@ func ConvertDBError(err error, itemID interface{}) error {
 }
 */
 
-func regexGetFirstMatchOrLogError(regexStr, str string) string {
-	return regexGetNthMatchOrLogError(regexStr, 1, str)
-}
-
 func regexGetNthMatchOrLogError(regexStr string, nMatch uint, str string) string {
 	match, err := regexGetNthMatch(regexStr, nMatch, str)
 	if err != nil {
