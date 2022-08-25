@@ -52,12 +52,12 @@ type HTTPServer struct {
 func New(config Configuration,
 	storageInstance storage.Storage,
 	groups map[string]groups.Group,
-	content []content.RuleContent) *HTTPServer {
+	ruleContents []content.RuleContent) *HTTPServer {
 	return &HTTPServer{
 		Config:  config,
 		Storage: storageInstance,
 		Groups:  groups,
-		Content: content,
+		Content: ruleContents,
 	}
 }
 
