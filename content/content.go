@@ -1,4 +1,4 @@
-// Copyright 2021 Red Hat, Inc
+// Copyright 2021, 2022 Red Hat, Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 package content
 
 import (
-	"io/ioutil"
+	"io"
 	"os"
 
 	"encoding/json"
@@ -31,7 +31,7 @@ func ParseContent(filePath string) ([]RuleContent, error) {
 		return ruleContent, err
 	}
 
-	bytes, err := ioutil.ReadAll(jsonFile)
+	bytes, err := io.ReadAll(jsonFile)
 	if err != nil {
 		return ruleContent, err
 	}
