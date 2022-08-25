@@ -50,12 +50,12 @@ type HTTPServer struct {
 
 // New constructs new implementation of Server interface
 func New(config Configuration,
-	storage storage.Storage,
+	storageInstance storage.Storage,
 	groups map[string]groups.Group,
 	content []content.RuleContent) *HTTPServer {
 	return &HTTPServer{
 		Config:  config,
-		Storage: storage,
+		Storage: storageInstance,
 		Groups:  groups,
 		Content: content,
 	}
