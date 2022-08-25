@@ -73,7 +73,7 @@ func startService(config conf.ConfigStruct) int {
 		return ExitStatusServerError
 	}
 
-	content, err := content.ParseContent(contentCfg.Path)
+	ruleContent, err := content.ParseContent(contentCfg.Path)
 	if err != nil {
 		log.Error().Err(err).Msg("Content init error")
 		return ExitStatusServerError
@@ -86,7 +86,7 @@ func startService(config conf.ConfigStruct) int {
 		return ExitStatusServerError
 	}
 
-	serverInstance = server.New(serverCfg, storageInstance, groups, content)
+	serverInstance = server.New(serverCfg, storageInstance, groups, ruleContent)
 
 	err = serverInstance.Start()
 	if err != nil {
