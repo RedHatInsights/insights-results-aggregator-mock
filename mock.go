@@ -78,7 +78,7 @@ func startService(config conf.ConfigStruct) int {
 		log.Error().Err(err).Msg("Content init error")
 		return ExitStatusServerError
 	}
-	log.Info().Int("count", len(content)).Msg("Content read")
+	log.Info().Int("count", len(ruleContent)).Msg("Content read")
 
 	storageInstance, err := storage.New(config.Paths.MockDataPath)
 	if err != nil {
