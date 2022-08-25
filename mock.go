@@ -67,7 +67,7 @@ func startService(config conf.ConfigStruct) int {
 	groupsCfg := conf.GetGroupsConfiguration()
 	contentCfg := conf.GetContentConfiguration()
 
-	groups, err := groups.ParseGroupConfigFile(groupsCfg.ConfigPath)
+	ruleGroups, err := groups.ParseGroupConfigFile(groupsCfg.ConfigPath)
 	if err != nil {
 		log.Error().Err(err).Msg("Groups init error")
 		return ExitStatusServerError
@@ -86,7 +86,7 @@ func startService(config conf.ConfigStruct) int {
 		return ExitStatusServerError
 	}
 
-	serverInstance = server.New(serverCfg, storageInstance, groups, ruleContent)
+	serverInstance = server.New(serverCfg, storageInstance, ruleGroups, ruleContent)
 
 	err = serverInstance.Start()
 	if err != nil {
