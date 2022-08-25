@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2021, 2022 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -80,13 +80,13 @@ func startService(config conf.ConfigStruct) int {
 	}
 	log.Info().Int("count", len(content)).Msg("Content read")
 
-	storage, err := storage.New(config.Paths.MockDataPath)
+	storageInstance, err := storage.New(config.Paths.MockDataPath)
 	if err != nil {
 		log.Error().Err(err).Msg("Storage init error")
 		return ExitStatusServerError
 	}
 
-	serverInstance = server.New(serverCfg, storage, groups, content)
+	serverInstance = server.New(serverCfg, storageInstance, groups, content)
 
 	err = serverInstance.Start()
 	if err != nil {
