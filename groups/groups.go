@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2021, 2022 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ limitations under the License.
 package groups
 
 import (
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/go-yaml/yaml"
@@ -42,7 +42,7 @@ type Group struct {
 
 // ParseGroupConfigFile parses the groups configuration file and return the read groups
 func ParseGroupConfigFile(groupConfigPath string) (map[string]Group, error) {
-	configBytes, err := ioutil.ReadFile(filepath.Clean(groupConfigPath))
+	configBytes, err := os.ReadFile(filepath.Clean(groupConfigPath))
 	if err != nil {
 		log.Error().Err(err).Msg("Error reading groups configuration file")
 		return nil, err
