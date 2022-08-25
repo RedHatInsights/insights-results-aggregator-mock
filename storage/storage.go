@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2021, 2022 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ package storage
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -111,7 +110,7 @@ func readReport(path, clusterName string) (string, error) {
 	}
 
 	// disable "G304 (CWE-22): Potential file inclusion via variable"
-	report, err := ioutil.ReadFile(absPath) // #nosec G304
+	report, err := os.ReadFile(absPath) // #nosec G304
 	if err != nil {
 		return "", err
 	}
