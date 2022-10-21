@@ -149,6 +149,7 @@ func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, req
 	}
 }
 
+/*
 // serveContent method implements the /content endpoint
 func (server *HTTPServer) serveContent(writer http.ResponseWriter, request *http.Request) {
 	err := responses.SendOK(writer, responses.BuildOkResponseWithData("content", server.Content))
@@ -158,6 +159,7 @@ func (server *HTTPServer) serveContent(writer http.ResponseWriter, request *http
 	}
 
 }
+*/
 
 func (server *HTTPServer) initGroupList() {
 	// let's mimick Content Service behaviour preciselly
