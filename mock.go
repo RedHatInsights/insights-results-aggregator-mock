@@ -149,7 +149,7 @@ func printHelp() int {
 }
 
 func printAuthors() int {
-	fmt.Println(authorsList)
+	fmt.Print(authorsList)
 
 	return ExitStatusOK
 }

@@ -134,6 +134,7 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	router.HandleFunc(openAPIURL, server.serveAPISpecFile).Methods(http.MethodGet)
 }
 
+/*
 // addCORSHeaders - middleware for adding headers that should be in any response
 func (server *HTTPServer) addCORSHeaders(nextHandler http.Handler) http.Handler {
 	return http.HandlerFunc(
@@ -145,7 +146,9 @@ func (server *HTTPServer) addCORSHeaders(nextHandler http.Handler) http.Handler 
 			nextHandler.ServeHTTP(w, r)
 		})
 }
+*/
 
+/*
 // handleOptionsMethod - middleware for handling OPTIONS method
 func (server *HTTPServer) handleOptionsMethod(nextHandler http.Handler) http.Handler {
 	return http.HandlerFunc(
@@ -157,3 +160,4 @@ func (server *HTTPServer) handleOptionsMethod(nextHandler http.Handler) http.Han
 			}
 		})
 }
+*/

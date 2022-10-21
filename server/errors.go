@@ -21,11 +21,6 @@ import (
 // responseDataError is used as the error message when the responses functions return an error
 const responseDataError = "Unexpected error during response data encoding"
 
-// AuthenticationError happens during auth problems, for example malformed token
-type AuthenticationError struct {
-	errString string
-}
-
 // handleServerError handles separate server errors and sends appropriate responses
 func handleServerError(err error) {
 	log.Error().Err(err).Msg("handleServerError()")

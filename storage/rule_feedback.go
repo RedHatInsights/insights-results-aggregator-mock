@@ -51,6 +51,7 @@ func (storage MemoryStorage) AddOrUpdateFeedbackOnRule(
 	return nil
 }
 
+/*
 // addOrUpdateUserFeedbackOnRuleForCluster adds or updates feedback
 // will update user vote and messagePtr if the pointers are not nil
 func (storage MemoryStorage) addOrUpdateUserFeedbackOnRuleForCluster(
@@ -62,6 +63,7 @@ func (storage MemoryStorage) addOrUpdateUserFeedbackOnRuleForCluster(
 ) error {
 	return nil
 }
+*/
 
 // GetUserFeedbackOnRule gets user feedback from DB
 func (storage MemoryStorage) GetUserFeedbackOnRule(
