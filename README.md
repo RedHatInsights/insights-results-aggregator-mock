@@ -91,8 +91,7 @@ Usage: make <OPTIONS> ... <TARGETS>
 
 Available targets are:
 
-clean                Run go clean
-build                Run go build
+build                Build binary containing service executable
 fmt                  Run go fmt -w for all sources
 lint                 Run golint
 vet                  Run go vet. Report likely mistakes in source code
@@ -109,8 +108,8 @@ test                 Run the unit tests
 cover                Generate HTML pages with code coverage
 coverage             Display code coverage on terminal
 integration_tests    Run all integration tests
-function_list        List all functions in generated binary file
 help                 Show this help screen
+function_list        List all functions in generated binary file
 ```
 
 ## Usage
