@@ -109,6 +109,7 @@ test                 Run the unit tests
 cover                Generate HTML pages with code coverage
 coverage             Display code coverage on terminal
 integration_tests    Run all integration tests
+function_list        List all functions in generated binary file
 help                 Show this help screen
 ```
 

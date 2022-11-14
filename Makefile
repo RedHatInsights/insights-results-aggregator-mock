@@ -14,7 +14,7 @@ clean: ## Run go clean
 	@go clean
 	rm -f rest-api-tests
 
-build: ## Run go build
+build: ## Build binary containing service executable
 	go build -ldflags="-X 'main.BuildTime=$(buildtime)' -X 'main.BuildVersion=$(version)' -X 'main.BuildBranch=$(branch)' -X 'main.BuildCommit=$(commit)'"
 
 fmt: ## Run go fmt -w for all sources
@@ -90,6 +90,9 @@ help: ## Show this help screen
 	@grep -E '^[ a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 	@echo ''
+
+function_list: ${BINARY} ## List all functions in generated binary file
+	go tool objdump ${BINARY} | grep ^TEXT | sed "s/^TEXT\s//g"
 
 docs/packages/%.html: %.go
 	mkdir -p $(dir $@)
