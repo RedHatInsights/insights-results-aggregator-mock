@@ -19,6 +19,7 @@ Please delete options that are not relevant.
 - REST API tests
 - Benchmarks (no changes in the code)
 - Documentation update
+- Configuration update
 
 ## Testing steps
 
