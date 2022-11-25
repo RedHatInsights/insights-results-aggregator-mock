@@ -209,20 +209,21 @@ func (storage MemoryStorage) ListOfOrgs() ([]types.OrgID, error) {
 
 func clustersForOrganization11789772() []types.ClusterName {
 	clusters := make([]types.ClusterName, 0)
-	clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a266")
-	clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a267")
-	clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a268")
-	clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a269")
-	clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a26a")
-	clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a26b")
-	clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a26c")
-	clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a26d")
-	clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a26e")
-	clusters = append(clusters, "34c3ecc5-624a-49a5-bab8-4fdc5e51a26f")
-	clusters = append(clusters, "74ae54aa-6577-4e80-85e7-697cb646ff37")
-	clusters = append(clusters, "a7467445-8d6a-43cc-b82c-7007664bdf69")
-	clusters = append(clusters, "ee7d2bf4-8933-4a3a-8634-3328fe806e08")
-	clusters = append(clusters, "eeeeeeee-eeee-eeee-eeee-000000000001")
+	clusters = append(clusters,
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a268",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a269",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26a",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26b",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26c",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26d",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26e",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26f",
+		"74ae54aa-6577-4e80-85e7-697cb646ff37",
+		"a7467445-8d6a-43cc-b82c-7007664bdf69",
+		"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
+		"eeeeeeee-eeee-eeee-eeee-000000000001")
 	return clusters
 }
 
