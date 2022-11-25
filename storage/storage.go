@@ -252,9 +252,10 @@ func (storage MemoryStorage) ListOfClustersForOrg(orgID types.OrgID) ([]types.Cl
 			"00000001-8d6a-43cc-b82c-7007664bdf69",
 			"00000001-eeee-eeee-eeee-000000000001")
 	case 2:
-		clusters = append(clusters, "00000002-624a-49a5-bab8-4fdc5e51a266")
-		clusters = append(clusters, "00000002-6577-4e80-85e7-697cb646ff37")
-		clusters = append(clusters, "00000002-8933-4a3a-8634-3328fe806e08")
+		clusters = append(clusters,
+			"00000002-624a-49a5-bab8-4fdc5e51a266",
+			"00000002-6577-4e80-85e7-697cb646ff37",
+			"00000002-8933-4a3a-8634-3328fe806e08")
 	case 3:
 		clusters = append(clusters, "00000003-8933-4a3a-8634-3328fe806e08")
 		clusters = append(clusters, "00000003-8d6a-43cc-b82c-7007664bdf69")
