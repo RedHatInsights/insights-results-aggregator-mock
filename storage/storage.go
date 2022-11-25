@@ -353,9 +353,7 @@ func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 	switch orgID {
 	case 11940171:
 		return types.ClusterReport(report), errors.New("You have no permissions to get or change info about this organization")
-	case 1:
-		fallthrough
-	case 2:
+	case 1, 2:
 		fallthrough
 	case 3:
 		fallthrough
