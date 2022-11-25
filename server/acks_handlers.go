@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 Red Hat, Inc.
+Copyright © 2021, 2022 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -155,7 +155,7 @@ func (server *HTTPServer) acknowledgePost(writer http.ResponseWriter, request *h
 	}
 
 	// return existing rule or the new one (if created)
-	returnRuleAckToClient(writer, acks[parameters.RuleSelector])
+	returnRuleAckToClient(writer, &acks[parameters.RuleSelector])
 }
 
 // method getAcknowledge acknowledges (and therefore hides) a rule from view in
@@ -198,7 +198,7 @@ func (server *HTTPServer) getAcknowledge(writer http.ResponseWriter, request *ht
 		updateRuleUpdatedAt(ruleSelector)
 	}
 
-	returnRuleAckToClient(writer, acks[ruleSelector])
+	returnRuleAckToClient(writer, &acks[ruleSelector])
 }
 
 // method updateAcknowledge updates an acknowledgement for a rule, by rule ID.
@@ -262,7 +262,7 @@ func (server *HTTPServer) updateAcknowledge(writer http.ResponseWriter, request 
 	// update existing rule
 	updateRuleJustification(ruleSelector, justification)
 
-	returnRuleAckToClient(writer, acks[ruleSelector])
+	returnRuleAckToClient(writer, &acks[ruleSelector])
 }
 
 // method deleteAcknowledge deletes an acknowledgement for a rule, by its rule
