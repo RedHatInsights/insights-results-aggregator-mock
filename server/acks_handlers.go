@@ -199,7 +199,7 @@ func (server *HTTPServer) getAcknowledge(writer http.ResponseWriter, request *ht
 		updateRuleUpdatedAt(ruleSelector)
 	}
 
-	ack := &acks[ruleSelector]
+	ack := acks[ruleSelector]
 	returnRuleAckToClient(writer, &ack)
 }
 
