@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 Red Hat, Inc.
+Copyright © 2021, 2022 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ func updateRuleUpdatedAt(ruleSelector types.RuleSelector) {
 
 // returnRuleAckToClient returns information about selected rule ack to client.
 // This function also tries to process all errors.
-func returnRuleAckToClient(writer http.ResponseWriter, ack types.Acknowledge) {
+func returnRuleAckToClient(writer http.ResponseWriter, ack *types.Acknowledge) {
 	// serialize the above data structure into JSON format
 	bytes, err := json.MarshalIndent(ack, "", "\t")
 	if err != nil {
