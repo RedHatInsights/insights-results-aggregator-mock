@@ -62,7 +62,7 @@ var (
 )
 
 // startService starts service and returns error code
-func startService(config conf.ConfigStruct) int {
+func startService(config *conf.ConfigStruct) int {
 	serverCfg := conf.GetServerConfiguration()
 	groupsCfg := conf.GetGroupsConfiguration()
 	contentCfg := conf.GetContentConfiguration()
@@ -195,7 +195,7 @@ func handleCommand(config conf.ConfigStruct, command string) int {
 	case "start-service":
 		logVersionInfo()
 
-		errCode := startService(config)
+		errCode := startService(&config)
 		if errCode != ExitStatusOK {
 			return errCode
 		}
