@@ -58,7 +58,7 @@ type Storage interface {
 		clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID,
 	) (*UserFeedbackOnRule, error)
 	GetContentForRules(
-		rules types.ReportRules,
+		rules *types.ReportRules,
 		userID types.UserID,
 		clusterName types.ClusterName,
 	) ([]types.RuleContentResponse, error)
@@ -374,7 +374,7 @@ func (storage MemoryStorage) ReadReportForClusterByClusterName(
 
 // GetContentForRules retrieves content for rules that were hit in the report
 func (storage MemoryStorage) GetContentForRules(
-	reportRules types.ReportRules,
+	reportRules *types.ReportRules,
 	userID types.UserID,
 	clusterName types.ClusterName,
 ) ([]types.RuleContentResponse, error) {
