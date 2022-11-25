@@ -155,7 +155,8 @@ func (server *HTTPServer) acknowledgePost(writer http.ResponseWriter, request *h
 	}
 
 	// return existing rule or the new one (if created)
-	returnRuleAckToClient(writer, &acks[parameters.RuleSelector])
+	ack := acks[parameters.RuleSelector]
+	returnRuleAckToClient(writer, &ack)
 }
 
 // method getAcknowledge acknowledges (and therefore hides) a rule from view in
@@ -198,7 +199,8 @@ func (server *HTTPServer) getAcknowledge(writer http.ResponseWriter, request *ht
 		updateRuleUpdatedAt(ruleSelector)
 	}
 
-	returnRuleAckToClient(writer, &acks[ruleSelector])
+	ack := &acks[ruleSelector]
+	returnRuleAckToClient(writer, &ack)
 }
 
 // method updateAcknowledge updates an acknowledgement for a rule, by rule ID.
@@ -262,7 +264,8 @@ func (server *HTTPServer) updateAcknowledge(writer http.ResponseWriter, request 
 	// update existing rule
 	updateRuleJustification(ruleSelector, justification)
 
-	returnRuleAckToClient(writer, &acks[ruleSelector])
+	ack := acks[ruleSelector]
+	returnRuleAckToClient(writer, &ack)
 }
 
 // method deleteAcknowledge deletes an acknowledgement for a rule, by its rule
