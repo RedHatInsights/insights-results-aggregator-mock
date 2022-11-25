@@ -154,7 +154,7 @@ func printAuthors() int {
 	return ExitStatusOK
 }
 
-func printConfig(config conf.ConfigStruct) int {
+func printConfig(config *conf.ConfigStruct) int {
 	configBytes, err := json.MarshalIndent(config, "", "    ")
 
 	if err != nil {
@@ -203,7 +203,7 @@ func handleCommand(config conf.ConfigStruct, command string) int {
 	case "help", "print-help":
 		return printHelp()
 	case "config", "print-config":
-		return printConfig(conf.Config)
+		return printConfig(&conf.Config)
 	case "version", "print-version-info":
 		return printVersionInfo()
 	case "authors", "print-authors":
