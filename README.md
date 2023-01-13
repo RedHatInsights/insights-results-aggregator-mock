@@ -1,6 +1,8 @@
 # insights-results-aggregator-mock
 Mock service mimicking Insights Results Aggregator
 
+[![forthebadge made-with-go](http://ForTheBadge.com/images/badges/made-with-go.svg)](https://go.dev/)
+
 [![GoDoc](https://godoc.org/github.com/RedHatInsights/insights-results-aggregator-mock?status.svg)](https://godoc.org/github.com/RedHatInsights/insights-results-aggregator-mock)
 [![GitHub Pages](https://img.shields.io/badge/%20-GitHub%20Pages-informational)](https://redhatinsights.github.io/insights-results-aggregator-mock/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/RedHatInsights/insights-results-aggregator-mock)](https://goreportcard.com/report/github.com/RedHatInsights/insights-results-aggregator-mock)
