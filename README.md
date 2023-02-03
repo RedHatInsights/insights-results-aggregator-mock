@@ -53,10 +53,10 @@ Mock service mimicking Insights Results Aggregator
     * [Delete rule](#delete-rule)
         * [Delete existing rule](#delete-existing-rule)
         * [Delete nonexisting rule](#delete-nonexisting-rule)
+* [BDD tests](#bdd-tests)
 * [Package manifest](#package-manifest)
 
 <!-- vim-markdown-toc -->
-
 
 ## Description
 
@@ -753,6 +753,23 @@ Response from the service:
 < Content-Length: 0
 < 
 ```
+
+
+
+## BDD tests
+
+Behaviour tests for this service are included in [Insights Behavioral
+Spec](https://github.com/RedHatInsights/insights-behavioral-spec) repository.
+In order to run these tests, the following steps need to be made:
+
+1. clone the [Insights Behavioral Spec](https://github.com/RedHatInsights/insights-behavioral-spec) repository
+1. go into the cloned subdirectory `insights-behavioral-spec`
+1. run the `insights-results-aggregator-mock.sh` from this subdirectory
+
+List of all test scenarios prepared for this service is available at
+<https://github.com/RedHatInsights/insights-behavioral-spec#insights-results-aggregator-mock>
+
+
 
 ## Package manifest
 
