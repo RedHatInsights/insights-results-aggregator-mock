@@ -65,8 +65,9 @@ func performRequest(client http.Client, baseurl string, n int) error {
 		return err
 	}
 
-	if response.Body != nil {
-		defer response.Body.Close()
+	if response.Body == nil {
+		log.Error().Err(err).Msg("Empty response body")
+		return err
 	}
 
 	body, err := ioutil.ReadAll(response.Body)
@@ -82,7 +83,15 @@ func performRequest(client http.Client, baseurl string, n int) error {
 		return err
 	}
 
+	// response body needs to be closed properly
+	err := response.Body.Close()
+	if err != nil {
+		log.Error().Err(err).Msg("Body close")
+		return err
+	}
+
 	log.Info().Int("len", len(body)).Msg("report length")
+
 	return nil
 }
 
