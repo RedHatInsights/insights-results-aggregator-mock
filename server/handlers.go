@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/http/httputil"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -305,7 +306,15 @@ func (server *HTTPServer) readReportForClusters(writer http.ResponseWriter, requ
 
 	generatedReports.Reports = make(map[types.ClusterName]interface{})
 
-	err := json.NewDecoder(request.Body).Decode(&clusterList)
+	dump, err := httputil.DumpRequest(request, true)
+	if err != nil {
+		log.Error().Err(err).Msg("dump error")
+		return
+	}
+
+	log.Info().Str("dump", string(dump)).Msg("dump of request")
+
+	err = json.NewDecoder(request.Body).Decode(&clusterList)
 
 	if err != nil {
 		log.Error().Err(err).Msg("getting list of clusters")
