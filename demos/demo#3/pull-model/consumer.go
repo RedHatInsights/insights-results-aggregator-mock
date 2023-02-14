@@ -83,7 +83,12 @@ func performRequest(client http.Client, baseurl string, n int) error {
 		return err
 	}
 
-	response.Body.Close()
+	// response body needs to be closed properly
+	err := response.Body.Close()
+	if err != nil {
+		log.Error().Err(err).Msg("Body close")
+		return err
+	}
 
 	log.Info().Int("len", len(body)).Msg("report length")
 
