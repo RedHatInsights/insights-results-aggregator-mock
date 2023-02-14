@@ -204,6 +204,20 @@ type AcknowledgementRuleSelectorJustification struct {
 	Value        string       `json:"justification"`
 }
 
+// UpgradeRiskPredictors data structure represents the alerts and conditions
+// that are contained in an upgrade-risk-predictions response
+type UpgradeRiskPredictors struct {
+	Alerts             []string `json:"alerts"`
+	OperatorConditions []string `json:"operator_conditions"`
+}
+
+// UpgradeRiskPrediction data structure represents body of the response
+// for an upgrade-risk-predictions request
+type UpgradeRiskPrediction struct {
+	Recommended bool                  `json:"upgrade_recommended"`
+	Predictors  UpgradeRiskPredictors `json:"upgrade_risks_predictors"`
+}
+
 const (
 	// DBDriverSQLite3 shows that db driver is sqlite
 	DBDriverSQLite3 DBDriver = iota
