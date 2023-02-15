@@ -53,6 +53,7 @@ Mock service mimicking Insights Results Aggregator
     * [Delete rule](#delete-rule)
         * [Delete existing rule](#delete-existing-rule)
         * [Delete nonexisting rule](#delete-nonexisting-rule)
+* [Upgrade risks prediction results](#upgrade-risks-prediction-results)
 * [BDD tests](#bdd-tests)
 * [Package manifest](#package-manifest)
 
@@ -726,7 +727,7 @@ deleted and a 204 is returned. Otherwise, a 404 is returned.
 Request to the service:
 
 ```
-curl-v -X DELETE "localhost:8080/api/insights-results-aggregator/v1/ack/ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR"
+curl -v -X DELETE "localhost:8080/api/insights-results-aggregator/v1/ack/ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR"
 ```
 
 Response from the service:
@@ -742,7 +743,7 @@ Response from the service:
 Request to the service:
 
 ```
-curl-v -X DELETE "localhost:8080/api/insights-results-aggregator/v1/ack/foobar|foobar"
+curl -v -X DELETE "localhost:8080/api/insights-results-aggregator/v1/ack/foobar|foobar"
 ```
 
 Response from the service:
@@ -754,7 +755,40 @@ Response from the service:
 < 
 ```
 
+## Upgrade risks prediction results
 
+To use the Upgrade Risks Prediction endpoint:
+
+```
+curl "localhost:8080/api/insights-results-aggregator/v1/upgrade-risks-prediction/cluster/{cluster_id}
+```
+
+Response from the service:
+
+```
+< HTTP/1.1 200 OK
+< Content-Type: application/json; charset=utf-8
+< Date: Wed, 15 Feb 2023 08:44:11 GMT
+< Content-Length: 136
+< 
+{"status":"ok","upgrade_recommendation":{"upgrade_recommended":true,"upgrade_risks_predictors":{"alerts":[],"operator_conditions":[]}}}
+```
+
+### Clusters that return valid data
+
+For the clusters not listed in the sections bellow, a 404 will be returned.
+
+#### Cluster returning a positive upgrade risks prediction (upgrade recommended)
+
+```
+00000001-624a-49a5-bab8-4fdc5e51a266
+```
+
+#### Cluster returning a negative upgrade risks prediction (upgrade recommended)
+
+```
+00000003-eeee-eeee-eeee-000000000001
+```
 
 ## BDD tests
 
