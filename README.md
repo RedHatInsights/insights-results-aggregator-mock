@@ -764,7 +764,7 @@ Response from the service:
 To use the Upgrade Risks Prediction endpoint:
 
 ```
-curl "localhost:8080/api/insights-results-aggregator/v1/upgrade-risks-prediction/cluster/{cluster_id}
+curl "localhost:8080/api/insights-results-aggregator/v1/cluster/{cluster_id}/upgrade-risks-prediction
 ```
 
 Response from the service:

@@ -928,7 +928,7 @@
         ]
       }
     },
-    "upgrade-risks-prediction/cluster/{clusterId}": {
+    "/cluster/{clusterId}/upgrade-risks-prediction": {
       "get": {
         "summary": "",
         "operationId": "getUpgradeRisksPrediction",
