@@ -53,11 +53,15 @@ Mock service mimicking Insights Results Aggregator
     * [Delete rule](#delete-rule)
         * [Delete existing rule](#delete-existing-rule)
         * [Delete nonexisting rule](#delete-nonexisting-rule)
-* [Upgrade risks prediction results](#upgrade-risks-prediction-results)
+    * [Upgrade risks prediction results](#upgrade-risks-prediction-results)
+        * [Clusters that return valid data](#clusters-that-return-valid-data)
+            * [Cluster returning a positive upgrade risks prediction (upgrade recommended)](#cluster-returning-a-positive-upgrade-risks-prediction-upgrade-recommended)
+            * [Cluster returning a negative upgrade risks prediction (upgrade recommended)](#cluster-returning-a-negative-upgrade-risks-prediction-upgrade-recommended)
 * [BDD tests](#bdd-tests)
 * [Package manifest](#package-manifest)
 
 <!-- vim-markdown-toc -->
+
 
 ## Description
 
@@ -755,7 +759,7 @@ Response from the service:
 < 
 ```
 
-## Upgrade risks prediction results
+### Upgrade risks prediction results
 
 To use the Upgrade Risks Prediction endpoint:
 
@@ -774,17 +778,17 @@ Response from the service:
 {"status":"ok","upgrade_recommendation":{"upgrade_recommended":true,"upgrade_risks_predictors":{"alerts":[],"operator_conditions":[]}}}
 ```
 
-### Clusters that return valid data
+#### Clusters that return valid data
 
 For the clusters not listed in the sections bellow, a 404 will be returned.
 
-#### Cluster returning a positive upgrade risks prediction (upgrade recommended)
+##### Cluster returning a positive upgrade risks prediction (upgrade recommended)
 
 ```
 00000001-624a-49a5-bab8-4fdc5e51a266
 ```
 
-#### Cluster returning a negative upgrade risks prediction (upgrade recommended)
+##### Cluster returning a negative upgrade risks prediction (upgrade recommended)
 
 ```
 00000003-eeee-eeee-eeee-000000000001
