@@ -100,7 +100,8 @@ const (
 	// Otherwise, a 404 is returned.
 	AckDeleteEndpoint = "ack/{rule_selector}"
 
-	// UpgradeRisksPredictionEndpoint
+	// UpgradeRisksPredictionEndpoint returns the prediction about upgrading
+	// the given cluster.
 	UpgradeRisksPredictionEndpoint = "upgrade-risks-prediction/cluster/{cluster}"
 
 	// MetricsEndpoint returns prometheus metrics

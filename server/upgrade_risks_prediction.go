@@ -47,6 +47,10 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 	if err != nil {
 		log.Error().Err(err).Msg("error retrieving upgrade prediction from storage")
 		handleServerError(err)
+		err = responses.SendNotFound(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 
