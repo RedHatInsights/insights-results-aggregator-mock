@@ -53,7 +53,7 @@ Mock service mimicking Insights Results Aggregator
     * [Delete rule](#delete-rule)
         * [Delete existing rule](#delete-existing-rule)
         * [Delete nonexisting rule](#delete-nonexisting-rule)
-* [Upgrade risks prediction results](#upgrade-risks-prediction-endpoint)
+* [Upgrade risks prediction results](#upgrade-risks-prediction-results)
 * [BDD tests](#bdd-tests)
 * [Package manifest](#package-manifest)
 
