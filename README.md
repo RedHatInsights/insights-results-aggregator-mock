@@ -775,7 +775,7 @@ Response from the service:
 < Date: Wed, 15 Feb 2023 08:44:11 GMT
 < Content-Length: 136
 < 
-{"status":"ok","upgrade_recommendation":{"upgrade_recommended":true,"upgrade_risks_predictors":{"alerts":[],"operator_conditions":[]}}}
+{"meta":{"last_checked_at":"2023-02-24T08:46:41Z"},"status":"ok","upgrade_recommendation":{"upgrade_recommended":true,"upgrade_risks_predictors":{"alerts":[],"operator_conditions":[]}}}
 ```
 
 #### Clusters that return valid data

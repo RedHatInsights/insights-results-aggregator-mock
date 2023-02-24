@@ -404,16 +404,28 @@ func (storage MemoryStorage) GetPredictionForCluster(cluster types.ClusterName) 
 		return &types.UpgradeRiskPrediction{
 			Recommended: true,
 			Predictors: types.UpgradeRiskPredictors{
-				Alerts:             []string{},
-				OperatorConditions: []string{},
+				Alerts:             []types.Alert{},
+				OperatorConditions: []types.OperatorCondition{},
 			},
 		}, nil
 	case "00000003-eeee-eeee-eeee-000000000001":
 		return &types.UpgradeRiskPrediction{
 			Recommended: false,
 			Predictors: types.UpgradeRiskPredictors{
-				Alerts:             []string{"alert1"},
-				OperatorConditions: []string{"foc1", "foc2"},
+				Alerts: []types.Alert{
+					{
+						Name:      "APIRemovedInNextEUSReleaseInUse",
+						Namespace: "openshift-kube-apiserver",
+						Severity:  "info",
+					},
+				},
+				OperatorConditions: []types.OperatorCondition{
+					{
+						Name:      "authentication",
+						Condition: "Failing",
+						Reason:    "AsExpected",
+					},
+				},
 			},
 		}, nil
 	}

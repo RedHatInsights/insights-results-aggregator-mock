@@ -954,10 +954,6 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "ok"
-                    },
                     "upgrade_recommendation": {
                       "type": "object",
                       "properties": {
@@ -970,20 +966,60 @@
                             "alerts": {
                               "type": "array",
                               "items": {
-                                "type": "string",
-                                "minimum": 0
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "example": "APIRemovedInNextEUSReleaseInUse"
+                                  },
+                                  "namespace": {
+                                    "type": "string",
+                                    "example": "openshift-kube-apiserver"
+                                  },
+                                  "severity": {
+                                    "type": "string",
+                                    "example": "info"
+                                  }
+                                }
                               }
                             },
                             "operator_conditions": {
                               "type": "array",
                               "items": {
-                                "type": "string",
-                                "minimum": 0
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "example": "authentication"
+                                  },
+                                  "condition": {
+                                    "type": "string",
+                                    "example": "Failing"
+                                  },
+                                  "reason": {
+                                    "type": "string",
+                                    "example": "AsExpected"
+                                  }
+                                }
                               }
                             }
                           }
                         }
                       }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "last_checked_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "[Optional] Last time of analysis for given cluster."
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
                     }
                   }
                 }

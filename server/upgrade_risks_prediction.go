@@ -18,6 +18,7 @@ package server
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/RedHatInsights/insights-operator-utils/responses"
 	"github.com/rs/zerolog/log"
@@ -54,8 +55,17 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 		return
 	}
 
+	meta := make(map[string]interface{})
+	meta["last_checked_at"] = time.Now().UTC().Format(time.RFC3339)
+
+	response := make(map[string]interface{})
+	response["upgrade_recommendation"] = prediction
+	response["meta"] = meta
+	response["status"] = "ok"
+
 	writer.Header().Set(contentType, appJSON)
-	err = responses.SendOK(writer, responses.BuildOkResponseWithData("upgrade_recommendation", prediction))
+
+	err = responses.SendOK(writer, response)
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}
