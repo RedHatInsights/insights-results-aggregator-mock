@@ -38,9 +38,22 @@ jobs:
         - go build
       script:
         - ./test.sh
+    - stage: bdd tests
+      before_script:
+        - wget -O docker-compose.yml https://raw.githubusercontent.com/RedHatInsights/insights-behavioral-spec/main/docker-compose.yml
+        - POSTGRES_DB_NAME=test docker-compose up -d
+        - cid=$(docker ps | grep 'insights-behavioral-spec:ci' | cut -d ' ' -f 1)
+        - make build
+        - docker cp . $cid:`docker exec $cid bash -c 'echo "$HOME"'`/mock_server
+        - docker cp insights-results-aggregator-mock $cid:`docker exec $cid bash -c 'echo "$VIRTUAL_ENV_BIN"'`
+        - docker exec -u root $cid /bin/bash -c 'chmod +x $VIRTUAL_ENV_BIN/insights-results-aggregator-mock'
+      script:
+        - docker exec -it $cid /bin/bash -c 'export PATH_TO_MOCK_SERVER=$HOME/mock_server && env && make aggregator-mock-tests'
 
 stages:
   - build
   - style
   - unit tests
   - functional tests
+  - bdd
+
