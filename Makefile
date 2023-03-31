@@ -17,6 +17,9 @@ clean: ## Run go clean
 build: ## Build binary containing service executable
 	go build -ldflags="-X 'main.BuildTime=$(buildtime)' -X 'main.BuildVersion=$(version)' -X 'main.BuildBranch=$(branch)' -X 'main.BuildCommit=$(commit)'"
 
+build-cover:	${SOURCES}  ## Build binary with code coverage detection support
+	go build -cover -ldflags="-X 'main.BuildTime=$(buildtime)' -X 'main.BuildVersion=$(version)' -X 'main.BuildBranch=$(branch)' -X 'main.BuildCommit=$(commit)'"
+
 fmt: ## Run go fmt -w for all sources
 	@echo "Running go formatting"
 	./gofmt.sh
