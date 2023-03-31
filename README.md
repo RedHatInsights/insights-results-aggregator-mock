@@ -99,6 +99,7 @@ Usage: make <OPTIONS> ... <TARGETS>
 Available targets are:
 
 build                Build binary containing service executable
+build-cover          Build binary with code coverage detection support
 fmt                  Run go fmt -w for all sources
 lint                 Run golint
 vet                  Run go vet. Report likely mistakes in source code
