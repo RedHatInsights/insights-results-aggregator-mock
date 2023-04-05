@@ -214,8 +214,7 @@ type UpgradeRiskPredictors struct {
 // UpgradeRiskPrediction data structure represents body of the response
 // for an upgrade-risk-predictions request
 type UpgradeRiskPrediction struct {
-	Recommended bool                  `json:"upgrade_recommended"`
-	Predictors  UpgradeRiskPredictors `json:"upgrade_risks_predictors"`
+	Predictors UpgradeRiskPredictors `json:"upgrade_risks_predictors"`
 }
 
 const (

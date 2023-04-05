@@ -23,6 +23,14 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+const (
+	ClusterOk            = "00000001-624a-49a5-bab8-4fdc5e51a266"
+	ClusterOkFailUpgrade = "00000003-eeee-eeee-eeee-000000000001"
+	ClusterManaged       = "6cab9726-c2be-438e-af11-db846a678abb"
+	ClusterNoAMS         = "c60ba611-6af4-4d62-9b9e-36344da5e7bc"
+	ClusterUnavailable   = "897ec1a1-4679-4122-aacb-f0ae9f9e1a5f"
+)
+
 // method upgradeRisksPrediction return a recommendation to upgrade or not a cluster
 // and a list of the alerts/operator conditions that were taken into account if the
 // upgrade is not recommended.
@@ -30,7 +38,6 @@ import (
 // Response format should look like:
 //
 //	{
-//		"upgrade_recommended": false,
 //		"upgrade_risks_predictors": {
 //			"alerts": ["alert1", "alert2"],
 //			"operator_conditions": ["foc1", "foc2"]
@@ -43,6 +50,33 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 		return
 	}
 
+	if clusterName == ClusterManaged {
+		log.Info().Msg("managed cluster case")
+		err = responses.SendNoContent(writer)
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+
+	if clusterName == ClusterNoAMS {
+		log.Info().Msg("No AMS available case")
+		err = responses.SendServiceUnavailable(writer, "AMS service unavailable")
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+
+	if clusterName == ClusterUnavailable {
+		log.Info().Msg("No AMS available case")
+		err = responses.SendServiceUnavailable(writer, "AMS service unavailable")
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+
 	prediction, err := server.Storage.GetPredictionForCluster(clusterName)
 	if err != nil {
 		log.Error().Err(err).Msg("error retrieving upgrade prediction from storage")
@@ -52,6 +86,11 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 			log.Error().Err(err).Msg(responseDataError)
 		}
 		return
+	}
+
+	if clusterName == ClusterOkFailUpgrade {
+		prediction.Predictors.Alerts = append(prediction.Predictors.Alerts, "alert1", "alert2")
+		prediction.Predictors.OperatorConditions = append(prediction.Predictors.OperatorConditions, "foc1", "foc2")
 	}
 
 	writer.Header().Set(contentType, appJSON)
