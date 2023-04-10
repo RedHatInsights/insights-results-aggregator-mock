@@ -24,11 +24,16 @@ import (
 )
 
 const (
-	ClusterOk            = "00000001-624a-49a5-bab8-4fdc5e51a266"
+	// ClusterOK is the cluster name for a OK response with no upgrade risks detected
+	ClusterOk = "00000001-624a-49a5-bab8-4fdc5e51a266"
+	// ClusterOKFailUpgrade is the cluster name for a OK response with upgrade risks detected
 	ClusterOkFailUpgrade = "00000003-eeee-eeee-eeee-000000000001"
-	ClusterManaged       = "6cab9726-c2be-438e-af11-db846a678abb"
-	ClusterNoAMS         = "c60ba611-6af4-4d62-9b9e-36344da5e7bc"
-	ClusterUnavailable   = "897ec1a1-4679-4122-aacb-f0ae9f9e1a5f"
+	// ClusterManaged is the cluster name for the response when a cluster in "managed"
+	ClusterManaged = "6cab9726-c2be-438e-af11-db846a678abb"
+	// ClusterNoAMS is the cluster name for the response when the AMS API is not available
+	ClusterNoAMS = "c60ba611-6af4-4d62-9b9e-36344da5e7bc"
+	// ClusterUnavailable is the cluster name for the response when the Upgrade risks prediction service is unavailable
+	ClusterUnavailable = "897ec1a1-4679-4122-aacb-f0ae9f9e1a5f"
 )
 
 // method upgradeRisksPrediction return a recommendation to upgrade or not a cluster
