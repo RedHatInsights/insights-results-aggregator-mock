@@ -71,8 +71,8 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 		}
 
 	case ClusterUnavailable:
-		log.Info().Msg("No AMS available case")
-		err = responses.SendServiceUnavailable(writer, "AMS service unavailable")
+		log.Info().Msg("No Upgrade Risks Prediction service available case")
+		err = responses.SendServiceUnavailable(writer, "Upgrade Risks Prediction service unavailable")
 		if err != nil {
 			log.Error().Err(err).Msg(responseDataError)
 		}
