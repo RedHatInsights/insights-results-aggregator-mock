@@ -24,9 +24,9 @@ import (
 )
 
 const (
-	// ClusterOK is the cluster name for a OK response with no upgrade risks detected
+	// ClusterOk is the cluster name for a OK response with no upgrade risks detected
 	ClusterOk = "00000001-624a-49a5-bab8-4fdc5e51a266"
-	// ClusterOKFailUpgrade is the cluster name for a OK response with upgrade risks detected
+	// ClusterOkFailUpgrade is the cluster name for a OK response with upgrade risks detected
 	ClusterOkFailUpgrade = "00000003-eeee-eeee-eeee-000000000001"
 	// ClusterManaged is the cluster name for the response when a cluster in "managed"
 	ClusterManaged = "6cab9726-c2be-438e-af11-db846a678abb"
@@ -55,52 +55,49 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 		return
 	}
 
-	if clusterName == ClusterManaged {
+	switch clusterName {
+	case ClusterManaged:
 		log.Info().Msg("managed cluster case")
 		err = responses.SendNoContent(writer)
 		if err != nil {
 			log.Error().Err(err).Msg(responseDataError)
 		}
-		return
-	}
 
-	if clusterName == ClusterNoAMS {
+	case ClusterNoAMS:
 		log.Info().Msg("No AMS available case")
 		err = responses.SendServiceUnavailable(writer, "AMS service unavailable")
 		if err != nil {
 			log.Error().Err(err).Msg(responseDataError)
 		}
-		return
-	}
 
-	if clusterName == ClusterUnavailable {
+	case ClusterUnavailable:
 		log.Info().Msg("No AMS available case")
 		err = responses.SendServiceUnavailable(writer, "AMS service unavailable")
 		if err != nil {
 			log.Error().Err(err).Msg(responseDataError)
 		}
-		return
-	}
 
-	prediction, err := server.Storage.GetPredictionForCluster(clusterName)
-	if err != nil {
-		log.Error().Err(err).Msg("error retrieving upgrade prediction from storage")
-		handleServerError(err)
-		err = responses.SendNotFound(writer, err.Error())
+	default:
+		prediction, err := server.Storage.GetPredictionForCluster(clusterName)
+		if err != nil {
+			log.Error().Err(err).Msg("error retrieving upgrade prediction from storage")
+			handleServerError(err)
+			err = responses.SendNotFound(writer, err.Error())
+			if err != nil {
+				log.Error().Err(err).Msg(responseDataError)
+			}
+			return
+		}
+
+		if clusterName == ClusterOkFailUpgrade {
+			prediction.Predictors.Alerts = append(prediction.Predictors.Alerts, "alert1", "alert2")
+			prediction.Predictors.OperatorConditions = append(prediction.Predictors.OperatorConditions, "foc1", "foc2")
+		}
+
+		writer.Header().Set(contentType, appJSON)
+		err = responses.SendOK(writer, responses.BuildOkResponseWithData("upgrade_recommendation", prediction))
 		if err != nil {
 			log.Error().Err(err).Msg(responseDataError)
 		}
-		return
-	}
-
-	if clusterName == ClusterOkFailUpgrade {
-		prediction.Predictors.Alerts = append(prediction.Predictors.Alerts, "alert1", "alert2")
-		prediction.Predictors.OperatorConditions = append(prediction.Predictors.OperatorConditions, "foc1", "foc2")
-	}
-
-	writer.Header().Set(contentType, appJSON)
-	err = responses.SendOK(writer, responses.BuildOkResponseWithData("upgrade_recommendation", prediction))
-	if err != nil {
-		log.Error().Err(err).Msg(responseDataError)
 	}
 }
