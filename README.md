@@ -774,7 +774,7 @@ Response from the service:
 < HTTP/1.1 200 OK
 < Content-Type: application/json; charset=utf-8
 < Date: Wed, 15 Feb 2023 08:44:11 GMT
-< Content-Length: 136
+< Content-Length: 109
 < 
 {"status":"ok","upgrade_recommendation":{"upgrade_recommended":true,"upgrade_risks_predictors":{"alerts":[],"operator_conditions":[]}}}
 ```
@@ -789,10 +789,28 @@ For the clusters not listed in the sections bellow, a 404 will be returned.
 00000001-624a-49a5-bab8-4fdc5e51a266
 ```
 
-##### Cluster returning a negative upgrade risks prediction (upgrade recommended)
+##### Cluster returning a negative upgrade risks prediction (upgrade not recommended)
 
 ```
 00000003-eeee-eeee-eeee-000000000001
+```
+
+#### Cluster returning "no content" because the cluster is managed
+
+```
+6cab9726-c2be-438e-af11-db846a678abb
+```
+
+#### Cluster returning unavailable service due to AMS is not available
+
+```
+c60ba611-6af4-4d62-9b9e-36344da5e7bc
+```
+
+#### Cluster returning unavailable service due to Upgrade Risks Prediction is not available
+
+```
+897ec1a1-4679-4122-aacb-f0ae9f9e1a5f
 ```
 
 ## BDD tests

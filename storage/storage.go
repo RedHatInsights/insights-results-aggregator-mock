@@ -22,7 +22,6 @@ package storage
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 	"time"
@@ -399,25 +398,10 @@ func (storage MemoryStorage) GetRuleByID(ruleID types.RuleID) (*types.Rule, erro
 
 // GetPredictionForCluster gets a prediction for the cluster
 func (storage MemoryStorage) GetPredictionForCluster(cluster types.ClusterName) (*types.UpgradeRiskPrediction, error) {
-	switch cluster {
-	case "00000001-624a-49a5-bab8-4fdc5e51a266":
-		return &types.UpgradeRiskPrediction{
-			Recommended: true,
-			Predictors: types.UpgradeRiskPredictors{
-				Alerts:             []string{},
-				OperatorConditions: []string{},
-			},
-		}, nil
-	case "00000003-eeee-eeee-eeee-000000000001":
-		return &types.UpgradeRiskPrediction{
-			Recommended: false,
-			Predictors: types.UpgradeRiskPredictors{
-				Alerts:             []string{"alert1"},
-				OperatorConditions: []string{"foc1", "foc2"},
-			},
-		}, nil
-	}
-
-	return nil, fmt.Errorf("cluster not found")
-
+	return &types.UpgradeRiskPrediction{
+		Predictors: types.UpgradeRiskPredictors{
+			Alerts:             []string{},
+			OperatorConditions: []string{},
+		},
+	}, nil
 }
