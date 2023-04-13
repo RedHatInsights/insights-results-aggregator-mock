@@ -1021,6 +1021,13 @@
                 }
               }
             }
+          },
+          "204": {
+            "description": "Status NoContent: happens when the cluster is managed. The upgrade risks prediction is not available for this kind of clusters."
+          },
+          "404": {},
+          "503": {
+            "description": "Status NotAvailable: happens when the AMS API or the Upgrade Risks Prediction service are not available."
           }
         }
       }
