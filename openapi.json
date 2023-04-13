@@ -1027,7 +1027,7 @@
           },
           "404": {},
           "503": {
-            "description": "Status NotAvailable: happens when the AMS API or the Upgrade Risks Prediction service are not available."
+            "description": "Status NotAvailable: happens when the AMS API or the Upgrade Risks Prediction service is not available."
           }
         }
       }
