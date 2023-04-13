@@ -93,6 +93,7 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 		}
 
 		if clusterName == ClusterOkFailUpgrade {
+			prediction.Recommended = false
 			prediction.Predictors.Alerts = append(
 				prediction.Predictors.Alerts,
 				types.Alert{
@@ -105,18 +106,33 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 					Namespace: "namespace2",
 					Severity:  "warning",
 				},
+				types.Alert{
+					Name:      "alert3",
+					Namespace: "namespace3",
+					Severity:  "critical",
+				},
 			)
 			prediction.Predictors.OperatorConditions = append(
 				prediction.Predictors.OperatorConditions,
 				types.OperatorCondition{
 					Name:      "foc1",
-					Condition: "condition1",
-					Reason:    "Reason1",
+					Condition: "Degraded",
+					Reason:    "NotExpected",
 				},
 				types.OperatorCondition{
 					Name:      "foc2",
-					Condition: "condition2",
-					Reason:    "Reason2",
+					Condition: "Failing",
+					Reason:    "NotExpected",
+				},
+				types.OperatorCondition{
+					Name:      "foc3",
+					Condition: "Not Available",
+					Reason:    "NotExpected",
+				},
+				types.OperatorCondition{
+					Name:      "foc4",
+					Condition: "Not Upgradeable",
+					Reason:    "NotExpected",
 				},
 			)
 		}
