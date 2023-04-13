@@ -28,7 +28,7 @@ type ClustersResponse struct {
 
 // common constants used by REST API tests
 const (
-	apiURL            = "http://localhost:8080/api/insights-results-aggregator/v1/"
+	apiURL            = "http://localhost:8080//api/insights-results-aggregator/v2/"
 	contentTypeHeader = "Content-Type"
 
 	// ContentTypeJSON represents MIME type for JSON format
