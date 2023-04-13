@@ -18,9 +18,12 @@ package server
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/RedHatInsights/insights-operator-utils/responses"
 	"github.com/rs/zerolog/log"
+
+	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
 const (
@@ -90,12 +93,56 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 		}
 
 		if clusterName == ClusterOkFailUpgrade {
-			prediction.Predictors.Alerts = append(prediction.Predictors.Alerts, "alert1", "alert2")
-			prediction.Predictors.OperatorConditions = append(prediction.Predictors.OperatorConditions, "foc1", "foc2")
+			prediction.Recommended = false
+			prediction.Predictors.Alerts = append(
+				prediction.Predictors.Alerts,
+				types.Alert{
+					Name:      "alert1",
+					Namespace: "namespace1",
+					Severity:  "info",
+				},
+				types.Alert{
+					Name:      "alert2",
+					Namespace: "namespace2",
+					Severity:  "warning",
+				},
+				types.Alert{
+					Name:      "alert3",
+					Namespace: "namespace3",
+					Severity:  "critical",
+				},
+			)
+			prediction.Predictors.OperatorConditions = append(
+				prediction.Predictors.OperatorConditions,
+				types.OperatorCondition{
+					Name:      "foc1",
+					Condition: "Degraded",
+					Reason:    "NotExpected",
+				},
+				types.OperatorCondition{
+					Name:      "foc2",
+					Condition: "Failing",
+					Reason:    "NotExpected",
+				},
+				types.OperatorCondition{
+					Name:      "foc3",
+					Condition: "Not Available",
+					Reason:    "NotExpected",
+				},
+				types.OperatorCondition{
+					Name:      "foc4",
+					Condition: "Not Upgradeable",
+					Reason:    "NotExpected",
+				},
+			)
 		}
 
 		writer.Header().Set(contentType, appJSON)
-		err = responses.SendOK(writer, responses.BuildOkResponseWithData("upgrade_recommendation", prediction))
+		resp := responses.BuildOkResponseWithData("upgrade_recommendation", prediction)
+		resp["meta"] = map[string]string{
+			"last_checked_at": time.Now().UTC().Format(time.RFC3339),
+		}
+		err = responses.SendOK(writer, resp)
 		if err != nil {
 			log.Error().Err(err).Msg(responseDataError)
 		}

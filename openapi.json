@@ -970,18 +970,50 @@
                             "alerts": {
                               "type": "array",
                               "items": {
-                                "type": "string",
-                                "minimum": 0
+                                "minimum": 0,
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "namespace": {
+                                    "type": "string"
+                                  },
+                                  "severity": {
+                                    "type": "string"
+                                  }
+                                }                                
                               }
                             },
                             "operator_conditions": {
                               "type": "array",
                               "items": {
-                                "type": "string",
-                                "minimum": 0
+                                "minimum": 0,
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "condition": {
+                                    "type": "string"
+                                  },
+                                  "reason": {
+                                    "type": "string"
+                                  }
+                                }
                               }
                             }
                           }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "last_checked_at": {
+                          "type": "string",
+                          "format": "date",
+                          "example": "2020-01-23T16:15:59.478901889Z"
                         }
                       }
                     }
@@ -989,6 +1021,15 @@
                 }
               }
             }
+          },
+          "204": {
+            "description": "Status NoContent: happens when the cluster is managed. The upgrade risks prediction is not available for this kind of clusters."
+          },
+          "404": {
+            "description": "Status NotFound: happens when the cluster cannot be found in the Observatorium data"
+          },
+          "503": {
+            "description": "Status NotAvailable: happens when the AMS API or the Upgrade Risks Prediction service is not available."
           }
         }
       }

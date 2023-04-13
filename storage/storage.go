@@ -399,9 +399,10 @@ func (storage MemoryStorage) GetRuleByID(ruleID types.RuleID) (*types.Rule, erro
 // GetPredictionForCluster gets a prediction for the cluster
 func (storage MemoryStorage) GetPredictionForCluster(cluster types.ClusterName) (*types.UpgradeRiskPrediction, error) {
 	return &types.UpgradeRiskPrediction{
-		Predictors: types.UpgradeRiskPredictors{
-			Alerts:             []string{},
-			OperatorConditions: []string{},
+		Recommended: true,
+		Predictors: types.UpgradeRisksPredictors{
+			Alerts:             []types.Alert{},
+			OperatorConditions: []types.OperatorCondition{},
 		},
 	}, nil
 }

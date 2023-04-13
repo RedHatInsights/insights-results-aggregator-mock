@@ -773,10 +773,10 @@ Response from the service:
 ```
 < HTTP/1.1 200 OK
 < Content-Type: application/json; charset=utf-8
-< Date: Wed, 15 Feb 2023 08:44:11 GMT
-< Content-Length: 109
+< Date: Thu, 13 Apr 2023 12:38:44 GMT
+< Content-Length: 186
 < 
-{"status":"ok","upgrade_recommendation":{"upgrade_recommended":true,"upgrade_risks_predictors":{"alerts":[],"operator_conditions":[]}}}
+{"meta":{"last_checked_at":"2023-04-13T12:38:44Z"},"status":"ok","upgrade_recommendation":{"upgrade_recommended":true,"upgrade_risks_predictors":{"alerts":[],"operator_conditions":[]}}}
 ```
 
 #### Clusters that return valid data
