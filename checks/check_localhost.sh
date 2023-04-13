@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ADDRESS=localhost:8080//api/insights-results-aggregator/v2
+ADDRESS=localhost:8080/api/insights-results-aggregator/v2
 
 mkdir -p localhost
 
