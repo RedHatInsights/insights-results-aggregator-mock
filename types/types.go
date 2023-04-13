@@ -204,17 +204,32 @@ type AcknowledgementRuleSelectorJustification struct {
 	Value        string       `json:"justification"`
 }
 
-// UpgradeRiskPredictors data structure represents the alerts and conditions
+// Alert data structure representing a single alert
+type Alert struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
+	Severity  string `json:"severity"`
+}
+
+// OperatorCondition data structure representing a single operator condition
+type OperatorCondition struct {
+	Name      string `json:"name"`
+	Condition string `json:"condition"`
+	Reason    string `json:"reason"`
+}
+
+// UpgradeRisksPredictors data structure represents the alerts and conditions
 // that are contained in an upgrade-risk-predictions response
-type UpgradeRiskPredictors struct {
-	Alerts             []string `json:"alerts"`
-	OperatorConditions []string `json:"operator_conditions"`
+type UpgradeRisksPredictors struct {
+	Alerts             []Alert             `json:"alerts"`
+	OperatorConditions []OperatorCondition `json:"operator_conditions"`
 }
 
 // UpgradeRiskPrediction data structure represents body of the response
 // for an upgrade-risk-predictions request
 type UpgradeRiskPrediction struct {
-	Predictors UpgradeRiskPredictors `json:"upgrade_risks_predictors"`
+	Recommended bool                   `json:"upgrade_recommended"`
+	Predictors  UpgradeRisksPredictors `json:"upgrade_risks_predictors"`
 }
 
 const (
