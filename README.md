@@ -144,7 +144,7 @@ Note: it is possible to use single dash or double dashes for all commands.
 ### Settings for localhost
 
 ```
-ADDRESS=localhost:8080/api/insights-results-aggregator/v1
+ADDRESS=localhost:8080/api/insights-results-aggregator/v2
 ```
 
 ### Basic endpoints
@@ -434,7 +434,7 @@ behaviour on client side.
 Example:
 
 ```
-ADDRESS=localhost:8080/api/insights-results-aggregator/v1
+ADDRESS=localhost:8080/api/insights-results-aggregator/v2
 
 clusters="ffffffff-ffff-ffff-ffff-000000000200
 ffffffff-ffff-ffff-ffff-000000000201
@@ -451,7 +451,7 @@ done
 ## List of clusters hitting specified rule
 
 ```
-curl 'localhost:8080/api/insights-results-aggregator/v1/rule/ccx_rules_ocp.external.rules.nodes_requirements_check.report|NODES_MINIMUM_REQUIREMENTS_NOT_MET/clusters_detail/'
+curl 'localhost:8080/api/insights-results-aggregator/v2/rule/ccx_rules_ocp.external.rules.nodes_requirements_check.report|NODES_MINIMUM_REQUIREMENTS_NOT_MET/clusters_detail/'
 ```
 
 ### An example of response:
@@ -504,7 +504,7 @@ List acks from this account where the rule is active. Will return an empty list 
 Request to the service:
 
 ```
-curl localhost:8080/api/insights-results-aggregator/v1/ack
+curl localhost:8080/api/insights-results-aggregator/v2/ack
 ```
 
 Response from the service:
@@ -565,7 +565,7 @@ Otherwise, a new ack is created.
 Request to the service:
 
 ```
-curl -v -X POST -H "Content-Type: application/json" --data '{"rule_id":"foo|bar", "justification":"xyzzy"}' "localhost:8080/api/insights-results-aggregator/v1/ack"
+curl -v -X POST -H "Content-Type: application/json" --data '{"rule_id":"foo|bar", "justification":"xyzzy"}' "localhost:8080/api/insights-results-aggregator/v2/ack"
 ```
 
 Response from the service:
@@ -590,7 +590,7 @@ Response from the service:
 Request to the service:
 
 ```
-curl -v -X POST -H "Content-Type: application/json" --data '{"rule_id":"existing|rule", "justification":"xyzzy"}' "localhost:8080/api/insights-results-aggregator/v1/ack"
+curl -v -X POST -H "Content-Type: application/json" --data '{"rule_id":"existing|rule", "justification":"xyzzy"}' "localhost:8080/api/insights-results-aggregator/v2/ack"
 ```
 
 Response from the service:
@@ -624,7 +624,7 @@ deleted by Insights rule ID, not by their own ack ID.
 Request to the service:
 
 ```
-curl -v "localhost:8080/api/insights-results-aggregator/v1/ack/new|rule"
+curl -v "localhost:8080/api/insights-results-aggregator/v2/ack/new|rule"
 ```
 
 Response from the service:
@@ -649,7 +649,7 @@ Response from the service:
 Request to the service:
 
 ```
-curl -v "localhost:8080/api/insights-results-aggregator/v1/ack/ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR"
+curl -v "localhost:8080/api/insights-results-aggregator/v2/ack/ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR"
 ```
 
 Response from the service:
@@ -678,7 +678,7 @@ Please note that just `updated_at` attribute is changed in this situation.
 Request to the service:
 
 ```
-curl -v-X PUT -H "Content-Type: application/json" --data '{"justification":"xyzzy"}' "localhost:8080/api/insights-results-aggregator/v1/ack/existing|rule"
+curl -v-X PUT -H "Content-Type: application/json" --data '{"justification":"xyzzy"}' "localhost:8080/api/insights-results-aggregator/v2/ack/existing|rule"
 ```
 
 Response from the service:
@@ -707,7 +707,7 @@ is returned.
 Request to the service:
 
 ```
-curl -v -X PUT -H "Content-Type: application/json" --data '{"justification":"xyzzy"}' "localhost:8080/api/insights-results-aggregator/v1/ack/new|rule"
+curl -v -X PUT -H "Content-Type: application/json" --data '{"justification":"xyzzy"}' "localhost:8080/api/insights-results-aggregator/v2/ack/new|rule"
 ```
 
 Response from the service:
@@ -732,7 +732,7 @@ deleted and a 204 is returned. Otherwise, a 404 is returned.
 Request to the service:
 
 ```
-curl -v -X DELETE "localhost:8080/api/insights-results-aggregator/v1/ack/ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR"
+curl -v -X DELETE "localhost:8080/api/insights-results-aggregator/v2/ack/ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR"
 ```
 
 Response from the service:
@@ -748,7 +748,7 @@ Response from the service:
 Request to the service:
 
 ```
-curl -v -X DELETE "localhost:8080/api/insights-results-aggregator/v1/ack/foobar|foobar"
+curl -v -X DELETE "localhost:8080/api/insights-results-aggregator/v2/ack/foobar|foobar"
 ```
 
 Response from the service:
@@ -765,7 +765,7 @@ Response from the service:
 To use the Upgrade Risks Prediction endpoint:
 
 ```
-curl "localhost:8080/api/insights-results-aggregator/v1/cluster/{cluster_id}/upgrade-risks-prediction
+curl "localhost:8080/api/insights-results-aggregator/v2/cluster/{cluster_id}/upgrade-risks-prediction
 ```
 
 Response from the service:

@@ -23,7 +23,7 @@ import (
 	"github.com/verdverm/frisby"
 )
 
-// checkRestAPIEntryPoint check if the entry point (usually /api/insights-results-aggregator/v1/) responds correctly to HTTP GET command
+// checkRestAPIEntryPoint check if the entry point (usually /api/insights-results-aggregator/v2/) responds correctly to HTTP GET command
 func checkRestAPIEntryPoint() {
 	f := frisby.Create("Check the entry point to REST API using HTTP GET method").Get(apiURL)
 	f.Send()
