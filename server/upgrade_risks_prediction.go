@@ -68,6 +68,7 @@ const (
 //			]
 //		}
 //	}
+
 func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
@@ -117,55 +118,7 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 		}
 
 		if clusterName == ClusterOkFailUpgrade {
-			prediction.Recommended = false
-			prediction.Predictors.Alerts = append(
-				prediction.Predictors.Alerts,
-				types.Alert{
-					Name:      "alert1",
-					Namespace: "namespace1",
-					Severity:  "info",
-					URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert1",
-				},
-				types.Alert{
-					Name:      "alert2",
-					Namespace: "namespace2",
-					Severity:  "warning",
-					URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert2",
-				},
-				types.Alert{
-					Name:      "alert3",
-					Namespace: "namespace3",
-					Severity:  "critical",
-					URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert3",
-				},
-			)
-			prediction.Predictors.OperatorConditions = append(
-				prediction.Predictors.OperatorConditions,
-				types.OperatorCondition{
-					Name:      "foc1",
-					Condition: "Degraded",
-					Reason:    "NotExpected",
-					URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc1",
-				},
-				types.OperatorCondition{
-					Name:      "foc2",
-					Condition: "Failing",
-					Reason:    "NotExpected",
-					URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc2",
-				},
-				types.OperatorCondition{
-					Name:      "foc3",
-					Condition: "Not Available",
-					Reason:    "NotExpected",
-					URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc3",
-				},
-				types.OperatorCondition{
-					Name:      "foc4",
-					Condition: "Not Upgradeable",
-					Reason:    "NotExpected",
-					URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc4",
-				},
-			)
+			buildOkResponse(prediction)
 		}
 
 		writer.Header().Set(contentType, appJSON)
@@ -178,4 +131,56 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 			log.Error().Err(err).Msg(responseDataError)
 		}
 	}
+}
+
+func buildOkResponse(prediction *types.UpgradeRiskPrediction) {
+	prediction.Recommended = false
+	prediction.Predictors.Alerts = append(
+		prediction.Predictors.Alerts,
+		types.Alert{
+			Name:      "alert1",
+			Namespace: "namespace1",
+			Severity:  "info",
+			URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert1",
+		},
+		types.Alert{
+			Name:      "alert2",
+			Namespace: "namespace2",
+			Severity:  "warning",
+			URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert2",
+		},
+		types.Alert{
+			Name:      "alert3",
+			Namespace: "namespace3",
+			Severity:  "critical",
+			URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert3",
+		},
+	)
+	prediction.Predictors.OperatorConditions = append(
+		prediction.Predictors.OperatorConditions,
+		types.OperatorCondition{
+			Name:      "foc1",
+			Condition: "Degraded",
+			Reason:    "NotExpected",
+			URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc1",
+		},
+		types.OperatorCondition{
+			Name:      "foc2",
+			Condition: "Failing",
+			Reason:    "NotExpected",
+			URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc2",
+		},
+		types.OperatorCondition{
+			Name:      "foc3",
+			Condition: "Not Available",
+			Reason:    "NotExpected",
+			URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc3",
+		},
+		types.OperatorCondition{
+			Name:      "foc4",
+			Condition: "Not Upgradeable",
+			Reason:    "NotExpected",
+			URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc4",
+		},
+	)
 }
