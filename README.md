@@ -813,6 +813,11 @@ c60ba611-6af4-4d62-9b9e-36344da5e7bc
 897ec1a1-4679-4122-aacb-f0ae9f9e1a5f
 ```
 
+#### Cluster returning 404 due to no data in RHOBS for this cluster
+
+```
+234ec1a1-4679-4122-aacb-f0ae9f9e1a56
+```
 ## BDD tests
 
 Behaviour tests for this service are included in [Insights Behavioral

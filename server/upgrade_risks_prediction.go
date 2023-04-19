@@ -37,6 +37,8 @@ const (
 	ClusterNoAMS = "c60ba611-6af4-4d62-9b9e-36344da5e7bc"
 	// ClusterUnavailable is the cluster name for the response when the Upgrade risks prediction service is unavailable
 	ClusterUnavailable = "897ec1a1-4679-4122-aacb-f0ae9f9e1a5f"
+	// ClusterNoData is the cluster name for the response when the Upgrade risks prediction service returns a 404
+	ClusterNoData = "234ec1a1-4679-4122-aacb-f0ae9f9e1a56"
 )
 
 // method upgradeRisksPrediction return a recommendation to upgrade or not a cluster
@@ -46,9 +48,24 @@ const (
 // Response format should look like:
 //
 //	{
+//		"upgrade_recommended": false,
 //		"upgrade_risks_predictors": {
-//			"alerts": ["alert1", "alert2"],
-//			"operator_conditions": ["foc1", "foc2"]
+//			"alerts": [
+//				{
+//					"name": "APIRemovedInNextEUSReleaseInUse",
+//					"namespace": "openshift-kube-apiserver",
+//					"severity": "info",
+//                  "url": "${CONSOLE_URL}/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=${ALERT_NAME}"
+//				}
+//			],
+//			"operator_conditions": [
+//				{
+//					"name": "authentication",
+//					"condition": "Failing",
+//					"reason": "AsExpected",
+//                  "url": "${CONSOLE_URL}/k8s/cluster/config.openshift.io~v1~ClusterOperator/${OPERATOR_NAME}"
+//				}
+//			]
 //		}
 //	}
 func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, request *http.Request) {
@@ -80,6 +97,13 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 			log.Error().Err(err).Msg(responseDataError)
 		}
 
+	case ClusterNoData:
+		log.Info().Msg("No data for the cluster")
+		err = responses.SendNotFound(writer, "No data for the cluster")
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+
 	default:
 		prediction, err := server.Storage.GetPredictionForCluster(clusterName)
 		if err != nil {
@@ -100,16 +124,19 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 					Name:      "alert1",
 					Namespace: "namespace1",
 					Severity:  "info",
+					URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert1",
 				},
 				types.Alert{
 					Name:      "alert2",
 					Namespace: "namespace2",
 					Severity:  "warning",
+					URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert2",
 				},
 				types.Alert{
 					Name:      "alert3",
 					Namespace: "namespace3",
 					Severity:  "critical",
+					URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert3",
 				},
 			)
 			prediction.Predictors.OperatorConditions = append(
@@ -118,21 +145,25 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 					Name:      "foc1",
 					Condition: "Degraded",
 					Reason:    "NotExpected",
+					URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc1",
 				},
 				types.OperatorCondition{
 					Name:      "foc2",
 					Condition: "Failing",
 					Reason:    "NotExpected",
+					URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc2",
 				},
 				types.OperatorCondition{
 					Name:      "foc3",
 					Condition: "Not Available",
 					Reason:    "NotExpected",
+					URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc3",
 				},
 				types.OperatorCondition{
 					Name:      "foc4",
 					Condition: "Not Upgradeable",
 					Reason:    "NotExpected",
+					URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc4",
 				},
 			)
 		}

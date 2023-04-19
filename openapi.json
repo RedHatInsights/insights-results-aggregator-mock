@@ -981,6 +981,9 @@
                                   },
                                   "severity": {
                                     "type": "string"
+                                  },
+                                  "url": {
+                                    "type": "string"
                                   }
                                 }                                
                               }
@@ -998,6 +1001,9 @@
                                     "type": "string"
                                   },
                                   "reason": {
+                                    "type": "string"
+                                  },
+                                  "url": {
                                     "type": "string"
                                   }
                                 }
@@ -1026,7 +1032,7 @@
             "description": "Status NoContent: happens when the cluster is managed. The upgrade risks prediction is not available for this kind of clusters."
           },
           "404": {
-            "description": "Status NotFound: happens when the cluster cannot be found in the Observatorium data"
+            "description": "Status NotFound: happens when the cluster has no data in Observatorium"
           },
           "503": {
             "description": "Status NotAvailable: happens when the AMS API or the Upgrade Risks Prediction service is not available."
