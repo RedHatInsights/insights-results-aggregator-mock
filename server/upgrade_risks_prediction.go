@@ -106,30 +106,34 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 		}
 
 	default:
-		prediction, err := server.Storage.GetPredictionForCluster(clusterName)
-		if err != nil {
-			log.Error().Err(err).Msg("error retrieving upgrade prediction from storage")
-			handleServerError(err)
-			err = responses.SendNotFound(writer, err.Error())
-			if err != nil {
-				log.Error().Err(err).Msg(responseDataError)
-			}
-			return
-		}
+		server.sendOkResponse(clusterName, writer)
+	}
+}
 
-		if clusterName == ClusterOkFailUpgrade {
-			buildOkResponse(prediction)
-		}
-
-		writer.Header().Set(contentType, appJSON)
-		resp := responses.BuildOkResponseWithData("upgrade_recommendation", prediction)
-		resp["meta"] = map[string]string{
-			"last_checked_at": time.Now().UTC().Format(time.RFC3339),
-		}
-		err = responses.SendOK(writer, resp)
+func (server *HTTPServer) sendOkResponse(clusterName types.ClusterName, writer http.ResponseWriter) {
+	prediction, err := server.Storage.GetPredictionForCluster(clusterName)
+	if err != nil {
+		log.Error().Err(err).Msg("error retrieving upgrade prediction from storage")
+		handleServerError(err)
+		err = responses.SendNotFound(writer, err.Error())
 		if err != nil {
 			log.Error().Err(err).Msg(responseDataError)
 		}
+		return
+	}
+
+	if clusterName == ClusterOkFailUpgrade {
+		buildOkResponse(prediction)
+	}
+
+	writer.Header().Set(contentType, appJSON)
+	resp := responses.BuildOkResponseWithData("upgrade_recommendation", prediction)
+	resp["meta"] = map[string]string{
+		"last_checked_at": time.Now().UTC().Format(time.RFC3339),
+	}
+	err = responses.SendOK(writer, resp)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
 	}
 }
 
