@@ -1037,7 +1037,10 @@
           "503": {
             "description": "Status NotAvailable: happens when the AMS API or the Upgrade Risks Prediction service is not available."
           }
-        }
+        },
+        "tags": [
+          "prod"
+        ]
       }
     }
   },
