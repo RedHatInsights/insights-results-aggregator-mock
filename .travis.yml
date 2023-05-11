@@ -42,7 +42,7 @@ jobs:
       before_script:
         - wget -O docker-compose.yml https://raw.githubusercontent.com/RedHatInsights/insights-behavioral-spec/main/docker-compose.yml
         - POSTGRES_DB_NAME=test docker-compose up -d
-        - cid=$(docker ps | grep 'insights-behavioral-spec:ci' | cut -d ' ' -f 1)
+        - cid=$(docker ps | grep 'insights-behavioral-spec:latest' | cut -d ' ' -f 1)
         - make build
         - docker cp . $cid:`docker exec $cid bash -c 'echo "$HOME"'`/mock_server
         - docker cp insights-results-aggregator-mock $cid:`docker exec $cid bash -c 'echo "$VIRTUAL_ENV_BIN"'`
