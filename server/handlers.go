@@ -528,6 +528,7 @@ func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, requ
 
 	requestID, err := readRequestID(writer, request)
 	if err != nil {
+		log.Error().Err(err).Msg(unableToReadRequestIDsMessage)
 		// everything has been handled already
 		return
 	}
@@ -546,6 +547,7 @@ func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, r
 
 	requestID, err := readRequestID(writer, request)
 	if err != nil {
+		log.Error().Err(err).Msg(unableToReadRequestIDsMessage)
 		// everything has been handled already
 		return
 	}
