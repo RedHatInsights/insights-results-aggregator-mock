@@ -1,5 +1,5 @@
 /*
-Copyright © 2020, 2021 Red Hat, Inc.
+Copyright © 2020, 2021, 2022, 2023 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -70,6 +70,22 @@ const (
 	EnableRuleForClusterEndpoint = "clusters/{cluster}/rules/{rule_id}/enable"
 	// RuleClusterDetailEndpoint should return a list of all the clusters IDs affected by this rule
 	RuleClusterDetailEndpoint = "rule/{rule_selector}/clusters_detail/"
+
+	// Endpoints to manipulate with simplified rule results stored
+	// independently under "tracker_id" identifier
+
+	// ListAllRequestIDs should return list of all request IDs detected for
+	// given cluster. In reality the list is refreshing as old request IDs
+	// are forgotten after 24 hours
+	ListAllRequestIDs = "cluster/{cluster}/requests/"
+
+	// StatusOfRequestID should return status of processing one given
+	// request ID
+	StatusOfRequestID = "clusters/{cluster}/request/{request_id}/status"
+
+	// RuleHitsForRequestID should return simplified results for given
+	// cluster and requestID
+	RuleHitsForRequestID = "cluster/{cluster}/request/{request_id}/report"
 
 	// Endpoints to acknowledge rule and to manipulate with
 	// acknowledgements.
