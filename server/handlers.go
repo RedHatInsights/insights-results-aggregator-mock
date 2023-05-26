@@ -43,6 +43,7 @@ const requestParameter = "Request parameter"
 
 const unableToReadReportErrorMessage = "Unable to read report for cluster"
 const unableToReadRequestIDsMessage = "Unable to read request IDs for cluster"
+const requestsForClusterNotFound = "Requests for cluster not found"
 
 // readOrganizationID retrieves organization id from request
 // if it's not possible, it writes http error to the writer and returns error
@@ -517,7 +518,7 @@ func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, reque
 
 	requestIDs, found := data.RequestIDs[clusterName]
 	if !found {
-		err := responses.SendNotFound(writer, "Requests for cluster not found")
+		err := responses.SendNotFound(writer, requestsForClusterNotFound)
 		if err != nil {
 			log.Error().Err(err).Msg(responseDataError)
 		}
@@ -536,7 +537,8 @@ func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, reque
 }
 
 // readStatusOfRequestID method implements endpoint that should return a status
-// for given request ID
+// for given request ID. Currently the status is set to "processed" or
+// "unknown" because we won't have information about "in-between" states.
 func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
@@ -552,6 +554,36 @@ func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, requ
 		return
 	}
 	logRequestID(requestID)
+
+	requestIDs, found := data.RequestIDs[clusterName]
+	if !found {
+		err := responses.SendNotFound(writer, requestsForClusterNotFound)
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+
+	// prepare data structure
+	responseData := map[string]interface{}{}
+	responseData["cluster"] = string(clusterName)
+	responseData["requestID"] = requestID
+	responseData["status"] = "unknown"
+
+	// try to find the required request in requests IDs
+	for _, storedRequestID := range requestIDs {
+		if storedRequestID == requestID {
+			// update data structure
+			responseData["status"] = "processed"
+			break
+		}
+	}
+
+	// send response back to user
+	err = responses.SendOK(writer, responseData)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
 }
 
 // readRuleHitsForRequestID method implements endpoint that should return
