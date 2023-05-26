@@ -1,5 +1,5 @@
 /*
-Copyright © 2020, 2021, 2022 Red Hat, Inc.
+Copyright © 2020, 2021, 2022, 2023 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package server
 import (
 	"context"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -72,6 +73,8 @@ func (server *HTTPServer) Start() error {
 		ReadHeaderTimeout: 3 * time.Second,
 	}
 
+	server.printAccessInfo()
+
 	err := server.Serv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		log.Error().Err(err).Msg("Unable to start HTTP/S server")
@@ -79,6 +82,21 @@ func (server *HTTPServer) Start() error {
 	}
 
 	return nil
+}
+
+func (server *HTTPServer) printAccessInfo() {
+	// access command should look like:
+	// curl localhost:8080/api/insights-results-aggregator/v2/
+	address := server.Config.Address
+	apiPrefix := server.Config.APIPrefix
+
+	hostname, err := os.Hostname()
+	if err != nil {
+		log.Error().Err(err).Msg("Cannot retrieve hostname")
+		hostname = "localhost"
+	}
+
+	log.Info().Msgf("Access REST API via: curl %s%s%s", hostname, address, apiPrefix)
 }
 
 // Stop stops server's execution
