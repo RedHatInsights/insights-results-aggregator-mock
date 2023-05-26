@@ -506,6 +506,30 @@ func logRequestID(requestID types.RequestID) {
 	log.Info().Str("request_id", string(requestID)).Msg(requestParameter)
 }
 
+// RequestStatus contains description about one request ID
+type RequestStatus struct {
+	RequestID string `json:"requestID"`
+	Valid     bool   `json:"valid"`
+	Received  string `json:"received"`
+	Processed string `json:"processed"`
+}
+
+func constructRequestsList(requestIDs []types.RequestID) []RequestStatus {
+	states := make([]RequestStatus, len(requestIDs))
+
+	for i := range requestIDs {
+		states[i].RequestID = string(requestIDs[i])
+		states[i].Valid = true
+
+		received := time.Date(2000, time.November, 1, 1, 0, 0, 999, time.UTC).Format(time.RFC3339Nano)
+		states[i].Received = received
+
+		processed := time.Now().UTC().Format(time.RFC3339Nano)
+		states[i].Processed = processed
+	}
+	return states
+}
+
 // readListOfRequestIDs method implements endpoint that should return a list of
 // all request IDs for given cluster
 func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, request *http.Request) {
@@ -528,7 +552,7 @@ func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, reque
 	// prepare data structure
 	responseData := map[string]interface{}{"status": "ok"}
 	responseData["cluster"] = string(clusterName)
-	responseData["requests"] = requestIDs
+	responseData["requests"] = constructRequestsList(requestIDs)
 
 	err = responses.SendOK(writer, responseData)
 	if err != nil {
