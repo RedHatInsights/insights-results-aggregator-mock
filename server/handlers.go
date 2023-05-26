@@ -517,7 +517,7 @@ type RequestStatus struct {
 func constructRequestsList(requestIDs []types.RequestID) []RequestStatus {
 	states := make([]RequestStatus, len(requestIDs))
 
-	for i, _ := range requestIDs {
+	for i := range requestIDs {
 		states[i].RequestID = string(requestIDs[i])
 		states[i].Valid = true
 
