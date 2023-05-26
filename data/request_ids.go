@@ -26,6 +26,8 @@ var RequestIDs map[types.ClusterName][]types.RequestID
 // init is called before the program enters the main function, so it is perfect
 // time to initialize maps etc.
 func init() {
+	RequestIDs = make(map[types.ClusterName][]types.RequestID, 10)
+
 	// up to 12 request IDs per cluster
 	RequestIDs["34c3ecc5-624a-49a5-bab8-4fdc5e51a266"] = []types.RequestID{
 		"3nl2vda87ld6e3s25jlk7n2dna",
