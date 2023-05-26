@@ -39,6 +39,8 @@ import (
 
 const failureClusterIDPrefix = "ffffffff-ffff-ffff-ffff-"
 
+const requestParameter = "Request parameter"
+
 const unableToReadReportErrorMessage = "Unable to read report for cluster"
 const unableToReadRequestIDsMessage = "Unable to read request IDs for cluster"
 
@@ -79,6 +81,17 @@ func readClusterName(writer http.ResponseWriter, request *http.Request) (types.C
 		return "", err
 	}
 	return types.ClusterName(clusterName), nil
+}
+
+// readRequestID retrieves request ID from request
+// if it's not possible, it writes http error to the writer and returns error
+func readRequestID(writer http.ResponseWriter, request *http.Request) (types.RequestID, error) {
+	requestID, err := getRouterParam(request, "request_id")
+	if err != nil {
+		return "", err
+	}
+
+	return types.RequestID(requestID), nil
 }
 
 // getRouterParam retrieves parameter from URL like `/organization/{org_id}`
@@ -485,7 +498,11 @@ func (server *HTTPServer) ruleClusterDetailEndpoint(writer http.ResponseWriter, 
 }
 
 func logClusterName(clusterName types.ClusterName) {
-	log.Info().Str("cluster_name", string(clusterName)).Msg("Request parameter")
+	log.Info().Str("cluster_name", string(clusterName)).Msg(requestParameter)
+}
+
+func logRequestID(requestID types.RequestID) {
+	log.Info().Str("request_id", string(requestID)).Msg(requestParameter)
 }
 
 // readListOfRequestIDs method implements endpoint that should return a list of
@@ -508,6 +525,13 @@ func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, requ
 		return
 	}
 	logClusterName(clusterName)
+
+	requestID, err := readRequestID(writer, request)
+	if err != nil {
+		// everything has been handled already
+		return
+	}
+	logRequestID(requestID)
 }
 
 // readRuleHitsForRequestID method implements endpoint that should return
@@ -519,4 +543,11 @@ func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, r
 		return
 	}
 	logClusterName(clusterName)
+
+	requestID, err := readRequestID(writer, request)
+	if err != nil {
+		// everything has been handled already
+		return
+	}
+	logRequestID(requestID)
 }
