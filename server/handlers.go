@@ -39,7 +39,10 @@ import (
 
 const failureClusterIDPrefix = "ffffffff-ffff-ffff-ffff-"
 
+const requestParameter = "Request parameter"
+
 const unableToReadReportErrorMessage = "Unable to read report for cluster"
+const unableToReadRequestIDsMessage = "Unable to read request IDs for cluster"
 
 // readOrganizationID retrieves organization id from request
 // if it's not possible, it writes http error to the writer and returns error
@@ -78,6 +81,17 @@ func readClusterName(writer http.ResponseWriter, request *http.Request) (types.C
 		return "", err
 	}
 	return types.ClusterName(clusterName), nil
+}
+
+// readRequestID retrieves request ID from request
+// if it's not possible, it writes http error to the writer and returns error
+func readRequestID(writer http.ResponseWriter, request *http.Request) (types.RequestID, error) {
+	requestID, err := getRouterParam(request, "request_id")
+	if err != nil {
+		return "", err
+	}
+
+	return types.RequestID(requestID), nil
 }
 
 // getRouterParam retrieves parameter from URL like `/organization/{org_id}`
@@ -432,7 +446,7 @@ type HittingClusters struct {
 	ClusterList []types.ClusterName     `json:"data"`
 }
 
-// ruleClusterDetailEndpoint methods implements endpoint that should return a list of all the clusters IDs affected by this rule
+// ruleClusterDetailEndpoint method implements endpoint that should return a list of all the clusters IDs affected by this rule
 func (server *HTTPServer) ruleClusterDetailEndpoint(writer http.ResponseWriter, request *http.Request) {
 	// read the selector
 	ruleSelector, err := readRuleSelector(writer, request)
@@ -481,4 +495,61 @@ func (server *HTTPServer) ruleClusterDetailEndpoint(writer http.ResponseWriter, 
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}
+}
+
+func logClusterName(clusterName types.ClusterName) {
+	log.Info().Str("cluster_name", string(clusterName)).Msg(requestParameter)
+}
+
+func logRequestID(requestID types.RequestID) {
+	log.Info().Str("request_id", string(requestID)).Msg(requestParameter)
+}
+
+// readListOfRequestIDs method implements endpoint that should return a list of
+// all request IDs for given cluster
+func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, request *http.Request) {
+	clusterName, err := readClusterName(writer, request)
+	if err != nil {
+		// everything has been handled already
+		return
+	}
+	logClusterName(clusterName)
+}
+
+// readStatusOfRequestID method implements endpoint that should return a status
+// for given request ID
+func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, request *http.Request) {
+	clusterName, err := readClusterName(writer, request)
+	if err != nil {
+		// everything has been handled already
+		return
+	}
+	logClusterName(clusterName)
+
+	requestID, err := readRequestID(writer, request)
+	if err != nil {
+		log.Error().Err(err).Msg(unableToReadRequestIDsMessage)
+		// everything has been handled already
+		return
+	}
+	logRequestID(requestID)
+}
+
+// readRuleHitsForRequestID method implements endpoint that should return
+// simplified result for given request ID
+func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, request *http.Request) {
+	clusterName, err := readClusterName(writer, request)
+	if err != nil {
+		// everything has been handled already
+		return
+	}
+	logClusterName(clusterName)
+
+	requestID, err := readRequestID(writer, request)
+	if err != nil {
+		log.Error().Err(err).Msg(unableToReadRequestIDsMessage)
+		// everything has been handled already
+		return
+	}
+	logRequestID(requestID)
 }

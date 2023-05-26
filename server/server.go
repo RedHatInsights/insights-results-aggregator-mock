@@ -139,6 +139,12 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	router.HandleFunc(apiPrefix+ClustersInOrgEndpoint, server.readReportForAllClustersInOrg).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+RuleClusterDetailEndpoint, server.ruleClusterDetailEndpoint).Methods(http.MethodGet)
 
+	// Endpoints to manipulate with simplified rule results stored
+	// independently under "tracker_id" identifier
+	router.HandleFunc(apiPrefix+ListAllRequestIDs, server.readListOfRequestIDs).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+StatusOfRequestID, server.readStatusOfRequestID).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+RuleHitsForRequestID, server.readRuleHitsForRequestID).Methods(http.MethodGet)
+
 	// Acknowledgement-related endpoints. Please look into acks_handlers.go
 	// and acks_utils.go for more information about these endpoints
 	// prepared to be compatible with RHEL Insights Advisor.
