@@ -20,7 +20,7 @@ import (
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
-// mapping between cluster name and sequence of request IDs
+// RequestIDs contains mapping between cluster name and sequence of request IDs
 var RequestIDs map[types.ClusterName][]types.RequestID
 
 // init is called before the program enters the main function, so it is perfect
