@@ -514,6 +514,25 @@ func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, reque
 		return
 	}
 	logClusterName(clusterName)
+
+	requestIDs, found := data.RequestIDs[clusterName]
+	if !found {
+		err := responses.SendNotFound(writer, "Requests for cluster not found")
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+
+	// prepare data structure
+	responseData := map[string]interface{}{"status": "ok"}
+	responseData["cluster"] = string(clusterName)
+	responseData["requests"] = requestIDs
+
+	err = responses.SendOK(writer, responseData)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
 }
 
 // readStatusOfRequestID method implements endpoint that should return a status
