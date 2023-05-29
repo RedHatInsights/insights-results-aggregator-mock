@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2021, 2022, 2023 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -232,6 +232,22 @@ type UpgradeRisksPredictors struct {
 type UpgradeRiskPrediction struct {
 	Recommended bool                   `json:"upgrade_recommended"`
 	Predictors  UpgradeRisksPredictors `json:"upgrade_risks_predictors"`
+}
+
+// SimplifiedReport is structure returned by the service to IO to handle On Demand Data Gathering
+type SimplifiedReport struct {
+	Cluster   string              `json:"cluster"`
+	RequestID string              `json:"requestID"`
+	Status    string              `json:"status"`
+	RuleHits  []SimplifiedRuleHit `json:"report"`
+}
+
+// SimplifiedRuleHit structure represents one simplified rule hit for On Demand Data Gathering
+type SimplifiedRuleHit struct {
+	RuleFQDN    string `json:"rule_fqdn"`
+	ErrorKey    string `json:"error_key"`
+	Description string `json:"description"`
+	TotalRisk   int    `json:"total_risk"`
 }
 
 const (
