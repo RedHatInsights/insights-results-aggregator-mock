@@ -602,6 +602,97 @@ func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, reque
 	}
 }
 
+// RequestList represents sequence of request IDs
+type RequestList []types.RequestID
+
+func dumpRequest(request *http.Request) {
+	dump, err := httputil.DumpRequest(request, true)
+	if err != nil {
+		log.Error().Err(err).Msg("dump error")
+		return
+	}
+	log.Info().Str("dump", string(dump)).Msg("dump of request")
+}
+
+func readRequestList(writer http.ResponseWriter, request *http.Request) (RequestList, error) {
+	var requestList RequestList
+	err := json.NewDecoder(request.Body).Decode(&requestList)
+	if err != nil {
+		log.Error().Err(err).Msg("getting list of requests")
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return nil, err
+	}
+	return requestList, nil
+}
+
+func logRequestIDs(message string, requestList RequestList) {
+	log.Info().Msg(message)
+	for _, requestID := range requestList {
+		log.Info().Str("ID", string(requestID)).Msg("   ")
+	}
+}
+
+func filterRequestIDs(requestIDs, requestList RequestList) RequestList {
+	// filter request IDs using the rather inneficient way!
+	var filteredIDs RequestList
+	for _, requestID := range requestIDs {
+		found := false
+		for _, wantedID := range requestList {
+			if requestID == wantedID {
+				found = true
+				break
+			}
+		}
+		if found {
+			filteredIDs = append(filteredIDs, requestID)
+		}
+	}
+	return filteredIDs
+}
+
+// readListOfRequestIDsPostVariant method implements endpoint that should return a list of
+// request IDs for given cluster
+func (server *HTTPServer) readListOfRequestIDsPostVariant(writer http.ResponseWriter, request *http.Request) {
+	dumpRequest(request)
+	requestList, err := readRequestList(writer, request)
+	if err != nil {
+		return
+	}
+	logRequestIDs("List of requests send to service", requestList)
+
+	clusterName, err := readClusterName(writer, request)
+	if err != nil {
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+	logClusterName(clusterName)
+
+	requestIDs, found := data.RequestIDs[clusterName]
+	if !found {
+		err := responses.SendNotFound(writer, requestsForClusterNotFound)
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+
+	filteredIDs := filterRequestIDs(requestIDs, requestList)
+	logRequestIDs("Filtered IDs", filteredIDs)
+
+	// prepare data structure
+	responseData := map[string]interface{}{"status": "ok"}
+	responseData["cluster"] = string(clusterName)
+	responseData["requests"] = constructRequestsList(filteredIDs)
+
+	err = responses.SendOK(writer, responseData)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
+}
+
 // readStatusOfRequestID method implements endpoint that should return a status
 // for given request ID. Currently the status is set to "processed" or
 // "unknown" because we won't have information about "in-between" states.

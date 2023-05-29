@@ -63,6 +63,8 @@ Mock service mimicking Insights Results Aggregator
         * [Cluster returning 404 due to no data in RHOBS for this cluster](#cluster-returning-404-due-to-no-data-in-rhobs-for-this-cluster)
 * [Endpoints for On Demand Data Gathering](#endpoints-for-on-demand-data-gathering)
     * [List of all rule hits](#list-of-all-rule-hits)
+        * [GET variant](#get-variant)
+        * [POST variant](#post-variant)
         * [Response from the service](#response-from-the-service)
         * [Response for improper request (bad cluster name)](#response-for-improper-request-bad-cluster-name)
     * [Check status of given `request-id`](#check-status-of-given-request-id)
@@ -844,11 +846,31 @@ c60ba611-6af4-4d62-9b9e-36344da5e7bc
 
 List of all rule hits (all identified by x-rh-insights-request-id) for given cluster (the list also contain timestamps).
 
-Request to the service:
+Request to the service
+
+#### GET variant
 
 ```
 curl -v localhost:8080/api/insights-results-aggregator/v2/cluster/34c3ecc5-624a-49a5-bab8-4fdc5e51a267/requests/
 ```
+
+#### POST variant
+
+```
+curl -v -X POST -d @requests.json localhost:8080/api/insights-results-aggregator/v2/cluster/34c3ecc5-624a-49a5-bab8-4fdc5e51a267/requests/
+```
+
+Where `requests.json` looks like:
+
+```json
+[
+    "1duzaoao0l1b230ipv0rb4sqe8",
+    "1yjdje758zgyy3ksfr732yb1cl",
+    "eeeeeeeeeeeeeeeeeeeeeeeeee",
+    "2ukce6u74rm9e12mplu6liqzsv"
+]
+```
+
 
 #### Response from the service
 
