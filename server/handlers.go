@@ -45,6 +45,8 @@ const requestParameter = "Request parameter"
 
 const unableToReadReportErrorMessage = "Unable to read report for cluster"
 const requestsForClusterNotFound = "Requests for cluster not found"
+
+// Status message for already processed reports (rule hits)
 const StatusProcessed = "processed"
 
 // readOrganizationID retrieves organization id from request

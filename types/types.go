@@ -234,6 +234,7 @@ type UpgradeRiskPrediction struct {
 	Predictors  UpgradeRisksPredictors `json:"upgrade_risks_predictors"`
 }
 
+// SimplifiedReport is structure returned by the service to IO to handle On Demand Data Gathering
 type SimplifiedReport struct {
 	Cluster   string              `json:"cluster"`
 	RequestID string              `json:"requestID"`
@@ -241,6 +242,7 @@ type SimplifiedReport struct {
 	RuleHits  []SimplifiedRuleHit `json:"report"`
 }
 
+// SimplifiedRuleHit structure represents one simplified rule hit for On Demand Data Gathering
 type SimplifiedRuleHit struct {
 	RuleFQDN    string `json:"rule_fqdn"`
 	ErrorKey    string `json:"error_key"`
