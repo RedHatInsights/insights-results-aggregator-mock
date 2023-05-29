@@ -28,6 +28,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/RedHatInsights/insights-operator-utils/responses"
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
@@ -70,6 +72,19 @@ func readRuleSelector(writer http.ResponseWriter, request *http.Request) (types.
 	return types.RuleSelector(ruleSelector), nil
 }
 
+// ValidateClusterName checks that the cluster name is a valid UUID.
+// Converted cluster name is returned if everything is okay, otherwise an error is returned.
+func ValidateClusterName(clusterName string) (types.ClusterName, error) {
+	if _, err := uuid.Parse(clusterName); err != nil {
+		message := fmt.Sprintf("invalid cluster name: '%s'. Error: %s", clusterName, err.Error())
+
+		log.Error().Err(err).Msg(message)
+		return "", err
+	}
+
+	return types.ClusterName(clusterName), nil
+}
+
 // readClusterName retrieves cluster name from request
 // if it's not possible, it writes http error to the writer and returns error
 func readClusterName(writer http.ResponseWriter, request *http.Request) (types.ClusterName, error) {
@@ -78,10 +93,12 @@ func readClusterName(writer http.ResponseWriter, request *http.Request) (types.C
 		return "", err
 	}
 
+	validatedClusterName, err := ValidateClusterName(clusterName)
 	if err != nil {
 		return "", err
 	}
-	return types.ClusterName(clusterName), nil
+
+	return validatedClusterName, nil
 }
 
 // readRequestID retrieves request ID from request
@@ -535,7 +552,10 @@ func constructRequestsList(requestIDs []types.RequestID) []RequestStatus {
 func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 	logClusterName(clusterName)
@@ -566,7 +586,10 @@ func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, reque
 func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 	logClusterName(clusterName)
@@ -615,7 +638,10 @@ func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, requ
 func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 	logClusterName(clusterName)
