@@ -602,6 +602,7 @@ func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, reque
 	}
 }
 
+// RequestList represents sequence of request IDs
 type RequestList []types.RequestID
 
 func dumpRequest(request *http.Request) {
