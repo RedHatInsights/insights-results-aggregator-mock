@@ -56,7 +56,11 @@ Mock service mimicking Insights Results Aggregator
     * [Upgrade risks prediction results](#upgrade-risks-prediction-results)
         * [Clusters that return valid data](#clusters-that-return-valid-data)
             * [Cluster returning a positive upgrade risks prediction (upgrade recommended)](#cluster-returning-a-positive-upgrade-risks-prediction-upgrade-recommended)
-            * [Cluster returning a negative upgrade risks prediction (upgrade recommended)](#cluster-returning-a-negative-upgrade-risks-prediction-upgrade-recommended)
+            * [Cluster returning a negative upgrade risks prediction (upgrade not recommended)](#cluster-returning-a-negative-upgrade-risks-prediction-upgrade-not-recommended)
+        * [Cluster returning "no content" because the cluster is managed](#cluster-returning-no-content-because-the-cluster-is-managed)
+        * [Cluster returning unavailable service due to AMS is not available](#cluster-returning-unavailable-service-due-to-ams-is-not-available)
+        * [Cluster returning unavailable service due to Upgrade Risks Prediction is not available](#cluster-returning-unavailable-service-due-to-upgrade-risks-prediction-is-not-available)
+        * [Cluster returning 404 due to no data in RHOBS for this cluster](#cluster-returning-404-due-to-no-data-in-rhobs-for-this-cluster)
 * [BDD tests](#bdd-tests)
 * [Package manifest](#package-manifest)
 
@@ -818,6 +822,7 @@ c60ba611-6af4-4d62-9b9e-36344da5e7bc
 ```
 234ec1a1-4679-4122-aacb-f0ae9f9e1a56
 ```
+
 ## BDD tests
 
 Behaviour tests for this service are included in [Insights Behavioral
