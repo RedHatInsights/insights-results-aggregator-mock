@@ -28,6 +28,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/RedHatInsights/insights-operator-utils/responses"
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
@@ -42,7 +44,6 @@ const failureClusterIDPrefix = "ffffffff-ffff-ffff-ffff-"
 const requestParameter = "Request parameter"
 
 const unableToReadReportErrorMessage = "Unable to read report for cluster"
-const unableToReadRequestIDsMessage = "Unable to read request IDs for cluster"
 const requestsForClusterNotFound = "Requests for cluster not found"
 
 // readOrganizationID retrieves organization id from request
@@ -70,6 +71,34 @@ func readRuleSelector(writer http.ResponseWriter, request *http.Request) (types.
 	return types.RuleSelector(ruleSelector), nil
 }
 
+// ValidateClusterName checks that the cluster name is a valid UUID.
+// Converted cluster name is returned if everything is okay, otherwise an error is returned.
+func ValidateClusterName(clusterName string) (types.ClusterName, error) {
+	if _, err := uuid.Parse(clusterName); err != nil {
+		message := fmt.Sprintf("invalid cluster name: '%s'. Error: %s", clusterName, err.Error())
+
+		log.Error().Err(err).Msg(message)
+		return "", err
+	}
+
+	return types.ClusterName(clusterName), nil
+}
+
+// ValidateRequestID checks that the request ID has proper format.
+// Converted request ID is returned if everything is okay, otherwise an error is returned.
+func ValidateRequestID(requestID string) (types.RequestID, error) {
+	IDValidator := regexp.MustCompile(`^[a-zA-Z0-9]+$`)
+
+	if !IDValidator.MatchString(requestID) {
+		message := fmt.Sprintf("invalid request ID: '%s'", requestID)
+		err := errors.New(message)
+		log.Error().Err(err).Msg(message)
+		return "", err
+	}
+
+	return types.RequestID(requestID), nil
+}
+
 // readClusterName retrieves cluster name from request
 // if it's not possible, it writes http error to the writer and returns error
 func readClusterName(writer http.ResponseWriter, request *http.Request) (types.ClusterName, error) {
@@ -78,10 +107,12 @@ func readClusterName(writer http.ResponseWriter, request *http.Request) (types.C
 		return "", err
 	}
 
+	validatedClusterName, err := ValidateClusterName(clusterName)
 	if err != nil {
 		return "", err
 	}
-	return types.ClusterName(clusterName), nil
+
+	return validatedClusterName, nil
 }
 
 // readRequestID retrieves request ID from request
@@ -92,7 +123,12 @@ func readRequestID(writer http.ResponseWriter, request *http.Request) (types.Req
 		return "", err
 	}
 
-	return types.RequestID(requestID), nil
+	validatedRequestID, err := ValidateRequestID(requestID)
+	if err != nil {
+		return "", err
+	}
+
+	return validatedRequestID, nil
 }
 
 // getRouterParam retrieves parameter from URL like `/organization/{org_id}`
@@ -535,7 +571,10 @@ func constructRequestsList(requestIDs []types.RequestID) []RequestStatus {
 func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 	logClusterName(clusterName)
@@ -566,15 +605,20 @@ func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, reque
 func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 	logClusterName(clusterName)
 
 	requestID, err := readRequestID(writer, request)
 	if err != nil {
-		log.Error().Err(err).Msg(unableToReadRequestIDsMessage)
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 	logRequestID(requestID)
@@ -615,15 +659,20 @@ func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, requ
 func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 	logClusterName(clusterName)
 
 	requestID, err := readRequestID(writer, request)
 	if err != nil {
-		log.Error().Err(err).Msg(unableToReadRequestIDsMessage)
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 	logRequestID(requestID)
