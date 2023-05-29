@@ -142,6 +142,7 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	// Endpoints to manipulate with simplified rule results stored
 	// independently under "tracker_id" identifier
 	router.HandleFunc(apiPrefix+ListAllRequestIDs, server.readListOfRequestIDs).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+ListAllRequestIDs, server.readListOfRequestIDsPostVariant).Methods(http.MethodPost)
 	router.HandleFunc(apiPrefix+StatusOfRequestID, server.readStatusOfRequestID).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+RuleHitsForRequestID, server.readRuleHitsForRequestID).Methods(http.MethodGet)
 
