@@ -61,6 +61,19 @@ Mock service mimicking Insights Results Aggregator
         * [Cluster returning unavailable service due to AMS is not available](#cluster-returning-unavailable-service-due-to-ams-is-not-available)
         * [Cluster returning unavailable service due to Upgrade Risks Prediction is not available](#cluster-returning-unavailable-service-due-to-upgrade-risks-prediction-is-not-available)
         * [Cluster returning 404 due to no data in RHOBS for this cluster](#cluster-returning-404-due-to-no-data-in-rhobs-for-this-cluster)
+* [Endpoints for On Demand Data Gathering](#endpoints-for-on-demand-data-gathering)
+    * [List of all rule hits](#list-of-all-rule-hits)
+        * [Response from the service](#response-from-the-service)
+        * [Response for improper request (bad cluster name)](#response-for-improper-request-bad-cluster-name)
+    * [Check status of given `request-id`](#check-status-of-given-request-id)
+        * [Response from the service](#response-from-the-service-1)
+        * [For not known request-id or cluster:](#for-not-known-request-id-or-cluster)
+        * [For improper request (bad cluster ID etc.)](#for-improper-request-bad-cluster-id-etc)
+        * [For improper request ID](#for-improper-request-id)
+    * [Retrieve simplified results for given `request-id`](#retrieve-simplified-results-for-given-request-id)
+        * [Response from the service](#response-from-the-service-2)
+        * [Response in case of empty result set](#response-in-case-of-empty-result-set)
+        * [Response in case of improper request](#response-in-case-of-improper-request)
 * [BDD tests](#bdd-tests)
 * [Package manifest](#package-manifest)
 
@@ -822,6 +835,195 @@ c60ba611-6af4-4d62-9b9e-36344da5e7bc
 ```
 234ec1a1-4679-4122-aacb-f0ae9f9e1a56
 ```
+
+
+
+## Endpoints for On Demand Data Gathering
+
+### List of all rule hits
+
+List of all rule hits (all identified by x-rh-insights-request-id) for given cluster (the list also contain timestamps).
+
+Request to the service:
+
+```
+curl -v localhost:8080/api/insights-results-aggregator/v2/cluster/34c3ecc5-624a-49a5-bab8-4fdc5e51a267/requests/
+```
+
+#### Response from the service
+
+```json
+{
+  "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
+  "requests": [
+    {
+      "requestID": "1duzaoao0l1b230ipv0rb4sqe8",
+      "valid": true,
+      "received": "2000-11-01T01:00:00.000000999Z",
+      "processed": "2023-05-29T06:44:20.210989121Z"
+    },
+    {
+      "requestID": "1yjdje758zgyy3ksfr732yb1cl",
+      "valid": true,
+      "received": "2000-11-01T01:00:00.000000999Z",
+      "processed": "2023-05-29T06:44:20.210989913Z"
+    },
+    {
+      "requestID": "2drtvjlisiqww1c93kugqyboyc",
+      "valid": true,
+      "received": "2000-11-01T01:00:00.000000999Z",
+      "processed": "2023-05-29T06:44:20.210994822Z"
+    }
+  ],
+  "status": "ok"
+}
+```
+
+#### Response for improper request (bad cluster name)
+
+* HTTP code 400 is set in HTTP header
+
+```json
+{
+  "status": "invalid UUID length: 37"
+}
+```
+
+### Check status of given `request-id`
+
+Check status of given `request-id` (original name `x-rh-insights-request-id`).
+
+Request to the service:
+
+```
+curl -v localhost:8080/api/insights-results-aggregator/v2/cluster/34c3ecc5-624a-49a5-bab8-4fdc5e51a267/request/1yjdje758zgyy3ksfr732yb1cl/status
+```
+
+#### Response from the service
+
+```json
+{
+  "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
+  "requestID": "1yjdje758zgyy3ksfr732yb1cl",
+  "status": "processed"
+}
+```
+
+or
+
+```json
+{
+  "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
+  "requestID": "1yjdje758zgyy3ksfr732yx1cl",
+  "status": "unknown"
+}
+```
+
+#### For not known request-id or cluster:
+
+```json
+{
+  "status": "Requests for cluster not found"
+}
+```
+
+#### For improper request (bad cluster ID etc.)
+
+* HTTP code 400 is set in HTTP header
+
+```json
+{
+  "status": "invalid UUID length: 35"
+}
+```
+
+#### For improper request ID
+
+* HTTP code 400 is set in HTTP header
+
+```json
+{
+  "status": "invalid request ID: '1yjdje758zgyy3ksf_r732yb1cl'"
+}
+```
+
+### Retrieve simplified results for given `request-id`
+
+Request to the service:
+
+```
+curl -v localhost:8080/api/insights-results-aggregator/v2/cluster/34c3ecc5-624a-49a5-bab8-4fdc5e51a267/request/1yjdje758zgyy3ksfr732yb1cl/report
+```
+
+#### Response from the service
+
+```json
+{
+  "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
+  "requestID": "38584huk209q82uhl8md5gsdxr",
+  "status": "processed",
+  "report": [
+    {
+      "rule_fqdn": "ccx_rules_ocp.external.rules.nodes_requirements_check.report",
+      "error_key": "NODES_MINIMUM_REQUIREMENTS_NOT_MET",
+      "description": "Lorem ipsum...",
+      "total_risk": 1
+    },
+    {
+      "rule_fqdn": "samples_op_failed_image_import_check.report",
+      "error_key": "SAMPLES_FAILED_IMAGE_IMPORT_ERR",
+      "description": "Lorem ipsum...",
+      "total_risk": 2
+    },
+    {
+      "rule_fqdn": "ccx_rules_ocp.external.bug_rules.bug_1766907.report",
+      "error_key": "BUGZILLA_BUG_1766907",
+      "description": "Lorem ipsum...",
+      "total_risk": 3
+    },
+    {
+      "rule_fqdn": "ccx_rules_ocp.external.rules.nodes_kubelet_version_check.report",
+      "error_key": "NODE_KUBELET_VERSION",
+      "description": "Lorem ipsum...",
+      "total_risk": 4
+    },
+    {
+      "rule_fqdn": "ccx_rules_ocp.external.rules.samples_op_failed_image_import_check.report",
+      "error_key": "SAMPLES_FAILED_IMAGE_IMPORT_ERR",
+      "description": "Lorem ipsum...",
+      "total_risk": 5
+    }
+  ]
+}
+```
+
+#### Response in case of empty result set
+
+```json
+{
+  "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
+  "requestID": "1yjdje758zgyy3ksfr732yb1cl",
+  "status": "processed",
+  "report": null
+}
+```
+
+#### Response in case of improper request
+
+* HTTP code 400 is set in HTTP header
+
+```json
+{
+  "status": "invalid UUID length: 35"
+}
+```
+
+```json
+{
+  "status": "invalid request ID: '38584huk209q82uhl8md5gsdxr_'"
+}
+```
+
 
 ## BDD tests
 
