@@ -85,6 +85,21 @@ func ValidateClusterName(clusterName string) (types.ClusterName, error) {
 	return types.ClusterName(clusterName), nil
 }
 
+// ValidateRequestID checks that the request ID has proper format.
+// Converted request ID is returned if everything is okay, otherwise an error is returned.
+func ValidateRequestID(requestID string) (types.RequestID, error) {
+	IDValidator := regexp.MustCompile(`^[a-zA-Z0-9]+$`)
+
+	if !IDValidator.MatchString(requestID) {
+		message := fmt.Sprintf("invalid request ID: '%s'", requestID)
+		err := errors.New(message)
+		log.Error().Err(err).Msg(message)
+		return "", err
+	}
+
+	return types.RequestID(requestID), nil
+}
+
 // readClusterName retrieves cluster name from request
 // if it's not possible, it writes http error to the writer and returns error
 func readClusterName(writer http.ResponseWriter, request *http.Request) (types.ClusterName, error) {
@@ -109,7 +124,12 @@ func readRequestID(writer http.ResponseWriter, request *http.Request) (types.Req
 		return "", err
 	}
 
-	return types.RequestID(requestID), nil
+	validatedRequestID, err := ValidateRequestID(requestID)
+	if err != nil {
+		return "", err
+	}
+
+	return validatedRequestID, nil
 }
 
 // getRouterParam retrieves parameter from URL like `/organization/{org_id}`
@@ -596,8 +616,10 @@ func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, requ
 
 	requestID, err := readRequestID(writer, request)
 	if err != nil {
-		log.Error().Err(err).Msg(unableToReadRequestIDsMessage)
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 	logRequestID(requestID)
@@ -648,8 +670,10 @@ func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, r
 
 	requestID, err := readRequestID(writer, request)
 	if err != nil {
-		log.Error().Err(err).Msg(unableToReadRequestIDsMessage)
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 	logRequestID(requestID)
