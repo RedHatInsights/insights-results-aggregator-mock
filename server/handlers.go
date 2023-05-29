@@ -44,7 +44,6 @@ const failureClusterIDPrefix = "ffffffff-ffff-ffff-ffff-"
 const requestParameter = "Request parameter"
 
 const unableToReadReportErrorMessage = "Unable to read report for cluster"
-const unableToReadRequestIDsMessage = "Unable to read request IDs for cluster"
 const requestsForClusterNotFound = "Requests for cluster not found"
 
 // readOrganizationID retrieves organization id from request
