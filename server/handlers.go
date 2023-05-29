@@ -45,6 +45,7 @@ const requestParameter = "Request parameter"
 
 const unableToReadReportErrorMessage = "Unable to read report for cluster"
 const requestsForClusterNotFound = "Requests for cluster not found"
+const StatusProcessed = "processed"
 
 // readOrganizationID retrieves organization id from request
 // if it's not possible, it writes http error to the writer and returns error
@@ -642,7 +643,7 @@ func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, requ
 	for _, storedRequestID := range requestIDs {
 		if storedRequestID == requestID {
 			// update data structure
-			responseData["status"] = "processed"
+			responseData["status"] = StatusProcessed
 			break
 		}
 	}
@@ -676,4 +677,33 @@ func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, r
 		return
 	}
 	logRequestID(requestID)
+
+	_, found := data.RequestIDs[clusterName]
+	if !found {
+		err := responses.SendNotFound(writer, requestsForClusterNotFound)
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+
+	// prepare data structure
+	var responseData types.SimplifiedReport
+	responseData.Cluster = string(clusterName)
+	responseData.RequestID = string(requestID)
+	responseData.Status = StatusProcessed
+	// can be nil
+	responseData.RuleHits, found = data.SimplifiedRuleHits[clusterName][requestID]
+
+	bytes, err := json.MarshalIndent(responseData, "", "\t")
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+		return
+	}
+
+	// send response back to user
+	_, err = writer.Write(bytes)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
 }
