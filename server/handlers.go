@@ -693,7 +693,7 @@ func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, r
 	responseData.RequestID = string(requestID)
 	responseData.Status = StatusProcessed
 	// can be nil
-	responseData.RuleHits, _ = data.SimplifiedRuleHits[clusterName][requestID]
+	responseData.RuleHits = data.SimplifiedRuleHits[clusterName][requestID]
 
 	bytes, err := json.MarshalIndent(responseData, "", "\t")
 	if err != nil {
