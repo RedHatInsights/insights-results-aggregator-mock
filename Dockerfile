@@ -23,7 +23,7 @@ RUN umask 0022 && \
     make build && \
     chmod a+x insights-results-aggregator-mock
 
-FROM registry.redhat.io/ubi8-minimal
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.8-1014
 
 COPY --from=builder /opt/app-root/src/insights-results-aggregator-mock .
 COPY --from=builder /opt/app-root/src/config_container.toml ./config.toml
