@@ -161,6 +161,11 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 
 	// OpenAPI specs
 	router.HandleFunc(openAPIURL, server.serveAPISpecFile).Methods(http.MethodGet)
+
+	// Endpoints enabled in Debug mode only
+	if server.Config.Debug {
+		router.HandleFunc(apiPrefix+ExitEndpoint, server.exit).Methods(http.MethodPut)
+	}
 }
 
 /*
