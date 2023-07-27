@@ -78,6 +78,10 @@ integration_tests: ## Run all integration tests
 	@echo "Running all integration tests"
 	@./test.sh
 
+local_integration_tests: ## Run all integration tests locally
+	@echo "Running all integration tests"
+	@./rest-api-tests.sh
+
 license:
 	GO111MODULE=off go get -u github.com/google/addlicense && \
 		addlicense -c "Red Hat, Inc" -l "apache" -v ./
