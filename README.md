@@ -117,27 +117,27 @@ Usage: make <OPTIONS> ... <TARGETS>
 
 Available targets are:
 
-build                Build binary containing service executable
-build-cover          Build binary with code coverage detection support
-fmt                  Run go fmt -w for all sources
-lint                 Run golint
-vet                  Run go vet. Report likely mistakes in source code
-cyclo                Run gocyclo
-ineffassign          Run ineffassign checker
-shellcheck           Run shellcheck
-errcheck             Run errcheck
-goconst              Run goconst checker
-gosec                Run gosec checker
-abcgo                Run ABC metrics checker
-style                Run all the formatting related commands (fmt, vet, lint, cyclo) + check shell scripts
-run                  Build the project and executes the binary
-test                 Run the unit tests
-cover                Generate HTML pages with code coverage
-coverage             Display code coverage on terminal
-integration_tests    Run all integration tests
+build                   Build binary containing service executable
+build-cover             Build binary with code coverage detection support
+fmt                     Run go fmt -w for all sources
+lint                    Run golint
+vet                     Run go vet. Report likely mistakes in source code
+cyclo                   Run gocyclo
+ineffassign             Run ineffassign checker
+shellcheck              Run shellcheck
+errcheck                Run errcheck
+goconst                 Run goconst checker
+gosec                   Run gosec checker
+abcgo                   Run ABC metrics checker
+style                   Run all the formatting related commands (fmt, vet, lint, cyclo) + check shell scripts
+run                     Build the project and executes the binary
+test                    Run the unit tests
+cover                   Generate HTML pages with code coverage
+coverage                Display code coverage on terminal
+integration_tests       Run all integration tests
 local_integration_tests Run all integration tests locally
-help                 Show this help screen
-function_list        List all functions in generated binary file
+help                    Show this help screen
+function_list           List all functions in generated binary file
 ```
 
 ## Usage
