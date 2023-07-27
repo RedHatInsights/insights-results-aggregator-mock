@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2023 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,11 +17,13 @@ limitations under the License.
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -799,4 +801,9 @@ func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, r
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}
+}
+
+func (server *HTTPServer) exit(writer http.ResponseWriter, request *http.Request) {
+	server.Stop(context.Background())
+	os.Exit(0)
 }
