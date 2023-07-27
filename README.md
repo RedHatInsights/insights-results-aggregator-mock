@@ -76,6 +76,8 @@ Mock service mimicking Insights Results Aggregator
         * [Response from the service](#response-from-the-service-2)
         * [Response in case of empty result set](#response-in-case-of-empty-result-set)
         * [Response in case of improper request](#response-in-case-of-improper-request)
+* [Debug endpoints](#debug-endpoints)
+    * [Exit HTTP server gracefully](#exit-http-server-gracefully)
 * [BDD tests](#bdd-tests)
 * [Package manifest](#package-manifest)
 
@@ -1046,6 +1048,23 @@ curl -v localhost:8080/api/insights-results-aggregator/v2/cluster/34c3ecc5-624a-
   "status": "invalid request ID: '38584huk209q82uhl8md5gsdxr_'"
 }
 ```
+
+## Debug endpoints
+
+The following endpoints needs to be enabled via configuration file by setting `debug` option to `true`.
+
+### Exit HTTP server gracefully
+
+Request to the service:
+
+```
+curl -X PUT -v localhost:8080/api/insights-results-aggregator/v2/exit
+```
+
+Response from the service:
+
+None, the server will stop immediatelly.
+
 
 
 ## BDD tests
