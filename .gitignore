@@ -10,3 +10,6 @@ issue.py
 *.csv
 mock
 real_content.json
+coverage/
+coverage.txt
+covcounters.*
