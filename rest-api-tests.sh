@@ -105,10 +105,31 @@ function cleanup() {
 
     sleep 1
 }
+
+function prepare_code_coverage() {
+    echo "Preparing code coverage environment"
+    rm -rf coverage
+    mkdir coverage
+    export GOCOVERDIR=coverage/
+}
+
+function code_coverage_report() {
+    echo "Preparing code coverage report"
+    go tool covdata merge -i=coverage/ -o=.
+    go tool covdata textfmt -i=. -o=coverage.txt
+    go tool cover -func=coverage.txt
+}
+
 trap cleanup EXIT
 
 echo -e "------------------------------------------------------------------------------------------------"
 
-make build
+make build-cover
+prepare_code_coverage
 test_rest_api
+
+# shut down server gracefully
+curl -X PUT http://localhost:8080/api/insights-results-aggregator/v2/exit
+
+code_coverage_report
 exit $?
