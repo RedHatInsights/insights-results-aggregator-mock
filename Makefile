@@ -78,6 +78,10 @@ integration_tests: ## Run all integration tests
 	@echo "Running all integration tests"
 	@./test.sh
 
+local_integration_tests: ## Run all integration tests locally
+	@echo "Running all integration tests"
+	@./rest-api-tests.sh
+
 license:
 	GO111MODULE=off go get -u github.com/google/addlicense && \
 		addlicense -c "Red Hat, Inc" -l "apache" -v ./
@@ -91,7 +95,7 @@ help: ## Show this help screen
 	@echo 'Available targets are:'
 	@echo ''
 	@grep -E '^[ a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
 	@echo ''
 
 function_list: ${BINARY} ## List all functions in generated binary file
