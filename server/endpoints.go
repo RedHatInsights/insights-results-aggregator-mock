@@ -16,11 +16,6 @@ limitations under the License.
 
 package server
 
-import (
-	"fmt"
-	"regexp"
-)
-
 const (
 	// MainEndpoint defines suffix of the root endpoint
 	MainEndpoint = ""
