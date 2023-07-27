@@ -122,6 +122,9 @@ const (
 
 	// MetricsEndpoint returns prometheus metrics
 	MetricsEndpoint = "metrics"
+
+	// ExitEndpoint perform server shutdown (in Debug mode only)
+	ExitEndpoint = "exit"
 )
 
 // MakeURLToEndpoint creates URL to endpoint, use constants from file endpoints.go

@@ -111,6 +111,13 @@ func (server *HTTPServer) Initialize(address string) http.Handler {
 	router := mux.NewRouter().StrictSlash(true)
 
 	server.addEndpointsToRouter(router)
+
+	// Endpoints enabled in Debug mode only
+	if server.Config.Debug {
+		log.Info().Msg("Debug endpoints enabled")
+		server.addDebugEndpointsToRouter(router)
+	}
+
 	log.Info().Msgf("Server has been initiliazed")
 
 	return router
@@ -161,6 +168,15 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 
 	// OpenAPI specs
 	router.HandleFunc(openAPIURL, server.serveAPISpecFile).Methods(http.MethodGet)
+}
+
+func (server *HTTPServer) addDebugEndpointsToRouter(router *mux.Router) {
+	apiPrefix := server.Config.APIPrefix
+	if !strings.HasSuffix(apiPrefix, "/") {
+		apiPrefix += "/"
+	}
+
+	router.HandleFunc(apiPrefix+ExitEndpoint, server.exit).Methods(http.MethodPut)
 }
 
 /*
