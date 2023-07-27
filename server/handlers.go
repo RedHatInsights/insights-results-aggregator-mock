@@ -808,6 +808,9 @@ func (server *HTTPServer) exit(writer http.ResponseWriter, request *http.Request
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}
-	server.Stop(context.Background())
+	err = server.Stop(context.Background())
+	if err != nil {
+		log.Error().Err(err).Msg("Error stopping HTTP server")
+	}
 	os.Exit(0)
 }
