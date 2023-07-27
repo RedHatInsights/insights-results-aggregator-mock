@@ -804,6 +804,10 @@ func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, r
 }
 
 func (server *HTTPServer) exit(writer http.ResponseWriter, request *http.Request) {
+	err := responses.SendOK(writer, responses.BuildOkResponse())
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
 	server.Stop(context.Background())
 	os.Exit(0)
 }
