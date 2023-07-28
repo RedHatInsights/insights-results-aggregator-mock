@@ -17,7 +17,7 @@ limitations under the License.
 // Package tests contains REST API tests for following endpoints:
 //
 // apiPrefix
-// apiPrefix + "groups"
+// apiPrefix + "organizations"
 package tests
 
 import (
@@ -26,24 +26,17 @@ import (
 	"github.com/verdverm/frisby"
 )
 
-const groupsEndpointPostfix = "groups"
+const organizationsEndpointPostfix = "organizations"
 
-// Group structure represents one group entry in groups array
-type Group struct {
-	Title       string   `json:"title"`
-	Description string   `json:"description"`
-	Tags        []string `json:"tags"`
+// OrganizationsResponse represents response from /organizations endpoint
+type OrganizationsResponse struct {
+	Organizations []int  `json:"organizations"`
+	Status        string `json:"status"`
 }
 
-// GroupsResponse represents response from /organizations endpoint
-type GroupsResponse struct {
-	Groups []Group `json:"groups"`
-	Status string  `json:"status"`
-}
-
-// checkGroupsEndpoint check if the 'groups' point (usually /api/insights-results-aggregator/v2/groups) responds correctly to HTTP GET command
-func checkGroupsEndpoint() {
-	f := frisby.Create("Check the 'groups' REST API point using HTTP GET method").Get(apiURL + groupsEndpointPostfix)
+// checkOrganizationsEndpoint check if the 'organizations' point (usually /api/insights-results-aggregator/v2/organizations) responds correctly to HTTP GET command
+func checkOrganizationsEndpoint() {
+	f := frisby.Create("Check the 'organizations' REST API point using HTTP GET method").Get(apiURL + organizationsEndpointPostfix)
 	f.Send()
 	f.ExpectStatus(200)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -53,7 +46,7 @@ func checkGroupsEndpoint() {
 	if err != nil {
 		f.AddError(err.Error())
 	} else {
-		response := GroupsResponse{}
+		response := OrganizationsResponse{}
 		err := json.Unmarshal(text, &response)
 		if err != nil {
 			f.AddError(err.Error())
@@ -61,14 +54,14 @@ func checkGroupsEndpoint() {
 		if response.Status != "ok" {
 			f.AddError(statusShouldBeSetToOK)
 		}
-		if len(response.Groups) == 0 {
-			f.AddError("Groups node is empty")
+		if len(response.Organizations) == 0 {
+			f.AddError("Organizations node is empty")
 		}
 	}
 	f.PrintReport()
 }
 
-// check whether other HTTP methods are rejected correctly for the REST API 'groups' point
-func checkWrongMethodsForGroupsEndpoint() {
-	checkGetEndpointByOtherMethods(apiURL+groupsEndpointPostfix, false)
+// check whether other HTTP methods are rejected correctly for the REST API 'organizations' point
+func checkWrongMethodsForOrganizationsEndpoint() {
+	checkGetEndpointByOtherMethods(apiURL+organizationsEndpointPostfix, false)
 }
