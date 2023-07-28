@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2023 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ limitations under the License.
 package tests
 
 import (
+	"encoding/json"
+
 	"github.com/verdverm/frisby"
 )
 
@@ -29,6 +31,21 @@ func checkRestAPIEntryPoint() {
 	f.Send()
 	f.ExpectStatus(200)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := StatusOnlyResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != "ok" {
+			f.AddError("Expecting 'status' to be set to 'ok'")
+		}
+	}
 	f.PrintReport()
 }
 
