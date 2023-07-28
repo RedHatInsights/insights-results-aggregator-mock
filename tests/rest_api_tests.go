@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Red Hat, Inc.
+Copyright © 2020, 2023 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,8 +19,12 @@ limitations under the License.
 //
 // These test should be started by using one of following commands in order to be configured properly:
 //
-//   ./run_on_ci.sh
-//   ./test.sh
+//	./run_on_ci.sh
+//	./test.sh
+//
+// It is also possible to run REST API tests with code coverage detection:
+//
+//	./rest-api-tests.sh
 package main
 
 import (
