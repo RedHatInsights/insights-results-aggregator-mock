@@ -35,4 +35,9 @@ func BasicTests() {
 	// implementation of these tests is stored in groups.go
 	checkGroupsEndpoint()
 	checkWrongMethodsForGroupsEndpoint()
+
+	// implementation of these tests is stored in organizations.go
+	checkOrganizationsEndpoint()
+	checkWrongMethodsForOrganizationsEndpoint()
+
 }
