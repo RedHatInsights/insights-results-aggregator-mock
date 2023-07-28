@@ -31,4 +31,8 @@ func BasicTests() {
 	checkNonExistentEntryPoint()
 	checkWrongEntryPoint()
 	checkWrongMethodsForEntryPoint()
+
+	// implementation of these tests is stored in groups.go
+	checkGroupsEndpoint()
+	checkWrongMethodsForGroupsEndpoint()
 }
