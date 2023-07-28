@@ -26,7 +26,7 @@ import (
 	"github.com/verdverm/frisby"
 )
 
-const endpointPostfix = "organizations"
+const organizationsEndpointPostfix = "organizations"
 
 // OrganizationsResponse represents response from /organizations endpoint
 type OrganizationsResponse struct {
@@ -36,7 +36,7 @@ type OrganizationsResponse struct {
 
 // checkOrganizationsEndpoint check if the 'organizations' point (usually /api/insights-results-aggregator/v2/organizations) responds correctly to HTTP GET command
 func checkOrganizationsEndpoint() {
-	f := frisby.Create("Check the 'organizations' REST API point using HTTP GET method").Get(apiURL + endpointPostfix)
+	f := frisby.Create("Check the 'organizations' REST API point using HTTP GET method").Get(apiURL + organizationsEndpointPostfix)
 	f.Send()
 	f.ExpectStatus(200)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -63,5 +63,5 @@ func checkOrganizationsEndpoint() {
 
 // check whether other HTTP methods are rejected correctly for the REST API 'organizations' point
 func checkWrongMethodsForOrganizationsEndpoint() {
-	checkGetEndpointByOtherMethods(apiURL+endpointPostfix, false)
+	checkGetEndpointByOtherMethods(apiURL+organizationsEndpointPostfix, false)
 }
