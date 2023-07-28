@@ -17,6 +17,7 @@ limitations under the License.
 // Package tests contains REST API tests for following endpoints:
 //
 // apiPrefix
+// apiPrefix + "groups"
 package tests
 
 import (
@@ -25,21 +26,22 @@ import (
 	"github.com/verdverm/frisby"
 )
 
+// Group structure represents one group entry in groups array
+type Group struct {
+	Title       string   `json:"title"`
+	Description string   `json:"description"`
+	Tags        []string `json:"tags"`
+}
+
 // GroupsResponse represents response from /info endpoint
 type GroupsResponse struct {
-	Groups map[string]string `json:"groups"`
-	Status string            `json:"status"`
+	Groups []Group `json:"groups"`
+	Status string  `json:"status"`
 }
 
 // checkGroupsEndpoint check if the 'groups' point (usually /api/insights-results-aggregator/v2/groups) responds correctly to HTTP GET command
 func checkGroupsEndpoint() {
-	var expectedGroupsKeys []string = []string{
-		"title",
-		"description",
-		"tags",
-	}
-
-	f := frisby.Create("Check the entry point to REST API using HTTP GET method").Get(apiURL + "groups")
+	f := frisby.Create("Check the 'groups' REST API point using HTTP GET method").Get(apiURL + "groups")
 	f.Send()
 	f.ExpectStatus(200)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -59,12 +61,6 @@ func checkGroupsEndpoint() {
 		}
 		if len(response.Groups) == 0 {
 			f.AddError("Groups node is empty")
-		}
-		for _, expectedKey := range expectedGroupsKeys {
-			_, found := response.Groups[expectedKey]
-			if !found {
-				f.AddError("Group node does not contain key " + expectedKey)
-			}
 		}
 	}
 	f.PrintReport()
