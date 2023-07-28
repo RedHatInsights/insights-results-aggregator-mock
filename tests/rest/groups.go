@@ -26,6 +26,8 @@ import (
 	"github.com/verdverm/frisby"
 )
 
+const endpointPostfix = "groups"
+
 // Group structure represents one group entry in groups array
 type Group struct {
 	Title       string   `json:"title"`
@@ -33,7 +35,7 @@ type Group struct {
 	Tags        []string `json:"tags"`
 }
 
-// GroupsResponse represents response from /info endpoint
+// GroupsResponse represents response from /organizations endpoint
 type GroupsResponse struct {
 	Groups []Group `json:"groups"`
 	Status string  `json:"status"`
@@ -41,7 +43,7 @@ type GroupsResponse struct {
 
 // checkGroupsEndpoint check if the 'groups' point (usually /api/insights-results-aggregator/v2/groups) responds correctly to HTTP GET command
 func checkGroupsEndpoint() {
-	f := frisby.Create("Check the 'groups' REST API point using HTTP GET method").Get(apiURL + "groups")
+	f := frisby.Create("Check the 'groups' REST API point using HTTP GET method").Get(apiURL + endpointPostfix)
 	f.Send()
 	f.ExpectStatus(200)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -68,5 +70,5 @@ func checkGroupsEndpoint() {
 
 // check whether other HTTP methods are rejected correctly for the REST API 'groups' point
 func checkWrongMethodsForGroupsEndpoint() {
-	checkGetEndpointByOtherMethods(apiURL+"groups", false)
+	checkGetEndpointByOtherMethods(apiURL+endpointPostfix, false)
 }
