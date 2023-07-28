@@ -22,6 +22,7 @@ package tests
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/verdverm/frisby"
 )
@@ -32,6 +33,18 @@ const organizationsEndpointPostfix = "organizations"
 type OrganizationsResponse struct {
 	Organizations []int  `json:"organizations"`
 	Status        string `json:"status"`
+}
+
+func testOrganizationIDExistence(f *frisby.Frisby, organizations []int, organizationID int) {
+	for _, orgID := range organizations {
+		if orgID == organizationID {
+			// found it
+			return
+		}
+	}
+	// not found
+	errorMessage := fmt.Sprintf("Organization %d has not been found", organizationID)
+	f.AddError(errorMessage)
 }
 
 // checkOrganizationsEndpoint check if the 'organizations' point (usually /api/insights-results-aggregator/v2/organizations) responds correctly to HTTP GET command
@@ -57,6 +70,8 @@ func checkOrganizationsEndpoint() {
 		if len(response.Organizations) == 0 {
 			f.AddError("Organizations node is empty")
 		}
+		testOrganizationIDExistence(f, response.Organizations, organization1)
+		testOrganizationIDExistence(f, response.Organizations, organization2)
 	}
 	f.PrintReport()
 }
