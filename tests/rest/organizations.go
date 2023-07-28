@@ -52,7 +52,7 @@ func checkOrganizationsEndpoint() {
 			f.AddError(err.Error())
 		}
 		if response.Status != "ok" {
-			f.AddError("Expecting 'status' to be set to 'ok'")
+			f.AddError(statusShouldBeSetToOK)
 		}
 		if len(response.Organizations) == 0 {
 			f.AddError("Organizations node is empty")

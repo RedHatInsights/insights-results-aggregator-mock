@@ -38,6 +38,11 @@ const (
 	ContentTypeText = "text/plain; charset=utf-8"
 )
 
+// messages
+const (
+	statusShouldBeSetToOK = "Expecting 'status' to be set to 'ok'"
+)
+
 // StatusOnlyResponse represents response containing just a status
 type StatusOnlyResponse struct {
 	Status string `json:"status"`

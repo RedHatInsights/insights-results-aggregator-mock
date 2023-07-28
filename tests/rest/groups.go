@@ -59,7 +59,7 @@ func checkGroupsEndpoint() {
 			f.AddError(err.Error())
 		}
 		if response.Status != "ok" {
-			f.AddError("Expecting 'status' to be set to 'ok'")
+			f.AddError(statusShouldBeSetToOK)
 		}
 		if len(response.Groups) == 0 {
 			f.AddError("Groups node is empty")

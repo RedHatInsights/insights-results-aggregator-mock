@@ -43,7 +43,7 @@ func checkRestAPIEntryPoint() {
 			f.AddError(err.Error())
 		}
 		if response.Status != "ok" {
-			f.AddError("Expecting 'status' to be set to 'ok'")
+			f.AddError(statusShouldBeSetToOK)
 		}
 	}
 	f.PrintReport()
