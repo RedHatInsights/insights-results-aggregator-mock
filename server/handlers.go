@@ -411,6 +411,8 @@ func (server *HTTPServer) readReportForClusters(writer http.ResponseWriter, requ
 }
 
 func (server *HTTPServer) readReportForOrganizationAndCluster(writer http.ResponseWriter, request *http.Request) {
+	writer.Header().Set(contentType, appJSON)
+
 	organizationID, err := readOrganizationID(writer, request)
 	if err != nil {
 		// everything has been handled already
