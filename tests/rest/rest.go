@@ -17,6 +17,9 @@ limitations under the License.
 // Package tests contains REST API tests for following endpoints:
 //
 // apiPrefix
+// apiPrefix + "clusters"
+// apiPrefix + "groups"
+// apiPrefix + "organizations"
 package tests
 
 // ServerTests run all tests for basic REST API endpoints
@@ -39,5 +42,10 @@ func BasicTests() {
 	// implementation of these tests is stored in organizations.go
 	checkOrganizationsEndpoint()
 	checkWrongMethodsForOrganizationsEndpoint()
+
+	// implementation of these tests is stored in clusters.go
+	checkClustersEndpointForOrganization1()
+	checkClustersEndpointForOrganization2()
+	checkWrongMethodsForClustersEndpoint()
 
 }
