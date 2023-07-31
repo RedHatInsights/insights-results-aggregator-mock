@@ -35,6 +35,7 @@ const (
 // messages
 const (
 	statusShouldBeSetToOK = "Expecting 'status' to be set to 'ok'"
+	noPermissionsForOrg   = "You have no permissions to get or change info about this organization"
 )
 
 // known IDs

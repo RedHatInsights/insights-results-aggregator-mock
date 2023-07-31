@@ -102,7 +102,7 @@ func checkClustersEndpointForOrganization2() {
 		if err != nil {
 			f.AddError(err.Error())
 		}
-		if response.Status != "You have no permissions to get or change info about this organization" {
+		if response.Status != noPermissionsForOrg {
 			f.AddError("Wrong status message received: " + response.Status)
 		}
 	}

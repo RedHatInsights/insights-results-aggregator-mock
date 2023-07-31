@@ -1,5 +1,5 @@
 /*
-Copyright © 2020, 2021, 2022 Red Hat, Inc.
+Copyright © 2020, 2021, 2022, 2023 Red Hat, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -102,6 +102,8 @@ type MemoryStorage struct {
 // 10 minutes or so. This is to simulate real world behaviour.
 const changingClustersPeriodInMinutes = 15
 
+const noPermissionsForOrg = "You have no permissions to get or change info about this organization"
+
 var reports map[string]string = make(map[string]string)
 
 func readReport(path, clusterName string) (string, error) {
@@ -189,9 +191,10 @@ func (storage MemoryStorage) Close() error {
 }
 
 // Report represents one (latest) cluster report.
-//     Org: organization ID
-//     Name: cluster GUID in the following format:
-//         c8590f31-e97e-4b85-b506-c45ce1911a12
+//
+//	Org: organization ID
+//	Name: cluster GUID in the following format:
+//	    c8590f31-e97e-4b85-b506-c45ce1911a12
 type Report struct {
 	Org        types.OrgID         `json:"org"`
 	Name       types.ClusterName   `json:"cluster"`
@@ -233,7 +236,7 @@ func (storage MemoryStorage) ListOfClustersForOrg(orgID types.OrgID) ([]types.Cl
 	clusters := make([]types.ClusterName, 0)
 	switch orgID {
 	case 11940171:
-		return clusters, errors.New("You have no permissions to get or change info about this organization")
+		return clusters, errors.New(noPermissionsForOrg)
 	case 11789772:
 		return clustersForOrganization11789772(), nil
 	case 1:
@@ -353,7 +356,7 @@ func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 
 	switch orgID {
 	case 11940171:
-		return types.ClusterReport(report), errors.New("You have no permissions to get or change info about this organization")
+		return types.ClusterReport(report), errors.New(noPermissionsForOrg)
 	case 1, 2, 3, 11789772:
 		report = getReportForCluster(clusterName)
 	}
