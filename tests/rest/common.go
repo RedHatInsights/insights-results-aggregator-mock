@@ -20,12 +20,6 @@ import (
 	"github.com/verdverm/frisby"
 )
 
-// ClustersResponse represents response containing list of clusters for given organization
-type ClustersResponse struct {
-	Clusters []string `json:"clusters"`
-	Status   string   `json:"status"`
-}
-
 // common constants used by REST API tests
 const (
 	apiURL            = "http://localhost:8080/api/insights-results-aggregator/v2/"
@@ -47,6 +41,10 @@ const (
 const (
 	organization1 = 11789772
 	organization2 = 11940171
+
+	cluster1ForOrg1 = "34c3ecc5-624a-49a5-bab8-4fdc5e51a266"
+	cluster2ForOrg1 = "ee7d2bf4-8933-4a3a-8634-3328fe806e08"
+	cluster3ForOrg1 = "eeeeeeee-eeee-eeee-eeee-000000000001"
 )
 
 // StatusOnlyResponse represents response containing just a status
