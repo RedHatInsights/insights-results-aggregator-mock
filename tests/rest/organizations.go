@@ -17,6 +17,8 @@ limitations under the License.
 // Package tests contains REST API tests for following endpoints:
 //
 // apiPrefix
+// apiPrefix + "clusters"
+// apiPrefix + "groups"
 // apiPrefix + "organizations"
 package tests
 
