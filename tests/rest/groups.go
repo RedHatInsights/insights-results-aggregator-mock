@@ -24,6 +24,7 @@ package tests
 
 import (
 	"encoding/json"
+	"net/http"
 
 	"github.com/verdverm/frisby"
 )
@@ -47,7 +48,7 @@ type GroupsResponse struct {
 func checkGroupsEndpoint() {
 	f := frisby.Create("Check the 'groups' REST API point using HTTP GET method").Get(apiURL + groupsEndpointPostfix)
 	f.Send()
-	f.ExpectStatus(200)
+	f.ExpectStatus(http.StatusOK)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
 
 	// check the response

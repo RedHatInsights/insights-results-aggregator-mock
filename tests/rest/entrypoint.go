@@ -24,6 +24,7 @@ package tests
 
 import (
 	"encoding/json"
+	"net/http"
 
 	"github.com/verdverm/frisby"
 )
@@ -32,7 +33,7 @@ import (
 func checkRestAPIEntryPoint() {
 	f := frisby.Create("Check the entry point to REST API using HTTP GET method").Get(apiURL)
 	f.Send()
-	f.ExpectStatus(200)
+	f.ExpectStatus(http.StatusOK)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
 
 	// check the response
@@ -56,7 +57,7 @@ func checkRestAPIEntryPoint() {
 func checkNonExistentEntryPoint() {
 	f := frisby.Create("Check the non-existent entry point to REST API").Get(apiURL + "foobar")
 	f.Send()
-	f.ExpectStatus(404)
+	f.ExpectStatus(http.StatusNotFound)
 	f.ExpectHeader(contentTypeHeader, ContentTypeText)
 	f.PrintReport()
 }
@@ -67,7 +68,7 @@ func checkWrongEntryPoint() {
 	for _, postfix := range postfixes {
 		f := frisby.Create("Check the wrong entry point to REST API with postfix '" + postfix + "'").Get(apiURL + postfix)
 		f.Send()
-		f.ExpectStatus(404)
+		f.ExpectStatus(http.StatusNotFound)
 		f.ExpectHeader(contentTypeHeader, ContentTypeText)
 		f.PrintReport()
 	}
