@@ -78,7 +78,7 @@ type RuleContentResponse struct {
 	CreatedAt    string      `json:"created_at"`
 	Description  string      `json:"description"`
 	ErrorKey     string      `json:"-"`
-	Generic      string      `json:"details"`
+	Generic      interface{} `json:"details"`
 	Reason       string      `json:"reason"`
 	Resolution   string      `json:"resolution"`
 	TotalRisk    int         `json:"total_risk"`
