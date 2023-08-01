@@ -48,4 +48,11 @@ func BasicTests() {
 	checkClustersEndpointForOrganization2()
 	checkWrongMethodsForClustersEndpoint()
 
+	// implementation of these tests is stored in reports.go
+	checkReportForKnownOrganizationKnownCluster()
+	checkReportForUnknownOrganization()
+	checkReportForImproperOrganization()
+	checkReportForKnownOrganizationUnknownCluster()
+	checkReportForKnownOrganizationWrongCluster()
+	checkWrongMethodsForReportEndpoint()
 }
