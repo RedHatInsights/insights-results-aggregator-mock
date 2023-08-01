@@ -17,6 +17,8 @@ limitations under the License.
 package tests
 
 import (
+	"net/http"
+
 	"github.com/verdverm/frisby"
 )
 
@@ -64,23 +66,23 @@ func sendAndExpectStatus(f *frisby.Frisby, expectedStatus int) {
 // checkGetEndpointByOtherMethods checks whether a 'GET' endpoint respond correctly if other HTTP methods are used
 func checkGetEndpointByOtherMethods(endpoint string, includingOptions bool) {
 	f := frisby.Create("Check the end point " + endpoint + " with wrong method: POST").Post(endpoint)
-	sendAndExpectStatus(f, 405)
+	sendAndExpectStatus(f, http.StatusMethodNotAllowed)
 
 	f = frisby.Create("Check the entry point " + endpoint + " with wrong method: PUT").Put(endpoint)
-	sendAndExpectStatus(f, 405)
+	sendAndExpectStatus(f, http.StatusMethodNotAllowed)
 
 	f = frisby.Create("Check the entry point " + endpoint + " with wrong method: DELETE").Delete(endpoint)
-	sendAndExpectStatus(f, 405)
+	sendAndExpectStatus(f, http.StatusMethodNotAllowed)
 
 	f = frisby.Create("Check the entry point " + endpoint + " with wrong method: PATCH").Patch(endpoint)
-	sendAndExpectStatus(f, 405)
+	sendAndExpectStatus(f, http.StatusMethodNotAllowed)
 
 	f = frisby.Create("Check the entry point " + endpoint + " with wrong method: HEAD").Head(endpoint)
-	sendAndExpectStatus(f, 405)
+	sendAndExpectStatus(f, http.StatusMethodNotAllowed)
 
 	// some endpoints accepts OPTIONS method together with GET one, so this check is fully optional
 	if includingOptions {
 		f = frisby.Create("Check the entry point " + endpoint + " with wrong method: OPTIONS").Options(endpoint)
-		sendAndExpectStatus(f, 405)
+		sendAndExpectStatus(f, http.StatusMethodNotAllowed)
 	}
 }
