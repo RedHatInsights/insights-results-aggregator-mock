@@ -114,3 +114,15 @@ func checkReportForKnownOrganizationWrongCluster() {
 
 	f.PrintReport()
 }
+
+// checkWrongMethodsForReportEndpoint checks whether other HTTP methods are
+// rejected correctly for the REST API 'report' point
+func checkWrongMethodsForReportEndpoint() {
+	// known organizations
+	checkGetEndpointByOtherMethods(reportEndpoint(organization1, cluster1ForOrg1), false)
+	checkGetEndpointByOtherMethods(reportEndpoint(organization2, cluster1ForOrg1), false)
+
+	// unknown organizations
+	checkGetEndpointByOtherMethods(reportEndpoint(1, ""), false)
+	checkGetEndpointByOtherMethods(reportEndpoint(2, ""), false)
+}
