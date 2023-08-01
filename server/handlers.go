@@ -415,18 +415,19 @@ func (server *HTTPServer) readReportForOrganizationAndCluster(writer http.Respon
 
 	organizationID, err := readOrganizationID(writer, request)
 	if err != nil {
-		// everything has been handled already
+		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
-		// everything has been handled already
+		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	report, err := server.Storage.ReadReportForOrganizationAndCluster(organizationID, clusterName)
 	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
 		log.Error().Err(err).Msg(unableToReadReportErrorMessage)
 		handleServerError(err)
 		return

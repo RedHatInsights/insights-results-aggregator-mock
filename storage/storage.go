@@ -277,12 +277,12 @@ func (storage MemoryStorage) GetOrgIDByClusterID(cluster types.ClusterName) (typ
 	return types.OrgID(orgID), nil
 }
 
-func getReportForCluster(clusterName types.ClusterName) string {
+func getReportForCluster(clusterName types.ClusterName) (string, bool) {
 	report, ok := reports[string(clusterName)]
 	if !ok {
-		return ""
+		return "", false
 	}
-	return report
+	return report, true
 }
 
 // ReadReportForCluster reads result (health status) for selected cluster
@@ -322,7 +322,7 @@ func (storage MemoryStorage) ReadReportForCluster(
 		reportName = chooseReport(changingCluster)
 	}
 
-	report = getReportForCluster(reportName)
+	report, _ = getReportForCluster(reportName)
 
 	return types.ClusterReport(report), nil
 }
@@ -358,10 +358,13 @@ func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 	case 11940171:
 		return types.ClusterReport(report), errors.New(noPermissionsForOrg)
 	case 1, 2, 3, 11789772:
-		report = getReportForCluster(clusterName)
+		report, found := getReportForCluster(clusterName)
+		if found {
+			return types.ClusterReport(report), nil
+		}
 	}
 
-	return types.ClusterReport(report), nil
+	return types.ClusterReport(report), errors.New("Cluster not found")
 }
 
 // ReadReportForClusterByClusterName reads result (health status) for selected cluster for given organization
