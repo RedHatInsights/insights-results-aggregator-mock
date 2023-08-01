@@ -285,7 +285,7 @@ func (server *HTTPServer) listOfClustersForOrganization(writer http.ResponseWrit
 func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
-		// everything has been handled already
+		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -304,6 +304,7 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 	}
 	report, err := server.Storage.ReadReportForCluster(clusterName)
 	if err != nil {
+		writer.WriteHeader(http.StatusNotFound)
 		log.Error().Err(err).Msg(unableToReadReportErrorMessage)
 		handleServerError(err)
 		return
