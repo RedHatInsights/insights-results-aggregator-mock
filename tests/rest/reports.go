@@ -79,3 +79,15 @@ func checkReportForUnknownOrganization() {
 
 	f.PrintReport()
 }
+
+// checkReportForImproperOrganization checks how improperly entered
+// organization ID is checked by REST API handler
+func checkReportForImproperOrganization() {
+	url := fmt.Sprintf("%sreport/foobar/%s", apiURL, cluster1ForOrg1)
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	f.PrintReport()
+}
