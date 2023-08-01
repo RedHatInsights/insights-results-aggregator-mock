@@ -46,6 +46,7 @@ const (
 	cluster1ForOrg1 = "34c3ecc5-624a-49a5-bab8-4fdc5e51a266"
 	cluster2ForOrg1 = "ee7d2bf4-8933-4a3a-8634-3328fe806e08"
 	cluster3ForOrg1 = "eeeeeeee-eeee-eeee-eeee-000000000001"
+	unknownCluster  = "ffffeeee-eeee-eeee-eeee-000000000001"
 )
 
 // StatusOnlyResponse represents response containing just a status
