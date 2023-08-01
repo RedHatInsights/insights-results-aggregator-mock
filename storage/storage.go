@@ -32,6 +32,8 @@ import (
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
+const clusterNotFoundMessage = "Cluster not found"
+
 // Storage represents an interface to almost any database or storage system
 type Storage interface {
 	Init() error
@@ -322,7 +324,10 @@ func (storage MemoryStorage) ReadReportForCluster(
 		reportName = chooseReport(changingCluster)
 	}
 
-	report, _ = getReportForCluster(reportName)
+	report, found := getReportForCluster(reportName)
+	if !found {
+		return types.ClusterReport(""), errors.New(clusterNotFoundMessage)
+	}
 
 	return types.ClusterReport(report), nil
 }
@@ -364,7 +369,7 @@ func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 		}
 	}
 
-	return types.ClusterReport(report), errors.New("Cluster not found")
+	return types.ClusterReport(report), errors.New(clusterNotFoundMessage)
 }
 
 // ReadReportForClusterByClusterName reads result (health status) for selected cluster for given organization
