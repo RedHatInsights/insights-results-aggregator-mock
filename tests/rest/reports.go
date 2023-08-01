@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -47,7 +47,7 @@ func reportEndpoint(orgID int, clusterName string) string {
 // checkReportForKnownOrganization checks if proper report is returned for
 // known organization ID and known cluster name
 func checkReportForKnownOrganizationKnownCluster() {
-	f := frisby.Create("Check the 'report' REST API point using HTTP GET method").Get(reportEndpoint(organization1, cluster1ForOrg1))
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with known cluster").Get(reportEndpoint(organization1, cluster1ForOrg1))
 	f.Send()
 	f.ExpectStatus(http.StatusOK)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -72,7 +72,7 @@ func checkReportForKnownOrganizationKnownCluster() {
 // checkReportForUknownOrganization checks how uknown organization ID is
 // checked by REST API handler
 func checkReportForUnknownOrganization() {
-	f := frisby.Create("Check the 'report' REST API point using HTTP GET method").Get(reportEndpoint(1234, unknownCluster))
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with unknown organization").Get(reportEndpoint(1234, unknownCluster))
 	f.Send()
 	f.ExpectStatus(http.StatusNotFound)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -84,7 +84,7 @@ func checkReportForUnknownOrganization() {
 // organization ID is checked by REST API handler
 func checkReportForImproperOrganization() {
 	url := fmt.Sprintf("%sreport/foobar/%s", apiURL, cluster1ForOrg1)
-	f := frisby.Create("Check the 'report' REST API point using HTTP GET method").Get(url)
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with improper organization ID").Get(url)
 	f.Send()
 	f.ExpectStatus(http.StatusBadRequest)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -95,7 +95,7 @@ func checkReportForImproperOrganization() {
 // checkReportForKnownOrganizationUnknownCluster checks how unknown cluster
 // name is checked by REST API handler
 func checkReportForKnownOrganizationUnknownCluster() {
-	f := frisby.Create("Check the 'report' REST API point using HTTP GET method").Get(reportEndpoint(organization1, unknownCluster))
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with unknown cluster").Get(reportEndpoint(organization1, unknownCluster))
 	f.Send()
 	f.ExpectStatus(http.StatusNotFound)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -107,7 +107,7 @@ func checkReportForKnownOrganizationUnknownCluster() {
 // is checked by REST API handler
 func checkReportForKnownOrganizationWrongCluster() {
 	clusterName := "abcdefghijklmnopqrstuvwyz"
-	f := frisby.Create("Check the 'report' REST API point using HTTP GET method").Get(reportEndpoint(organization1, clusterName))
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with improper cluster name").Get(reportEndpoint(organization1, clusterName))
 	f.Send()
 	f.ExpectStatus(http.StatusBadRequest)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
