@@ -68,3 +68,14 @@ func checkReportForKnownOrganizationKnownCluster() {
 	}
 	f.PrintReport()
 }
+
+// checkReportForUknownOrganization checks how uknown organization ID is
+// checked by REST API handler
+func checkReportForUnknownOrganization() {
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method").Get(reportEndpoint(1234, unknownCluster))
+	f.Send()
+	f.ExpectStatus(http.StatusNotFound)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	f.PrintReport()
+}
