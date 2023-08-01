@@ -25,6 +25,7 @@ package tests
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/verdverm/frisby"
 )
@@ -57,7 +58,7 @@ func testClusterIDExistence(f *frisby.Frisby, clusters []string, searchedCluster
 func checkClustersEndpointForOrganization1() {
 	f := frisby.Create("Check the 'clusters' REST API point using HTTP GET method").Get(clustersEndpointForOrganization(organization1))
 	f.Send()
-	f.ExpectStatus(200)
+	f.ExpectStatus(http.StatusOK)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
 
 	// check the response
@@ -89,7 +90,7 @@ func checkClustersEndpointForOrganization1() {
 func checkClustersEndpointForOrganization2() {
 	f := frisby.Create("Check the 'clusters' REST API point using HTTP GET method").Get(clustersEndpointForOrganization(organization2))
 	f.Send()
-	f.ExpectStatus(403)
+	f.ExpectStatus(http.StatusForbidden)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
 
 	// check the response

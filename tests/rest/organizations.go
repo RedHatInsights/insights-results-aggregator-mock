@@ -25,6 +25,7 @@ package tests
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/verdverm/frisby"
 )
@@ -53,7 +54,7 @@ func testOrganizationIDExistence(f *frisby.Frisby, organizations []int, organiza
 func checkOrganizationsEndpoint() {
 	f := frisby.Create("Check the 'organizations' REST API point using HTTP GET method").Get(apiURL + organizationsEndpointPostfix)
 	f.Send()
-	f.ExpectStatus(200)
+	f.ExpectStatus(http.StatusOK)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
 
 	// check the response
