@@ -91,3 +91,26 @@ func checkReportForImproperOrganization() {
 
 	f.PrintReport()
 }
+
+// checkReportForKnownOrganizationUnknownCluster checks how unknown cluster
+// name is checked by REST API handler
+func checkReportForKnownOrganizationUnknownCluster() {
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method").Get(reportEndpoint(organization1, unknownCluster))
+	f.Send()
+	f.ExpectStatus(http.StatusNotFound)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	f.PrintReport()
+}
+
+// checkReportForKnownOrganizationWrongCluster checks how improper cluster name
+// is checked by REST API handler
+func checkReportForKnownOrganizationWrongCluster() {
+	clusterName := "abcdefghijklmnopqrstuvwyz"
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method").Get(reportEndpoint(organization1, clusterName))
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	f.PrintReport()
+}
