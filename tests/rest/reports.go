@@ -168,3 +168,13 @@ func checkReportForUnknownCluster() {
 	f.ExpectStatus(http.StatusNotFound)
 	f.PrintReport()
 }
+
+// checkReportForImproperCluster checks how improper cluster
+// name is checked by REST API handler
+func checkReportForImproperCluster() {
+	url := reportEndpointForCluster("foobarbaz")
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with improper cluster w/o org").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.PrintReport()
+}
