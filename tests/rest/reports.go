@@ -178,3 +178,10 @@ func checkReportForImproperCluster() {
 	f.ExpectStatus(http.StatusBadRequest)
 	f.PrintReport()
 }
+
+// checkWrongMethodsForClusterReportEndpoint checks whether other HTTP methods are
+// rejected correctly for the REST API 'report' point
+func checkWrongMethodsForClusterReportEndpoint() {
+	checkGetEndpointByOtherMethods(reportEndpointForCluster(cluster1ForOrg1), false)
+	checkGetEndpointByOtherMethods(reportEndpointForCluster(cluster1ForOrg1), false)
+}
