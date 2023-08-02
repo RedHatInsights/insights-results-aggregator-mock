@@ -158,3 +158,13 @@ func checkReportForKnownCluster() {
 	}
 	f.PrintReport()
 }
+
+// checkReportForUnknownCluster checks how unknown cluster
+// name is checked by REST API handler
+func checkReportForUnknownCluster() {
+	url := reportEndpointForCluster(unknownCluster)
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with unknown cluster w/o org").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusNotFound)
+	f.PrintReport()
+}
