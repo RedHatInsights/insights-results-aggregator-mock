@@ -132,3 +132,29 @@ func checkWrongMethodsForReportForOrgAndClusterEndpoint() {
 	checkGetEndpointByOtherMethods(reportEndpointForOrgAndCluster(1, ""), false)
 	checkGetEndpointByOtherMethods(reportEndpointForOrgAndCluster(2, ""), false)
 }
+
+// checkReportForKnownCluster checks if proper report is returned for
+// known cluster name (w/o organization ID)
+func checkReportForKnownCluster() {
+	url := reportEndpointForCluster(cluster1ForOrg1)
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with known cluster w/o org").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := FullReportResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != "ok" {
+			f.AddError(statusShouldBeSetToOK)
+		}
+	}
+	f.PrintReport()
+}
