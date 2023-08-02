@@ -38,16 +38,22 @@ type FullReportResponse struct {
 	Status string               `json:"status"`
 }
 
-// reportEndpoint helper function constructs URL for accessing endpoint to
+// reportEndpointForCluster helper function constructs URL for accessing endpoint to
+// retrieve report for given cluster (w/o organization ID)
+func reportEndpointForCluster(clusterName string) string {
+	return fmt.Sprintf("%sreport/%s", apiURL, clusterName)
+}
+
+// reportEndpointForOrgAndCluster helper function constructs URL for accessing endpoint to
 // retrieve report for given organization and cluster
-func reportEndpoint(orgID int, clusterName string) string {
+func reportEndpointForOrgAndCluster(orgID int, clusterName string) string {
 	return fmt.Sprintf("%sreport/%d/%s", apiURL, orgID, clusterName)
 }
 
-// checkReportForKnownOrganization checks if proper report is returned for
+// checkReportForKnownOrganizationKnownCluster checks if proper report is returned for
 // known organization ID and known cluster name
 func checkReportForKnownOrganizationKnownCluster() {
-	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with known cluster").Get(reportEndpoint(organization1, cluster1ForOrg1))
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with known cluster").Get(reportEndpointForOrgAndCluster(organization1, cluster1ForOrg1))
 	f.Send()
 	f.ExpectStatus(http.StatusOK)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -72,7 +78,7 @@ func checkReportForKnownOrganizationKnownCluster() {
 // checkReportForUknownOrganization checks how uknown organization ID is
 // checked by REST API handler
 func checkReportForUnknownOrganization() {
-	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with unknown organization").Get(reportEndpoint(1234, unknownCluster))
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with unknown organization").Get(reportEndpointForOrgAndCluster(1234, unknownCluster))
 	f.Send()
 	f.ExpectStatus(http.StatusNotFound)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -95,7 +101,7 @@ func checkReportForImproperOrganization() {
 // checkReportForKnownOrganizationUnknownCluster checks how unknown cluster
 // name is checked by REST API handler
 func checkReportForKnownOrganizationUnknownCluster() {
-	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with unknown cluster").Get(reportEndpoint(organization1, unknownCluster))
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with unknown cluster").Get(reportEndpointForOrgAndCluster(organization1, unknownCluster))
 	f.Send()
 	f.ExpectStatus(http.StatusNotFound)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -107,7 +113,7 @@ func checkReportForKnownOrganizationUnknownCluster() {
 // is checked by REST API handler
 func checkReportForKnownOrganizationWrongCluster() {
 	clusterName := "abcdefghijklmnopqrstuvwyz"
-	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with improper cluster name").Get(reportEndpoint(organization1, clusterName))
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with improper cluster name").Get(reportEndpointForOrgAndCluster(organization1, clusterName))
 	f.Send()
 	f.ExpectStatus(http.StatusBadRequest)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
@@ -115,14 +121,67 @@ func checkReportForKnownOrganizationWrongCluster() {
 	f.PrintReport()
 }
 
-// checkWrongMethodsForReportEndpoint checks whether other HTTP methods are
+// checkWrongMethodsForReportForOrgAndClusterEndpoint checks whether other HTTP methods are
 // rejected correctly for the REST API 'report' point
-func checkWrongMethodsForReportEndpoint() {
+func checkWrongMethodsForReportForOrgAndClusterEndpoint() {
 	// known organizations
-	checkGetEndpointByOtherMethods(reportEndpoint(organization1, cluster1ForOrg1), false)
-	checkGetEndpointByOtherMethods(reportEndpoint(organization2, cluster1ForOrg1), false)
+	checkGetEndpointByOtherMethods(reportEndpointForOrgAndCluster(organization1, cluster1ForOrg1), false)
+	checkGetEndpointByOtherMethods(reportEndpointForOrgAndCluster(organization2, cluster1ForOrg1), false)
 
 	// unknown organizations
-	checkGetEndpointByOtherMethods(reportEndpoint(1, ""), false)
-	checkGetEndpointByOtherMethods(reportEndpoint(2, ""), false)
+	checkGetEndpointByOtherMethods(reportEndpointForOrgAndCluster(1, ""), false)
+	checkGetEndpointByOtherMethods(reportEndpointForOrgAndCluster(2, ""), false)
+}
+
+// checkReportForKnownCluster checks if proper report is returned for
+// known cluster name (w/o organization ID)
+func checkReportForKnownCluster() {
+	url := reportEndpointForCluster(cluster1ForOrg1)
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with known cluster w/o org").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := FullReportResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != "ok" {
+			f.AddError(statusShouldBeSetToOK)
+		}
+	}
+	f.PrintReport()
+}
+
+// checkReportForUnknownCluster checks how unknown cluster
+// name is checked by REST API handler
+func checkReportForUnknownCluster() {
+	url := reportEndpointForCluster(unknownCluster)
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with unknown cluster w/o org").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusNotFound)
+	f.PrintReport()
+}
+
+// checkReportForImproperCluster checks how improper cluster
+// name is checked by REST API handler
+func checkReportForImproperCluster() {
+	url := reportEndpointForCluster("foobarbaz")
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with improper cluster w/o org").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.PrintReport()
+}
+
+// checkWrongMethodsForClusterReportEndpoint checks whether other HTTP methods are
+// rejected correctly for the REST API 'report' point
+func checkWrongMethodsForClusterReportEndpoint() {
+	checkGetEndpointByOtherMethods(reportEndpointForCluster(cluster1ForOrg1), false)
+	checkGetEndpointByOtherMethods(reportEndpointForCluster(cluster1ForOrg1), false)
 }
