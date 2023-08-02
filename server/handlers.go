@@ -309,6 +309,7 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 		handleServerError(err)
 		return
 	}
+	writer.Header().Set(contentType, appJSON)
 
 	r := []byte(report)
 	_, err = writer.Write(r)
