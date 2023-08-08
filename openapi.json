@@ -932,7 +932,7 @@
       "get": {
         "summary": "",
         "operationId": "getUpgradeRisksPrediction",
-        "description": "The title of the rule, a short description.",
+        "description": "Get the upgrade risk prediction.",
         "parameters": [
           {
             "name": "clusterId",
@@ -1033,6 +1033,216 @@
           },
           "404": {
             "description": "Status NotFound: happens when the cluster has no data in Observatorium"
+          },
+          "503": {
+            "description": "Status NotAvailable: happens when the AMS API or the Upgrade Risks Prediction service is not available."
+          }
+        },
+        "tags": [
+          "prod"
+        ]
+      }
+    },
+    "/upgrade-risks-prediction": {
+      "post": {
+        "summary": "",
+        "operationId": "getUpgradeRisksPredictionMultipleClusters",
+        "description": "Get the upgrade risk prediction for multiple clusters.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clusters": { 
+                    "description": "List of the clusters to get the prediction for",
+                    "type": "array"
+                  }
+                },
+                "required": ["clusters"] 
+              },
+              "example": {
+                "clusters" : [
+                  "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+                  "44444444-3333-2222-1111-111111111111"
+                ] 
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Status ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "predictions"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "predictions": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "cluster_id": {
+                              "type": "string",
+                              "example": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+                            },
+                            "status": {
+                              "type": "string",
+                              "example": "ok"
+                            },
+                            "upgrade_recommended": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "upgrade_risks_predictors": {
+                              "type": "object",
+                              "properties": {
+                                "alerts": {
+                                  "type": "array",
+                                  "items": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "name": {
+                                          "type": "string",
+                                          "example": "SomeCriticalAlert"
+                                        },
+                                        "namespace": {
+                                          "type": "string",
+                                          "example": "openshift-kube-apiserver"
+                                        },
+                                        "severity": {
+                                          "type": "string",
+                                          "example": "critical"
+                                        },
+                                        "url": {
+                                          "type": "string",
+                                          "example": "https://some_url.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=SomeCriticalAlert"
+                                        }
+                                      },
+                                      "required": [
+                                        "name",
+                                        "namespace",
+                                        "severity",
+                                        "url"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "operator_conditions": {
+                                  "type": "array",
+                                  "items": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "name": {
+                                          "type": "string",
+                                          "example": "authentication"
+                                        },
+                                        "condition": {
+                                          "type": "string",
+                                          "example": "Degraded"
+                                        },
+                                        "reason": {
+                                          "type": "string",
+                                          "example": "AsExpected"
+                                        },
+                                        "url": {
+                                          "type": "string",
+                                          "example": "https://some_url.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/authentication"
+                                        }
+                                      },
+                                      "required": [
+                                        "name",
+                                        "condition",
+                                        "reason",
+                                        "url"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "alerts",
+                                "operator_conditions"
+                              ]
+                            },
+                            "last_checked_at": {
+                              "type": "string",
+                              "example": "2011-15-04T00:05:23Z"
+                            }
+                          }
+                        }
+                      ],
+                      "example": [
+                        {
+                          "cluster": "not-an-uuid",
+                          "status": "invalid UUID"
+                        },
+                        {
+                          "cluster": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+                          "status": "ok",
+                          "upgrade_recommended": false,
+                          "upgrade_risks_predictors": {
+                            "alerts": [
+                              {
+                                "name": "SomeCriticalAlert",
+                                "namespace": "openshift-kube-apiserver",
+                                "severity": "critical",
+                                "url": "https://some_url.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=SomeCriticalAlert"
+                              }
+                            ],
+                            "operator_conditions": [
+                              {
+                                "name": "authentication",
+                                "condition": "Degraded",
+                                "reason": "AsExpected",
+                                "url": "https://some_url.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/authentication"
+                              }
+                            ]
+                          },
+                          "last_checked_at": "2011-11-04T00:05:23Z"
+                        },
+                        {
+                          "cluster": "44444444-3333-2222-1111-111111111111",
+                          "status": "ok",
+                          "upgrade_recommended": false,
+                          "upgrade_risks_predictors": {
+                            "alerts": [
+                              {
+                                "name": "SomeCriticalAlert",
+                                "namespace": "openshift-kube-apiserver",
+                                "severity": "critical",
+                                "url": "https://some_url.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=SomeCriticalAlert"
+                              }
+                            ],
+                            "operator_conditions": [
+                              {
+                                "name": "authentication",
+                                "condition": "Degraded",
+                                "reason": "AsExpected",
+                                "url": "https://some_url.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/authentication"
+                              }
+                            ]
+                          },
+                          "last_checked_at": "2011-15-04T00:05:23Z"
+                        }
+                    ]
+                    }
+                  }
+                }
+              }
+            }
           },
           "503": {
             "description": "Status NotAvailable: happens when the AMS API or the Upgrade Risks Prediction service is not available."
