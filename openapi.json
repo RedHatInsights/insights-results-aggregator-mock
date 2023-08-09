@@ -1244,6 +1244,9 @@
               }
             }
           },
+          "400": {
+            "description": "Status BadRequest: wrong input received. Maybe you sent too many clusters or the body was malformed."
+          },
           "503": {
             "description": "Status NotAvailable: happens when the AMS API or the Upgrade Risks Prediction service is not available."
           }
