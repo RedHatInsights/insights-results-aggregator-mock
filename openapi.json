@@ -1092,7 +1092,8 @@
                         {
                           "type": "object",
                           "required": [
-                            "cluster_id"
+                            "cluster_id",
+                            "status"
                           ],
                           "properties": {
                             "cluster_id": {
