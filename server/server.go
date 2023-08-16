@@ -166,6 +166,9 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	// for more information about this endpoint
 	router.HandleFunc(apiPrefix+UpgradeRisksPredictionEndpoint, server.upgradeRisksPrediction).Methods(http.MethodGet)
 
+	// DVO-related endpoints
+	router.HandleFunc(apiPrefix+AllDVONamespaces, server.allDVONamespaces).Methods(http.MethodGet)
+
 	// OpenAPI specs
 	router.HandleFunc(openAPIURL, server.serveAPISpecFile).Methods(http.MethodGet)
 }
