@@ -23,6 +23,27 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// Constants used to produce HTTP responses
+const (
+	cluster1UUID        = "00000001-0001-0001-0001-000000000001"
+	cluster1DisplayName = "Cluster #1"
+
+	namespace1UUID     = "00000001-0001-0001-0001-000000000001"
+	namespace1FullName = "Namespace #1"
+	namespace2UUID     = "00000001-0001-0001-0001-000000000001"
+	namespace2FullName = "Namespace #2"
+
+	dvoReport1Check       = "no_anti_affinity"
+	dvoReport1Kind        = "Deployment"
+	dvoReport1Description = "Indicates when... ... ..."
+	dvoReport1Remediation = "Specify anti-affinity in your pod specification ... ... ..."
+
+	dvoReport2Check       = "run_as_non_root"
+	dvoReport2Kind        = "Runtime"
+	dvoReport2Description = "Indicates when... ... ..."
+	dvoReport2Remediation = "Select different user to run this deployment... ... ..."
+)
+
 // AllDVONamespacesResponse is a data structure that represents list of namespace
 type AllDVONamespacesResponse struct {
 	Status    string     `json:"status"`
@@ -91,25 +112,25 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, request *
 	responseData.Workloads = []Workload{
 		Workload{
 			ClusterEntry{
-				UUID:        "00000001-0001-0001-0001-000000000001",
-				DisplayName: "Cluster #1",
+				UUID:        cluster1UUID,
+				DisplayName: cluster1DisplayName,
 			},
 			NamespaceEntry{
-				UUID:     "00000002-0002-0002-0002-000000000002",
-				FullName: "Namespace #2",
+				UUID:     namespace2UUID,
+				FullName: namespace2FullName,
 			},
 			[]DVOReport{
 				DVOReport{
-					Check:       "no_anti_affinity",
-					Kind:        "Deployment",
-					Description: "Indicates when... ... ...",
-					Remediation: "Specify anti-affinity in your pod specification ... ... ...",
+					Check:       dvoReport1Check,
+					Kind:        dvoReport1Kind,
+					Description: dvoReport1Description,
+					Remediation: dvoReport1Remediation,
 				},
 				DVOReport{
-					Check:       "run_as_non_root",
-					Kind:        "Runtime",
-					Description: "Indicates when... ... ...",
-					Remediation: "Select different user to run this deployment... ... ...",
+					Check:       dvoReport2Check,
+					Kind:        dvoReport2Kind,
+					Description: dvoReport2Description,
+					Remediation: dvoReport2Remediation,
 				},
 			},
 		},
