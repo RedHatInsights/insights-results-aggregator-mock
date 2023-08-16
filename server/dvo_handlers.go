@@ -42,7 +42,7 @@ type ClusterEntry struct {
 	DisplayName string `json:"display_name"`
 }
 
-// Namespace structure contains basic information about namespace
+// NamespaceEntry structure contains basic information about namespace
 type NamespaceEntry struct {
 	UUID     string `json:"uuid"`
 	FullName string `json:"name"`
@@ -60,28 +60,28 @@ type DVOReport struct {
 // does not depend on Organization ID as this information is passed through
 // Bearer token in real Smart Proxy service. The format of output should be:
 //
-//           {
-//             "status": "ok",
-//             "workloads": [
-//                 {
-//                     "cluster": {
-//                         "uuid": "{cluster UUID}",
-//                         "display_name": "{cluster UUID or displayable name}",
-//                     },
-//                     "namespace": {
-//                         "uuid": "{namespace UUID}",
-//                         "name": "{namespace real name}", // optional, might be null
-//                     },
-//                     "reports": [
-//                         {
-//                             "check": "{for example no_anti_affinity}", // taken from the original full name deploment_validation_operator_no_anti_affinity
-//                             "kind": "{kind attribute}",
-//                             "description": {description}",
-//                             "remediation": {remediation}",
-//                         },
-//                     ]
-//             ]
-//         }
+//	  {
+//	    "status": "ok",
+//	    "workloads": [
+//	        {
+//	            "cluster": {
+//	                "uuid": "{cluster UUID}",
+//	                "display_name": "{cluster UUID or displayable name}",
+//	            },
+//	            "namespace": {
+//	                "uuid": "{namespace UUID}",
+//	                "name": "{namespace real name}", // optional, might be null
+//	            },
+//	            "reports": [
+//	                {
+//	                    "check": "{for example no_anti_affinity}", // taken from the original full name deploment_validation_operator_no_anti_affinity
+//	                    "kind": "{kind attribute}",
+//	                    "description": {description}",
+//	                    "remediation": {remediation}",
+//	                },
+//	            ]
+//	    ]
+//	}
 func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, request *http.Request) {
 	log.Info().Msg("All DVO namespaces handler")
 
