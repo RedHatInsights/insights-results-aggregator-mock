@@ -29,6 +29,33 @@ type AllDVONamespacesResponse struct {
 	Workloads []Workload `json:"workloads"`
 }
 
+// Workload structure represents one workload entry in list of workloads
+type Workload struct {
+	ClusterEntry ClusterEntry   `json:"cluster"`
+	Namespace    NamespaceEntry `json:"namespace"`
+	Reports      []DVOReport    `json:"reports"`
+}
+
+// ClusterEntry structure contains cluster UUID and cluster name
+type ClusterEntry struct {
+	UUID        string `json:"uuid"`
+	DisplayName string `json:"display_name"`
+}
+
+// Namespace structure contains basic information about namespace
+type NamespaceEntry struct {
+	UUID     string `json:"uuid"`
+	FullName string `json:"name"`
+}
+
+// DVOReport structure represents one DVO-related report
+type DVOReport struct {
+	Check       string `json:"check"`
+	Kind        string `json:"kind"`
+	Description string `json:"description"`
+	Remediation string `json:"remediation"`
+}
+
 // allDVONamespaces handler returns list of all DVO namespaces. Currently it
 // does not depend on Organization ID as this information is passed through
 // Bearer token in real Smart Proxy service. The format of output should be:
