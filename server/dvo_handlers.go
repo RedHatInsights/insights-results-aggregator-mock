@@ -23,6 +23,12 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// AllDVONamespacesResponse is a data structure that represents list of namespace
+type AllDVONamespacesResponse struct {
+	Status    string     `json:"status"`
+	Workloads []Workload `json:"workloads"`
+}
+
 // allDVONamespaces handler returns list of all DVO namespaces. Currently it
 // does not depend on Organization ID as this information is passed through
 // Bearer token in real Smart Proxy service. The format of output should be:
