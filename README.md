@@ -76,6 +76,10 @@ Mock service mimicking Insights Results Aggregator
         * [Response from the service](#response-from-the-service-2)
         * [Response in case of empty result set](#response-in-case-of-empty-result-set)
         * [Response in case of improper request](#response-in-case-of-improper-request)
+* [Endpoints to retrieve information about DVO namespaces](#endpoints-to-retrieve-information-about-dvo-namespaces)
+    * [List of all DVO namespaces](#list-of-all-dvo-namespaces)
+        * [Request to the service](#request-to-the-service)
+        * [Response from the service](#response-from-the-service-3)
 * [Debug endpoints](#debug-endpoints)
     * [Exit HTTP server gracefully](#exit-http-server-gracefully)
 * [BDD tests](#bdd-tests)
@@ -1046,6 +1050,56 @@ curl -v localhost:8080/api/insights-results-aggregator/v2/cluster/34c3ecc5-624a-
 ```json
 {
   "status": "invalid request ID: '38584huk209q82uhl8md5gsdxr_'"
+}
+```
+
+## Endpoints to retrieve information about DVO namespaces
+
+### List of all DVO namespaces
+
+Returns the list of all DVO namespaces (i.e. array of objects) to which this
+particular account has access.  Each object contains the namespace ID, the
+namespace display name if available, the cluster ID under which this namespace
+is created, and the number of affecting recommendations for this namespace as
+well.
+
+#### Request to the service
+
+```
+curl -v localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo
+```
+
+#### Response from the service
+
+```json
+{
+  "status": "ok",
+  "workloads": [
+    {
+      "cluster": {
+        "uuid": "00000001-0001-0001-0001-000000000001",
+        "display_name": "Cluster #1"
+      },
+      "namespace": {
+        "uuid": "00000002-0002-0002-0002-000000000002",
+        "name": "Namespace #2"
+      },
+      "reports": [
+        {
+          "check": "no_anti_affinity",
+          "kind": "Deployment",
+          "description": "Indicates when... ... ...",
+          "remediation": "Specify anti-affinity in your pod specification ... ... ..."
+        },
+        {
+          "check": "run_as_non_root",
+          "kind": "Runtime",
+          "description": "Indicates when... ... ...",
+          "remediation": "Select different user to run this deployment... ... ..."
+        }
+      ]
+    }
+  ]
 }
 ```
 
