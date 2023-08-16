@@ -88,6 +88,32 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, request *
 	// prepare response structure
 	var responseData AllDVONamespacesResponse
 	responseData.Status = "ok"
+	responseData.Workloads = []Workload{
+		Workload{
+			ClusterEntry{
+				UUID:        "00000001-0001-0001-0001-000000000001",
+				DisplayName: "Cluster #1",
+			},
+			NamespaceEntry{
+				UUID:     "00000002-0002-0002-0002-000000000002",
+				FullName: "Namespace #2",
+			},
+			[]DVOReport{
+				DVOReport{
+					Check:       "no_anti_affinity",
+					Kind:        "Deployment",
+					Description: "Indicates when... ... ...",
+					Remediation: "Specify anti-affinity in your pod specification ... ... ...",
+				},
+				DVOReport{
+					Check:       "run_as_non_root",
+					Kind:        "Runtime",
+					Description: "Indicates when... ... ...",
+					Remediation: "Select different user to run this deployment... ... ...",
+				},
+			},
+		},
+	}
 
 	// transform response structure into proper JSON payload
 	bytes, err := json.MarshalIndent(responseData, "", "\t")
