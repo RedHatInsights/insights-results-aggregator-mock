@@ -240,7 +240,7 @@ func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, request *http
 
 	err := responses.SendOK(writer, responses.BuildOkResponseWithData("groups", server.groupsList))
 	if err != nil {
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("List of groups handler")
 		handleServerError(err)
 		return
 	}
@@ -298,7 +298,7 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 			handleServerError(err)
 			return
 		}
-		log.Info().Int("Code", int(code)).Msg("Failed clusters")
+		log.Info().Int("Code", code).Msg("Failed clusters")
 		writer.WriteHeader(code)
 		return
 	}
@@ -447,7 +447,7 @@ func parseRuleSelector(ruleSelector types.RuleSelector) (types.Component, types.
 
 	if len(splitedRuleID) != 2 {
 		err := fmt.Errorf("invalid rule ID, it must contain only rule ID and error key separated by |")
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("parse rule selector")
 		return types.Component(""), types.ErrorKey(""), err
 	}
 
@@ -458,7 +458,7 @@ func parseRuleSelector(ruleSelector types.RuleSelector) (types.Component, types.
 
 	if !isRuleIDValid || !isErrorKeyValid {
 		err := fmt.Errorf("invalid rule ID, each part of ID must contain only latin characters, number, underscores or dots")
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("rule name validity check")
 		return types.Component(""), types.ErrorKey(""), err
 	}
 
