@@ -122,7 +122,7 @@ func readClusterName(_ http.ResponseWriter, request *http.Request) (types.Cluste
 
 // readRequestID retrieves request ID from request
 // if it's not possible, it writes http error to the writer and returns error
-func readRequestID(writer http.ResponseWriter, request *http.Request) (types.RequestID, error) {
+func readRequestID(_ http.ResponseWriter, request *http.Request) (types.RequestID, error) {
 	requestID, err := getRouterParam(request, "request_id")
 	if err != nil {
 		return "", err
@@ -233,7 +233,7 @@ func (server *HTTPServer) initGroupList() {
 }
 
 // listOfGroups returns the list of defined groups
-func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, _ *http.Request) {
 	log.Info().Msg("List of groups handler")
 
 	server.initGroupList()
@@ -808,7 +808,7 @@ func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, r
 	}
 }
 
-func (server *HTTPServer) exit(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) exit(writer http.ResponseWriter, _ *http.Request) {
 	err := responses.SendOK(writer, responses.BuildOkResponse())
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
