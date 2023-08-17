@@ -19,7 +19,7 @@ import (
 )
 
 // GetRuleWithContent returns rule with content for provided ruleID and ruleErrorKey
-func (storage MemoryStorage) GetRuleWithContent(ruleID types.RuleID, ruleErrorKey types.ErrorKey) (*types.RuleWithContent, error) {
+func (storage MemoryStorage) GetRuleWithContent(_ types.RuleID, _ types.ErrorKey) (*types.RuleWithContent, error) {
 	var result types.RuleWithContent
 
 	return &result, nil
