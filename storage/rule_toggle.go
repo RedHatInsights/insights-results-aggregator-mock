@@ -15,8 +15,9 @@
 package storage
 
 import (
-	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 	"time"
+
+	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
 // RuleToggle is a type for user's vote
@@ -42,7 +43,7 @@ type ClusterRuleToggle struct {
 
 // ToggleRuleForCluster toggles rule for specified cluster
 func (storage MemoryStorage) ToggleRuleForCluster(
-	clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID, ruleToggle RuleToggle,
+	_ types.ClusterName, _ types.RuleID, _ types.UserID, _ RuleToggle,
 ) error {
 
 	return nil
