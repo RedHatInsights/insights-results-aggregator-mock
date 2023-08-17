@@ -106,7 +106,7 @@ const changingClustersPeriodInMinutes = 15
 
 const noPermissionsForOrg = "You have no permissions to get or change info about this organization"
 
-var reports map[string]string = make(map[string]string)
+var reports = make(map[string]string)
 
 func readReport(path, clusterName string) (string, error) {
 	absPath, err := filepath.Abs(path + "/report_" + clusterName + ".json")
