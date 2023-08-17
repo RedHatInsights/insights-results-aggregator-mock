@@ -41,26 +41,27 @@ const (
 // Will return an empty list if this account has no acks.
 //
 // Response format should look like:
-// {
-//   "meta": {
-//     "count": 0
-//   },
-//   "links": {
-//     "first": "string",
-//     "previous": "string",
-//     "next": "string",
-//     "last": "string"
-//   },
-//   "data": [
-//     {
-//       "rule": "string",
-//       "justification": "string",
-//       "created_by": "string",
-//       "created_at": "2021-09-04T17:11:35.130Z",
-//       "updated_at": "2021-09-04T17:11:35.130Z"
-//     }
-//   ]
-// }
+//
+//	{
+//	  "meta": {
+//	    "count": 0
+//	  },
+//	  "links": {
+//	    "first": "string",
+//	    "previous": "string",
+//	    "next": "string",
+//	    "last": "string"
+//	  },
+//	  "data": [
+//	    {
+//	      "rule": "string",
+//	      "justification": "string",
+//	      "created_by": "string",
+//	      "created_at": "2021-09-04T17:11:35.130Z",
+//	      "updated_at": "2021-09-04T17:11:35.130Z"
+//	    }
+//	  ]
+//	}
 //
 // Please note that for the sake of simplicity we don't use links section as
 // pagination is not supported ATM.
@@ -102,20 +103,20 @@ func (server *HTTPServer) readAckList(writer http.ResponseWriter, request *http.
 //
 // An example request:
 //
-// {
-//   "rule_id": "string",
-//   "justification": "string"
-// }
+//	{
+//	  "rule_id": "string",
+//	  "justification": "string"
+//	}
 //
 // An example response:
 //
-// {
-//   "rule": "string",
-//   "justification": "string",  <- can not be set by this call!!!
-//   "created_by": "string",
-//   "created_at": "2021-09-04T17:52:48.976Z",
-//   "updated_at": "2021-09-04T17:52:48.976Z"
-// }
+//	{
+//	  "rule": "string",
+//	  "justification": "string",  <- can not be set by this call!!!
+//	  "created_by": "string",
+//	  "created_at": "2021-09-04T17:52:48.976Z",
+//	  "updated_at": "2021-09-04T17:52:48.976Z"
+//	}
 func (server *HTTPServer) acknowledgePost(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set(contentType, appJSON)
 
@@ -166,13 +167,13 @@ func (server *HTTPServer) acknowledgePost(writer http.ResponseWriter, request *h
 //
 // An example response:
 //
-// {
-//   "rule": "string",
-//   "justification": "string",  <- can not be set by this call!!!
-//   "created_by": "string",
-//   "created_at": "2021-09-04T17:52:48.976Z",
-//   "updated_at": "2021-09-04T17:52:48.976Z"
-// }
+//	{
+//	  "rule": "string",
+//	  "justification": "string",  <- can not be set by this call!!!
+//	  "created_by": "string",
+//	  "created_at": "2021-09-04T17:52:48.976Z",
+//	  "updated_at": "2021-09-04T17:52:48.976Z"
+//	}
 //
 // Please note that it is impossible to set "justification" field into any
 // value that makes sense!
@@ -209,19 +210,19 @@ func (server *HTTPServer) getAcknowledge(writer http.ResponseWriter, request *ht
 //
 // An example of request:
 //
-// {
-//    "justification": "string"
-// }
+//	{
+//	   "justification": "string"
+//	}
 //
 // An example response:
 //
-// {
-//   "rule": "string",
-//   "justification": "string",
-//   "created_by": "string",
-//   "created_at": "2021-09-04T17:52:48.976Z",
-//   "updated_at": "2021-09-04T17:52:48.976Z"
-// }
+//	{
+//	  "rule": "string",
+//	  "justification": "string",
+//	  "created_by": "string",
+//	  "created_at": "2021-09-04T17:52:48.976Z",
+//	  "updated_at": "2021-09-04T17:52:48.976Z"
+//	}
 //
 // Additionally, if rule is not found, 404 is returned (not mentioned in
 // original REST API specification).
