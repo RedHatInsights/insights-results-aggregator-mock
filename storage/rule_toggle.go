@@ -51,7 +51,7 @@ func (storage MemoryStorage) ToggleRuleForCluster(
 
 // ListDisabledRulesForCluster retrieves disabled rules for specified cluster
 func (storage MemoryStorage) ListDisabledRulesForCluster(
-	clusterID types.ClusterName, userID types.UserID,
+	_ types.ClusterName, _ types.UserID,
 ) ([]types.DisabledRuleResponse, error) {
 
 	rules := make([]types.DisabledRuleResponse, 0)
@@ -61,7 +61,7 @@ func (storage MemoryStorage) ListDisabledRulesForCluster(
 
 // GetFromClusterRuleToggle gets a rule from cluster_rule_toggle
 func (storage MemoryStorage) GetFromClusterRuleToggle(
-	clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID,
+	_ types.ClusterName, _ types.RuleID, _ types.UserID,
 ) (*ClusterRuleToggle, error) {
 	var disabledRule ClusterRuleToggle
 
@@ -70,7 +70,7 @@ func (storage MemoryStorage) GetFromClusterRuleToggle(
 
 // DeleteFromRuleClusterToggle deletes a record from the table rule_cluster_toggle. Only exposed in debug mode.
 func (storage MemoryStorage) DeleteFromRuleClusterToggle(
-	clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID,
+	_ types.ClusterName, _ types.RuleID, _ types.UserID,
 ) error {
 	return nil
 }

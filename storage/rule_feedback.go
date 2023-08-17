@@ -76,7 +76,7 @@ func (storage MemoryStorage) GetUserFeedbackOnRule(
 
 // GetUserFeedbackOnRules gets user feedbacks for defined array of rule IDs from DB
 func (storage MemoryStorage) GetUserFeedbackOnRules(
-	clusterID types.ClusterName, rulesContent []types.RuleContentResponse, userID types.UserID,
+	_ types.ClusterName, _ []types.RuleContentResponse, _ types.UserID,
 ) (map[types.RuleID]types.UserVote, error) {
 	feedbacks := make(map[types.RuleID]types.UserVote)
 
