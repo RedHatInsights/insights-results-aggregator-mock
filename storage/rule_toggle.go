@@ -45,7 +45,6 @@ type ClusterRuleToggle struct {
 func (storage MemoryStorage) ToggleRuleForCluster(
 	_ types.ClusterName, _ types.RuleID, _ types.UserID, _ RuleToggle,
 ) error {
-
 	return nil
 }
 
@@ -53,7 +52,6 @@ func (storage MemoryStorage) ToggleRuleForCluster(
 func (storage MemoryStorage) ListDisabledRulesForCluster(
 	_ types.ClusterName, _ types.UserID,
 ) ([]types.DisabledRuleResponse, error) {
-
 	rules := make([]types.DisabledRuleResponse, 0)
 
 	return rules, nil
