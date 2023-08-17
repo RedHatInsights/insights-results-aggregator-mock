@@ -158,7 +158,7 @@ func printConfig(config *conf.ConfigStruct) int {
 	configBytes, err := json.MarshalIndent(config, "", "    ")
 
 	if err != nil {
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("print config")
 		return ExitStatusOther
 	}
 
