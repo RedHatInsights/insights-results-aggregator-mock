@@ -273,7 +273,7 @@ func (storage MemoryStorage) ListOfClustersForOrg(orgID types.OrgID) ([]types.Cl
 }
 
 // GetOrgIDByClusterID reads OrgID for specified cluster
-func (storage MemoryStorage) GetOrgIDByClusterID(cluster types.ClusterName) (types.OrgID, error) {
+func (storage MemoryStorage) GetOrgIDByClusterID(_ types.ClusterName) (types.OrgID, error) {
 	var orgID uint64 = 42
 
 	return types.OrgID(orgID), nil
@@ -374,7 +374,7 @@ func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 
 // ReadReportForClusterByClusterName reads result (health status) for selected cluster for given organization
 func (storage MemoryStorage) ReadReportForClusterByClusterName(
-	clusterName types.ClusterName,
+	_ types.ClusterName,
 ) (types.ClusterReport, types.Timestamp, error) {
 	var report string
 	var lastChecked time.Time
@@ -384,9 +384,9 @@ func (storage MemoryStorage) ReadReportForClusterByClusterName(
 
 // GetContentForRules retrieves content for rules that were hit in the report
 func (storage MemoryStorage) GetContentForRules(
-	reportRules *types.ReportRules,
-	userID types.UserID,
-	clusterName types.ClusterName,
+	_ *types.ReportRules,
+	_ types.UserID,
+	_ types.ClusterName,
 ) ([]types.RuleContentResponse, error) {
 	rules := make([]types.RuleContentResponse, 0)
 
