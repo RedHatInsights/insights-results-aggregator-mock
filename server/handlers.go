@@ -53,7 +53,7 @@ const StatusProcessed = "processed"
 
 // readOrganizationID retrieves organization id from request
 // if it's not possible, it writes http error to the writer and returns error
-func readOrganizationID(writer http.ResponseWriter, request *http.Request) (types.OrgID, error) {
+func readOrganizationID(_ http.ResponseWriter, request *http.Request) (types.OrgID, error) {
 	organizationID, err := getRouterPositiveIntParam(request, "organization")
 	if err != nil {
 		return 0, err
@@ -62,7 +62,7 @@ func readOrganizationID(writer http.ResponseWriter, request *http.Request) (type
 }
 
 // readRuleSelector retrieves rule selector from request
-func readRuleSelector(writer http.ResponseWriter, request *http.Request) (types.RuleSelector, error) {
+func readRuleSelector(_ http.ResponseWriter, request *http.Request) (types.RuleSelector, error) {
 	ruleSelector, err := getRouterParam(request, "rule_selector")
 	if err != nil {
 		return "", err
@@ -106,7 +106,7 @@ func ValidateRequestID(requestID string) (types.RequestID, error) {
 
 // readClusterName retrieves cluster name from request
 // if it's not possible, it writes http error to the writer and returns error
-func readClusterName(writer http.ResponseWriter, request *http.Request) (types.ClusterName, error) {
+func readClusterName(_ http.ResponseWriter, request *http.Request) (types.ClusterName, error) {
 	clusterName, err := getRouterParam(request, "cluster")
 	if err != nil {
 		return "", err
@@ -189,7 +189,7 @@ func (server *HTTPServer) serveAPISpecFile(writer http.ResponseWriter, request *
 
 // serveContentWithGroups method implements the /content endpoint that also
 // returns group info
-func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, _ *http.Request) {
 	log.Info().Msg("Content with groups handler")
 
 	server.initGroupList()
