@@ -401,14 +401,14 @@ func (storage MemoryStorage) ReportsCount() (int, error) {
 }
 
 // GetRuleByID gets a rule by ID
-func (storage MemoryStorage) GetRuleByID(ruleID types.RuleID) (*types.Rule, error) {
+func (storage MemoryStorage) GetRuleByID(_ types.RuleID) (*types.Rule, error) {
 	var rule types.Rule
 
 	return &rule, nil
 }
 
 // GetPredictionForCluster gets a prediction for the cluster
-func (storage MemoryStorage) GetPredictionForCluster(cluster types.ClusterName) (*types.UpgradeRiskPrediction, error) {
+func (storage MemoryStorage) GetPredictionForCluster(_ types.ClusterName) (*types.UpgradeRiskPrediction, error) {
 	return &types.UpgradeRiskPrediction{
 		Recommended: true,
 		Predictors: types.UpgradeRisksPredictors{

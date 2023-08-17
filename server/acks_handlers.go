@@ -65,7 +65,7 @@ const (
 //
 // Please note that for the sake of simplicity we don't use links section as
 // pagination is not supported ATM.
-func (server *HTTPServer) readAckList(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) readAckList(writer http.ResponseWriter, _ *http.Request) {
 	// set the response header
 	writer.Header().Set(contentType, appJSON)
 
