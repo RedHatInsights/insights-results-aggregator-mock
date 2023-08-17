@@ -33,20 +33,20 @@ type UserFeedbackOnRule struct {
 
 // VoteOnRule likes or dislikes rule for cluster by user. If entry exists, it overwrites it
 func (storage MemoryStorage) VoteOnRule(
-	clusterID types.ClusterName,
-	ruleID types.RuleID,
-	userID types.UserID,
-	userVote types.UserVote,
+	_ types.ClusterName,
+	_ types.RuleID,
+	_ types.UserID,
+	_ types.UserVote,
 ) error {
 	return nil
 }
 
 // AddOrUpdateFeedbackOnRule adds feedback on rule for cluster by user. If entry exists, it overwrites it
 func (storage MemoryStorage) AddOrUpdateFeedbackOnRule(
-	clusterID types.ClusterName,
-	ruleID types.RuleID,
-	userID types.UserID,
-	message string,
+	_ types.ClusterName,
+	_ types.RuleID,
+	_ types.UserID,
+	_ string,
 ) error {
 	return nil
 }
@@ -67,7 +67,7 @@ func (storage MemoryStorage) addOrUpdateUserFeedbackOnRuleForCluster(
 
 // GetUserFeedbackOnRule gets user feedback from DB
 func (storage MemoryStorage) GetUserFeedbackOnRule(
-	clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID,
+	_ types.ClusterName, _ types.RuleID, _ types.UserID,
 ) (*UserFeedbackOnRule, error) {
 	feedback := UserFeedbackOnRule{}
 
@@ -76,7 +76,7 @@ func (storage MemoryStorage) GetUserFeedbackOnRule(
 
 // GetUserFeedbackOnRules gets user feedbacks for defined array of rule IDs from DB
 func (storage MemoryStorage) GetUserFeedbackOnRules(
-	clusterID types.ClusterName, rulesContent []types.RuleContentResponse, userID types.UserID,
+	_ types.ClusterName, _ []types.RuleContentResponse, _ types.UserID,
 ) (map[types.RuleID]types.UserVote, error) {
 	feedbacks := make(map[types.RuleID]types.UserVote)
 

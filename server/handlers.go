@@ -53,7 +53,7 @@ const StatusProcessed = "processed"
 
 // readOrganizationID retrieves organization id from request
 // if it's not possible, it writes http error to the writer and returns error
-func readOrganizationID(writer http.ResponseWriter, request *http.Request) (types.OrgID, error) {
+func readOrganizationID(_ http.ResponseWriter, request *http.Request) (types.OrgID, error) {
 	organizationID, err := getRouterPositiveIntParam(request, "organization")
 	if err != nil {
 		return 0, err
@@ -62,7 +62,7 @@ func readOrganizationID(writer http.ResponseWriter, request *http.Request) (type
 }
 
 // readRuleSelector retrieves rule selector from request
-func readRuleSelector(writer http.ResponseWriter, request *http.Request) (types.RuleSelector, error) {
+func readRuleSelector(_ http.ResponseWriter, request *http.Request) (types.RuleSelector, error) {
 	ruleSelector, err := getRouterParam(request, "rule_selector")
 	if err != nil {
 		return "", err
@@ -106,7 +106,7 @@ func ValidateRequestID(requestID string) (types.RequestID, error) {
 
 // readClusterName retrieves cluster name from request
 // if it's not possible, it writes http error to the writer and returns error
-func readClusterName(writer http.ResponseWriter, request *http.Request) (types.ClusterName, error) {
+func readClusterName(_ http.ResponseWriter, request *http.Request) (types.ClusterName, error) {
 	clusterName, err := getRouterParam(request, "cluster")
 	if err != nil {
 		return "", err
@@ -122,7 +122,7 @@ func readClusterName(writer http.ResponseWriter, request *http.Request) (types.C
 
 // readRequestID retrieves request ID from request
 // if it's not possible, it writes http error to the writer and returns error
-func readRequestID(writer http.ResponseWriter, request *http.Request) (types.RequestID, error) {
+func readRequestID(_ http.ResponseWriter, request *http.Request) (types.RequestID, error) {
 	requestID, err := getRouterParam(request, "request_id")
 	if err != nil {
 		return "", err
@@ -189,7 +189,7 @@ func (server *HTTPServer) serveAPISpecFile(writer http.ResponseWriter, request *
 
 // serveContentWithGroups method implements the /content endpoint that also
 // returns group info
-func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, _ *http.Request) {
 	log.Info().Msg("Content with groups handler")
 
 	server.initGroupList()
@@ -233,14 +233,14 @@ func (server *HTTPServer) initGroupList() {
 }
 
 // listOfGroups returns the list of defined groups
-func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, _ *http.Request) {
 	log.Info().Msg("List of groups handler")
 
 	server.initGroupList()
 
 	err := responses.SendOK(writer, responses.BuildOkResponseWithData("groups", server.groupsList))
 	if err != nil {
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("List of groups handler")
 		handleServerError(err)
 		return
 	}
@@ -298,7 +298,7 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 			handleServerError(err)
 			return
 		}
-		log.Info().Int("Code", int(code)).Msg("Failed clusters")
+		log.Info().Int("Code", code).Msg("Failed clusters")
 		writer.WriteHeader(code)
 		return
 	}
@@ -447,7 +447,7 @@ func parseRuleSelector(ruleSelector types.RuleSelector) (types.Component, types.
 
 	if len(splitedRuleID) != 2 {
 		err := fmt.Errorf("invalid rule ID, it must contain only rule ID and error key separated by |")
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("parse rule selector")
 		return types.Component(""), types.ErrorKey(""), err
 	}
 
@@ -458,7 +458,7 @@ func parseRuleSelector(ruleSelector types.RuleSelector) (types.Component, types.
 
 	if !isRuleIDValid || !isErrorKeyValid {
 		err := fmt.Errorf("invalid rule ID, each part of ID must contain only latin characters, number, underscores or dots")
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("rule name validity check")
 		return types.Component(""), types.ErrorKey(""), err
 	}
 
@@ -808,7 +808,7 @@ func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, r
 	}
 }
 
-func (server *HTTPServer) exit(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) exit(writer http.ResponseWriter, _ *http.Request) {
 	err := responses.SendOK(writer, responses.BuildOkResponse())
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)

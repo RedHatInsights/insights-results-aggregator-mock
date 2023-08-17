@@ -106,7 +106,7 @@ const changingClustersPeriodInMinutes = 15
 
 const noPermissionsForOrg = "You have no permissions to get or change info about this organization"
 
-var reports map[string]string = make(map[string]string)
+var reports = make(map[string]string)
 
 func readReport(path, clusterName string) (string, error) {
 	absPath, err := filepath.Abs(path + "/report_" + clusterName + ".json")
@@ -273,7 +273,7 @@ func (storage MemoryStorage) ListOfClustersForOrg(orgID types.OrgID) ([]types.Cl
 }
 
 // GetOrgIDByClusterID reads OrgID for specified cluster
-func (storage MemoryStorage) GetOrgIDByClusterID(cluster types.ClusterName) (types.OrgID, error) {
+func (storage MemoryStorage) GetOrgIDByClusterID(_ types.ClusterName) (types.OrgID, error) {
 	var orgID uint64 = 42
 
 	return types.OrgID(orgID), nil
@@ -374,7 +374,7 @@ func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 
 // ReadReportForClusterByClusterName reads result (health status) for selected cluster for given organization
 func (storage MemoryStorage) ReadReportForClusterByClusterName(
-	clusterName types.ClusterName,
+	_ types.ClusterName,
 ) (types.ClusterReport, types.Timestamp, error) {
 	var report string
 	var lastChecked time.Time
@@ -384,9 +384,9 @@ func (storage MemoryStorage) ReadReportForClusterByClusterName(
 
 // GetContentForRules retrieves content for rules that were hit in the report
 func (storage MemoryStorage) GetContentForRules(
-	reportRules *types.ReportRules,
-	userID types.UserID,
-	clusterName types.ClusterName,
+	_ *types.ReportRules,
+	_ types.UserID,
+	_ types.ClusterName,
 ) ([]types.RuleContentResponse, error) {
 	rules := make([]types.RuleContentResponse, 0)
 
@@ -401,14 +401,14 @@ func (storage MemoryStorage) ReportsCount() (int, error) {
 }
 
 // GetRuleByID gets a rule by ID
-func (storage MemoryStorage) GetRuleByID(ruleID types.RuleID) (*types.Rule, error) {
+func (storage MemoryStorage) GetRuleByID(_ types.RuleID) (*types.Rule, error) {
 	var rule types.Rule
 
 	return &rule, nil
 }
 
 // GetPredictionForCluster gets a prediction for the cluster
-func (storage MemoryStorage) GetPredictionForCluster(cluster types.ClusterName) (*types.UpgradeRiskPrediction, error) {
+func (storage MemoryStorage) GetPredictionForCluster(_ types.ClusterName) (*types.UpgradeRiskPrediction, error) {
 	return &types.UpgradeRiskPrediction{
 		Recommended: true,
 		Predictors: types.UpgradeRisksPredictors{

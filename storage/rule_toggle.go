@@ -15,8 +15,9 @@
 package storage
 
 import (
-	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 	"time"
+
+	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
 // RuleToggle is a type for user's vote
@@ -42,17 +43,15 @@ type ClusterRuleToggle struct {
 
 // ToggleRuleForCluster toggles rule for specified cluster
 func (storage MemoryStorage) ToggleRuleForCluster(
-	clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID, ruleToggle RuleToggle,
+	_ types.ClusterName, _ types.RuleID, _ types.UserID, _ RuleToggle,
 ) error {
-
 	return nil
 }
 
 // ListDisabledRulesForCluster retrieves disabled rules for specified cluster
 func (storage MemoryStorage) ListDisabledRulesForCluster(
-	clusterID types.ClusterName, userID types.UserID,
+	_ types.ClusterName, _ types.UserID,
 ) ([]types.DisabledRuleResponse, error) {
-
 	rules := make([]types.DisabledRuleResponse, 0)
 
 	return rules, nil
@@ -60,7 +59,7 @@ func (storage MemoryStorage) ListDisabledRulesForCluster(
 
 // GetFromClusterRuleToggle gets a rule from cluster_rule_toggle
 func (storage MemoryStorage) GetFromClusterRuleToggle(
-	clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID,
+	_ types.ClusterName, _ types.RuleID, _ types.UserID,
 ) (*ClusterRuleToggle, error) {
 	var disabledRule ClusterRuleToggle
 
@@ -69,7 +68,7 @@ func (storage MemoryStorage) GetFromClusterRuleToggle(
 
 // DeleteFromRuleClusterToggle deletes a record from the table rule_cluster_toggle. Only exposed in debug mode.
 func (storage MemoryStorage) DeleteFromRuleClusterToggle(
-	clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID,
+	_ types.ClusterName, _ types.RuleID, _ types.UserID,
 ) error {
 	return nil
 }

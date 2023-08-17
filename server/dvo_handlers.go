@@ -103,7 +103,7 @@ type DVOReport struct {
 //	            ]
 //	    ]
 //	}
-func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.Request) {
 	log.Info().Msg("All DVO namespaces handler")
 
 	// prepare response structure
