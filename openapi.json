@@ -1093,14 +1093,14 @@
                           "type": "object",
                           "required": [
                             "cluster_id",
-                            "status"
+                            "prediction_status"
                           ],
                           "properties": {
                             "cluster_id": {
                               "type": "string",
                               "example": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
                             },
-                            "status": {
+                            "prediction_status": {
                               "type": "string",
                               "example": "ok"
                             },
@@ -1191,11 +1191,11 @@
                       "example": [
                         {
                           "cluster_id": "not-an-uuid",
-                          "status": "invalid UUID"
+                          "prediction_status": "invalid UUID"
                         },
                         {
                           "cluster_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-                          "status": "ok",
+                          "prediction_status": "ok",
                           "upgrade_recommended": false,
                           "upgrade_risks_predictors": {
                             "alerts": [
@@ -1219,7 +1219,7 @@
                         },
                         {
                           "cluster_id": "44444444-3333-2222-1111-111111111111",
-                          "status": "ok",
+                          "prediction_status": "ok",
                           "upgrade_recommended": false,
                           "upgrade_risks_predictors": {
                             "alerts": [
