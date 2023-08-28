@@ -35,6 +35,7 @@ function test_rest_api() {
     fi
     sleep 1
 
+    echo "Check if Mock service REST API is available"
     curl http://localhost:8080/api/insights-results-aggregator/v2/ || {
         echo -e "${COLORS_RED}server is not running(for some reason)${COLORS_RESET}"
         exit 1

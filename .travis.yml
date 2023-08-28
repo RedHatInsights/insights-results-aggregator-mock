@@ -35,7 +35,6 @@ jobs:
     - stage: functional tests
       before_script:
         - ./run_on_ci.sh
-        - go build
       script:
         - ./test.sh
     - stage: bdd tests
