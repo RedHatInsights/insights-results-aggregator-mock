@@ -215,6 +215,18 @@ func checkReportForFailedClusterNegativeTestCase() {
 	f.PrintReport()
 }
 
+// checkReportForFailedCluster checks how cluster with special failures setup
+// is checked by REST API handler (expected HTTP code is 500)
+func checkReportForFailedCluster500() {
+	// expected HTTP code is encoded in last three characters in cluster name
+	// in this case it should be 500 Internal Server Error
+	url := reportEndpointForCluster("ffffffff-ffff-ffff-ffff-000000000500")
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with expected HTTP code 500").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusInternalServerError)
+	f.PrintReport()
+}
+
 // checkWrongMethodsForClusterReportEndpoint checks whether other HTTP methods are
 // rejected correctly for the REST API 'report' point
 func checkWrongMethodsForClusterReportEndpoint() {
