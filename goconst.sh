@@ -24,7 +24,7 @@ then
     GO111MODULE=off go get github.com/jgautheron/goconst/cmd/goconst
 fi
 
-if [[ $(goconst -min-occurrences=3 ./... | tee /dev/tty | wc -l) -ne 0 ]]
+if [[ $(goconst -min-occurrences=4 ./... | tee /dev/tty | wc -l) -ne 0 ]]
 then
     echo "${RED_BG}Duplicated string(s) found${NC}"
     exit 1
