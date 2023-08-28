@@ -42,10 +42,10 @@ type FullReportResponse struct {
 // AllReportsForOrganizationResponse represents response with all reports for
 // given organization
 type AllReportsForOrganizationResponse struct {
-	Clusters    []string    `json:clusters"`
-	Errors      []string    `json:erors"`
-	Reports     interface{} `json:reports"`
-	GeneratedAt time.Time   `json:generated_at"` // timestamp
+	Clusters    []string    `json:"clusters"`
+	Errors      []string    `json:"erors"`
+	Reports     interface{} `json:"reports"`
+	GeneratedAt time.Time   `json:"generated_at"` // timestamp
 }
 
 // reportEndpointForCluster helper function constructs URL for accessing endpoint to
