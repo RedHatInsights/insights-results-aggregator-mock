@@ -25,6 +25,15 @@ limitations under the License.
 // It is also possible to run REST API tests with code coverage detection:
 //
 //	./rest-api-tests.sh
+//
+//
+// REST API endpoints that are tested:
+//
+// URL                                         handler                                     HTTP methods
+// apiPrefix+MainEndpoint                      server.mainEndpoint                         GET
+// apiPrefix+GroupsEndpoint                    server.listOfGroups                         GET   OPTIONS
+// apiPrefix+ReportForClusterEndpoint          server.readReportForCluster                 GET   OPTIONS
+// apiPrefix+ReportForClusterEndpoint2         server.readReportForCluster                 GET   OPTIONS
 package main
 
 import (
