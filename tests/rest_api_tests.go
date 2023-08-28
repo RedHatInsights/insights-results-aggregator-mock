@@ -34,6 +34,7 @@ limitations under the License.
 // apiPrefix+ContentEndpoint                   server.serveContentWithGroups               GET   OPTIONS
 // apiPrefix+ReportForClusterEndpoint          server.readReportForCluster                 GET   OPTIONS
 // apiPrefix+ReportForClusterEndpoint2         server.readReportForCluster                 GET   OPTIONS
+// apiPrefix+ReportEndpoint                    server.readReportForOrganizationAndCluster  GET   OPTIONS
 // apiPrefix+AckListEndpoint                   server.readAckList                          GET
 // openAPIURL                                  server.serveAPISpecFile                     GET
 package main
