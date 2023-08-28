@@ -71,5 +71,4 @@ func BasicTests() {
 
 	// implementation of these tests are stored in acks.go
 	checkRetrieveListOfAcks()
-
 }
