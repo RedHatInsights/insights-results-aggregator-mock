@@ -14,7 +14,7 @@
 
 language: go
 go:
-- 1.17
+- 1.20
 
 jobs:
   include:
@@ -35,7 +35,6 @@ jobs:
     - stage: functional tests
       before_script:
         - ./run_on_ci.sh
-        - go build
       script:
         - ./test.sh
     - stage: bdd tests

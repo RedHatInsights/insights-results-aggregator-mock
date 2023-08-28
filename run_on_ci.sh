@@ -13,8 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-make build
+make build-cover
 
 set -m
+mkdir coverage
+export GOCOVERDIR=coverage/
 ./insights-results-aggregator-mock &
 sleep 5
