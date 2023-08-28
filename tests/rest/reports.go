@@ -26,6 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/verdverm/frisby"
 
@@ -38,6 +39,15 @@ type FullReportResponse struct {
 	Status string               `json:"status"`
 }
 
+// AllReportsForOrganizationResponse represents response with all reports for
+// given organization
+type AllReportsForOrganizationResponse struct {
+	Clusters    []string    `json:clusters"`
+	Errors      []string    `json:erors"`
+	Reports     interface{} `json:reports"`
+	GeneratedAt time.Time   `json:generated_at"` // timestamp
+}
+
 // reportEndpointForCluster helper function constructs URL for accessing endpoint to
 // retrieve report for given cluster (w/o organization ID)
 func reportEndpointForCluster(clusterName string) string {
@@ -48,6 +58,12 @@ func reportEndpointForCluster(clusterName string) string {
 // retrieve report for given organization and cluster
 func reportEndpointForOrgAndCluster(orgID int, clusterName string) string {
 	return fmt.Sprintf("%sreport/%d/%s", apiURL, orgID, clusterName)
+}
+
+// reportEndpointForAllReportsForOrg helper function constructs URL for accessing endpoint to
+// retrieve all reports for given organization
+func reportEndpointForAllReportsForOrg(orgID int) string {
+	return fmt.Sprintf("%sclusters/%d", apiURL, orgID)
 }
 
 // checkReportForKnownOrganizationKnownCluster checks if proper report is returned for
@@ -232,4 +248,35 @@ func checkReportForFailedCluster500() {
 func checkWrongMethodsForClusterReportEndpoint() {
 	checkGetEndpointByOtherMethods(reportEndpointForCluster(cluster1ForOrg1), false)
 	checkGetEndpointByOtherMethods(reportEndpointForCluster(cluster1ForOrg1), false)
+}
+
+// checkReportsForAllClustersInOrganizationPositiveTestCase check the REST API endpoint
+// to retrieve reports for all clusters in given organization
+func checkReportsForAllClustersInOrganizationPositiveTestCase() {
+	url := reportEndpointForAllReportsForOrg(1) // proper org ID
+	f := frisby.Create("Check the 'reports for all clusters' REST API point using HTTP GET method with proper organization").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		// try to parse the payload
+		response := AllReportsForOrganizationResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		// parsing was ok, so check response content
+		// ATM no clusters and no errors should be returned from server
+		if len(response.Clusters) != 0 {
+			f.AddError("Expecting empty list of clusters")
+		}
+		if len(response.Errors) != 0 {
+			f.AddError("Expecting empty list of errors")
+		}
+	}
+	f.PrintReport()
 }
