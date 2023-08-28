@@ -69,6 +69,10 @@ func BasicTests() {
 	checkReportForFailedClusterNegativeTestCase()
 	checkWrongMethodsForClusterReportEndpoint()
 
+	// implementations of these tests are stored in content.go
+	checkContentEndpoint()
+	checkWrongMethodsForContentEndpoint()
+
 	// implementation of these tests are stored in acks.go
 	checkRetrieveListOfAcks()
 }
