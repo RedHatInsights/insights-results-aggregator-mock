@@ -33,6 +33,7 @@ limitations under the License.
 // apiPrefix+GroupsEndpoint                    server.listOfGroups                         GET   OPTIONS
 // apiPrefix+ReportForClusterEndpoint          server.readReportForCluster                 GET   OPTIONS
 // apiPrefix+ReportForClusterEndpoint2         server.readReportForCluster                 GET   OPTIONS
+// apiPrefix+AckListEndpoint                   server.readAckList                          GET
 // openAPIURL                                  server.serveAPISpecFile                     GET
 package main
 
