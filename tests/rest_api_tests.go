@@ -26,7 +26,6 @@ limitations under the License.
 //
 //	./rest-api-tests.sh
 //
-//
 // REST API endpoints that are tested:
 //
 // URL                                         handler                                     HTTP methods
