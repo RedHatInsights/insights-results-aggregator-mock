@@ -16,6 +16,7 @@
 make build-cover
 
 set -m
+mkdir coverage
 export GOCOVERDIR=coverage/
 ./insights-results-aggregator-mock &
 sleep 5
