@@ -16,5 +16,6 @@
 make build-cover
 
 set -m
+export GOCOVERDIR=coverage/
 ./insights-results-aggregator-mock &
 sleep 5

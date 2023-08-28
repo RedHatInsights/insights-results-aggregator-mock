@@ -34,6 +34,7 @@ function test_rest_api() {
         return 1
     fi
     sleep 1
+
     curl http://localhost:8080/api/insights-results-aggregator/v2/ || {
         echo -e "${COLORS_RED}server is not running(for some reason)${COLORS_RESET}"
         exit 1
@@ -51,7 +52,26 @@ function test_rest_api() {
     return $EXIT_CODE
 }
 
+function prepare_code_coverage() {
+    echo "Preparing code coverage environment"
+    mkdir coverage
+    export GOCOVERDIR=coverage/
+}
+
+function code_coverage_report() {
+    echo "Preparing code coverage report"
+    go tool covdata merge -i=coverage/ -o=.
+    go tool covdata textfmt -i=. -o=coverage.txt
+    go tool cover -func=coverage.txt
+}
+
 echo -e "------------------------------------------------------------------------------------------------"
 
+prepare_code_coverage
 test_rest_api
+
+# shut down server gracefully
+curl -X PUT http://localhost:8080/api/insights-results-aggregator/v2/exit
+
+code_coverage_report
 exit $?
