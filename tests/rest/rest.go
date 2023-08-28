@@ -29,26 +29,26 @@ func ServerTests() {
 
 // BasicTests implements basic tests for REST API apiPrefix
 func BasicTests() {
-	// implementation of these tests is stored in entrypoint.go
+	// implementations of these tests are stored in entrypoint.go
 	checkRestAPIEntryPoint()
 	checkNonExistentEntryPoint()
 	checkWrongEntryPoint()
 	checkWrongMethodsForEntryPoint()
 
-	// implementation of these tests is stored in groups.go
+	// implementations of these tests are stored in groups.go
 	checkGroupsEndpoint()
 	checkWrongMethodsForGroupsEndpoint()
 
-	// implementation of these tests is stored in organizations.go
+	// implementations of these tests are stored in organizations.go
 	checkOrganizationsEndpoint()
 	checkWrongMethodsForOrganizationsEndpoint()
 
-	// implementation of these tests is stored in clusters.go
+	// implementations of these tests are stored in clusters.go
 	checkClustersEndpointForOrganization1()
 	checkClustersEndpointForOrganization2()
 	checkWrongMethodsForClustersEndpoint()
 
-	// implementation of these tests is stored in reports.go
+	// implementations of these tests are stored in reports.go
 	checkReportForKnownOrganizationKnownCluster()
 	checkReportForUnknownOrganization()
 	checkReportForImproperOrganization()
@@ -59,5 +59,9 @@ func BasicTests() {
 	checkReportForKnownCluster()
 	checkReportForUnknownCluster()
 	checkReportForImproperCluster()
+	checkReportForFailedCluster200()
+	checkReportForFailedCluster400()
+	checkReportForFailedCluster500()
+	checkReportForFailedClusterNegativeTestCase()
 	checkWrongMethodsForClusterReportEndpoint()
 }
