@@ -191,6 +191,18 @@ func checkReportForFailedCluster200() {
 	f.PrintReport()
 }
 
+// checkReportForFailedCluster checks how cluster with special failures setup
+// is checked by REST API handler (expected HTTP code is 400)
+func checkReportForFailedCluster400() {
+	// expected HTTP code is encoded in last three characters in cluster name
+	// in this case it should be 400 Bad Request
+	url := reportEndpointForCluster("ffffffff-ffff-ffff-ffff-000000000400")
+	f := frisby.Create("Check the 'report' REST API point using HTTP GET method with expected HTTP code 400").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.PrintReport()
+}
+
 // checkWrongMethodsForClusterReportEndpoint checks whether other HTTP methods are
 // rejected correctly for the REST API 'report' point
 func checkWrongMethodsForClusterReportEndpoint() {
