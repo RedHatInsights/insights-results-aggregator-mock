@@ -29,6 +29,10 @@ func ServerTests() {
 
 // BasicTests implements basic tests for REST API apiPrefix
 func BasicTests() {
+	// tests for OpenAPI specification that is accessible via its endpoint as well
+	// implementation of these tests is stored in openapi.go
+	checkOpenAPISpecification()
+
 	// implementations of these tests are stored in entrypoint.go
 	checkRestAPIEntryPoint()
 	checkNonExistentEntryPoint()
