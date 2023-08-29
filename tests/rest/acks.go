@@ -140,3 +140,18 @@ func checkAckRule() {
 	}
 	f.PrintReport()
 }
+
+// checkAckRuleWithIncorrectName checks how improper rule name is handled by ack endpoint
+func checkAckRuleWithIncorrectName() {
+	url := ackListEndpoint()
+	f := frisby.Create("Check the 'ack' REST API point using HTTP POST method (incorrect variant)").Post(url)
+
+	// set the payload to be sent
+	f.SetJson(RuleAckRequest{
+		Rule:          "incorrect rule name",
+		Justification: "justification"})
+
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.PrintReport()
+}
