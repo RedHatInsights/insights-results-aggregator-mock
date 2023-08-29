@@ -30,7 +30,7 @@ type RequestStruct struct {
 	RequestID string    `json:"requestID"`
 	Valid     bool      `json:"valid"`
 	Received  time.Time `json:"received"`
-	Processed time.Time `json:processed"`
+	Processed time.Time `json:"processed"`
 }
 
 // RequestsResponse represents response containing list of requests
