@@ -33,7 +33,7 @@ type RequestStruct struct {
 	Processed time.Time `json:"processed"`
 }
 
-// RequestsResponse represents response containing list of requests
+// RequestResponse represents response containing list of requests
 type RequestResponse struct {
 	Cluster  string          `json:"cluster"`
 	Requests []RequestStruct `json:"requests"`
