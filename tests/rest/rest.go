@@ -75,6 +75,11 @@ func BasicTests() {
 	checkContentEndpoint()
 	checkWrongMethodsForContentEndpoint()
 
+	// implementations of these tests are stored in rules.go
+	checkRetrieveClusterDetailsForKnownRule()
+	checkRetrieveClusterDetailsForUnknownRule()
+	checkRetrieveClusterDetailsForImproperRule()
+
 	// implementation of these tests are stored in acks.go
 	checkRetrieveListOfAcks()
 	checkAckRule()
