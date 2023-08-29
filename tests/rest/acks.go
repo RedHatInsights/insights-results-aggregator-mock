@@ -177,3 +177,12 @@ func checkAckRuleViaGetEndpoint() {
 	}
 	f.PrintReport()
 }
+
+// checkAckIncorrectRule checks if/how incorrect rule ack can be Ackd
+func checkAckIncorrectRule() {
+	url := ackRuleEndpoint(incorrectRule)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP GET method for incorrect rule").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.PrintReport()
+}
