@@ -89,3 +89,42 @@ func checkRetrieveClusterDetailsForKnownRule() {
 	}
 	f.PrintReport()
 }
+
+// checkRetrieveClusterDetailsForUnknownRule checks if the
+// 'rule/clusters_detail' point responds correctly to HTTP GET command for
+// unknown rule
+func checkRetrieveClusterDetailsForUnknownRule() {
+	const component = "this.is.unknown.component"
+	const errorKey = "THIS_IS_NOT_KNOW_ERROR_KEY"
+
+	url := clustersDetailsEndpointForRule(component, errorKey)
+	f := frisby.Create("Check the 'rule/{rule}/clusters_detail' REST API point using HTTP GET method (unknown rule)").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := ClustersDetails{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.MetaData.Count != 0 {
+			f.AddError("Improper metadata about number of clusters returned")
+		}
+		if response.MetaData.Component != component {
+			f.AddError("Invalid component")
+		}
+		if response.MetaData.ErrorKey != errorKey {
+			f.AddError("Invalid error key")
+		}
+		if len(response.Clusters) != 0 {
+			f.AddError("Improper number of clusters returned")
+		}
+	}
+	f.PrintReport()
+}
