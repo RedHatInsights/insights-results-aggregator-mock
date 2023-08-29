@@ -105,6 +105,8 @@ type DVOReport struct {
 //	}
 func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.Request) {
 	log.Info().Msg("All DVO namespaces handler")
+	// set the response header
+	writer.Header().Set(contentType, appJSON)
 
 	// prepare response structure
 	var responseData AllDVONamespacesResponse
