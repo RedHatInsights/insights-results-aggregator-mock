@@ -25,6 +25,14 @@ import (
 	"github.com/verdverm/frisby"
 )
 
+// rule names
+const (
+	ackedRule1      = "my|RULE1"
+	ackedRule2      = "my|RULE2"
+	nonExistingRule = "my|RULEX"
+	incorrectRule   = "this is incorrect"
+)
+
 // AckListResponse represents response containing list of acks
 type AckListResponse struct {
 	AckListMetaData AckListMetadata `json:"meta"`
@@ -45,9 +53,26 @@ type Ack struct {
 	UpdatedAt     time.Time `json:"updated_at"`
 }
 
+// RuleAckRequest represents structure used to request rule to be acked via
+// REST API
+type RuleAckRequest struct {
+	Rule          string `json:"rule_id"`
+	Justification string `json:"justification"`
+}
+
+// Justification represents structure with justification for acking a rule
+type Justification struct {
+	Justification string `json:"justification"`
+}
+
 // ackListEndpoint constructs an URL for list of acks
 func ackListEndpoint() string {
 	return fmt.Sprintf("%sack", apiURL)
+}
+
+// ackRuleEndpoint constructs an URL for getting/changing/removing rule ack
+func ackRuleEndpoint(ruleSelector string) string {
+	return fmt.Sprintf("%sack/%s", apiURL, ruleSelector)
 }
 
 func testRuleExistence(f *frisby.Frisby, acks []Ack, searchedRule string) {
@@ -93,5 +118,158 @@ func checkRetrieveListOfAcks() {
 		testRuleExistence(f, response.Acks, "ccx_rules_ocp.external.rules.samples_op_failed_image_import_check.report|SAMPLES_FAILED_IMAGE_IMPORT_ERR")
 		testRuleExistence(f, response.Acks, "ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR")
 	}
+	f.PrintReport()
+}
+
+// checkAckRule checks if it is possible to ack one selected rule
+func checkAckRule() {
+	url := ackListEndpoint()
+	f := frisby.Create("Check the 'ack' REST API point using HTTP POST method").Post(url)
+
+	// set the payload to be sent
+	f.SetJson(RuleAckRequest{
+		Rule:          ackedRule1,
+		Justification: "justification"})
+
+	f.Send()
+	f.ExpectStatus(http.StatusCreated)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := Ack{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+	}
+	f.PrintReport()
+}
+
+// checkAckRuleWithIncorrectName checks how improper rule name is handled by ack endpoint
+func checkAckRuleWithIncorrectName() {
+	url := ackListEndpoint()
+	f := frisby.Create("Check the 'ack' REST API point using HTTP POST method (incorrect variant)").Post(url)
+
+	// set the payload to be sent
+	f.SetJson(RuleAckRequest{
+		Rule:          "incorrect rule name",
+		Justification: "justification"})
+
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.PrintReport()
+}
+
+// checkAckRuleViaGetEndpoint checks if it is possible to ack one selected rule
+func checkAckRuleViaGetEndpoint() {
+	url := ackRuleEndpoint(ackedRule2)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP GET method").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := Ack{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+	}
+	f.PrintReport()
+}
+
+// checkAckIncorrectRule checks if/how incorrect rule ack can be Ackd
+func checkAckIncorrectRule() {
+	url := ackRuleEndpoint(incorrectRule)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP GET method for incorrect rule").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.PrintReport()
+}
+
+// checkUpdateExistingRule checks if it is possible to update ack for one selected rule
+func checkUpdateExistingRule() {
+	url := ackRuleEndpoint(ackedRule2)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP PUT method").Put(url)
+	// set the payload to be sent
+	f.SetJson(Justification{
+		Justification: "justification"})
+
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := Ack{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+	}
+	f.PrintReport()
+}
+
+// checkUpdateNonExistingRule checks if/how non-existing rule ack can be updated
+func checkUpdateNonExistingRule() {
+	url := ackRuleEndpoint(nonExistingRule)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP PUT method for non-existing rule").Put(url)
+	// set the payload to be sent
+	f.SetJson(Justification{
+		Justification: "justification"})
+
+	f.Send()
+	f.ExpectStatus(http.StatusNotFound)
+	f.PrintReport()
+}
+
+// checkUpdateIncorrectRule checks if/how incorrect rule ack can be updated
+func checkUpdateIncorrectRule() {
+	url := ackRuleEndpoint("this is incorrect")
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP PUT method for incorrect rule").Put(url)
+	// set the payload to be sent
+	f.SetJson(Justification{
+		Justification: "justification"})
+
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.PrintReport()
+}
+
+// checkDeleteExistingRule checks if existing rule ack can be deleted
+func checkDeleteExistingRule() {
+	url := ackRuleEndpoint(ackedRule2)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP DELETE method for existing rule").Delete(url)
+	f.Send()
+	f.ExpectStatus(http.StatusNoContent)
+	f.PrintReport()
+}
+
+// checkDeleteNonExistingRule checks if/how non-existing rule ack can be deleted
+func checkDeleteNonExistingRule() {
+	url := ackRuleEndpoint(nonExistingRule)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP DELETE method for non-existing rule").Delete(url)
+	f.Send()
+	f.ExpectStatus(http.StatusNotFound)
+	f.PrintReport()
+}
+
+// checkDeleteIncorrectRule checks if/how incorrect rule ack can be deleted
+func checkDeleteIncorrectRule() {
+	url := ackRuleEndpoint(incorrectRule)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP DELETE method for incorrect rule").Delete(url)
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
 	f.PrintReport()
 }

@@ -77,4 +77,14 @@ func BasicTests() {
 
 	// implementation of these tests are stored in acks.go
 	checkRetrieveListOfAcks()
+	checkAckRule()
+	checkAckRuleWithIncorrectName()
+	checkAckRuleViaGetEndpoint()
+	checkAckIncorrectRule()
+	checkUpdateExistingRule()
+	checkUpdateNonExistingRule()
+	checkUpdateIncorrectRule()
+	checkDeleteExistingRule()
+	checkDeleteNonExistingRule()
+	checkDeleteIncorrectRule()
 }

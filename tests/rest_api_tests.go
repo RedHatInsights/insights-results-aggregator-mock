@@ -36,6 +36,10 @@ limitations under the License.
 // apiPrefix+ReportForClusterEndpoint2         server.readReportForCluster                 GET   OPTIONS
 // apiPrefix+ReportEndpoint                    server.readReportForOrganizationAndCluster  GET   OPTIONS
 // apiPrefix+AckListEndpoint                   server.readAckList                          GET
+// apiPrefix+AckAcknowledgePostEndpoint        server.acknowledgePost                      POST
+// apiPrefix+AckGetEndpoint                    server.getAcknowledge                       GET
+// apiPrefix+AckUpdateEndpoint                 server.updateAcknowledge                    PUT
+// apiPrefix+AckDeleteEndpoint                 server.deleteAcknowledge                    DELETE
 // openAPIURL                                  server.serveAPISpecFile                     GET
 package main
 
