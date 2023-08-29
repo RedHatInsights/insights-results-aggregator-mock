@@ -141,3 +141,7 @@ func checkListOfDVONamespaces() {
 	}
 	f.PrintReport()
 }
+
+func checkListOfDVONamespacesOtherMethods() {
+	checkGetEndpointByOtherMethods(dvoNamespacesEndpoint(), false)
+}
