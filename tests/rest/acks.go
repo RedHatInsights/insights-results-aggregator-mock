@@ -186,6 +186,13 @@ func checkAckRuleViaGetEndpoint() {
 	f.PrintReport()
 }
 
+// checkAckRuleSeveralTimes checks if acking the rule several times works as expected
+func checkAckRuleSeveralTimes() {
+	for i := 0; i < 10; i++ {
+		checkAckRuleViaGetEndpoint()
+	}
+}
+
 // checkAckIncorrectRule checks if/how incorrect rule ack can be Ackd
 func checkAckIncorrectRule() {
 	url := ackRuleEndpoint(incorrectRule)

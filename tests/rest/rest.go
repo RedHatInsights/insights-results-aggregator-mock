@@ -85,6 +85,7 @@ func BasicTests() {
 	checkAckRule()
 	checkAckRuleWithIncorrectName()
 	checkAckRuleViaGetEndpoint()
+	checkAckRuleSeveralTimes()
 	checkAckIncorrectRule()
 	checkUpdateExistingRule()
 	checkUpdateNonExistingRule()
