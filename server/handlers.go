@@ -380,6 +380,10 @@ func (server *HTTPServer) readReportForClusters(writer http.ResponseWriter, requ
 		return
 	}
 
+	// server response has JSON format for this endpoint
+	writer.Header().Set(contentType, appJSON)
+
+	// construct reports for all clusters in a list
 	for _, clusterName := range clusterList.Clusters {
 		log.Info().Str("cluster name", clusterName).Msg("result for cluster")
 		clusterName := types.ClusterName(clusterName)
@@ -401,11 +405,15 @@ func (server *HTTPServer) readReportForClusters(writer http.ResponseWriter, requ
 		generatedReports.ClusterList = append(generatedReports.ClusterList, clusterName)
 		generatedReports.Reports[clusterName] = report
 	}
+
+	// try to serialize all reports
 	bytes, err := json.MarshalIndent(generatedReports, "", "\t")
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 		return
 	}
+
+	// send report back to client
 	_, err = writer.Write(bytes)
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
