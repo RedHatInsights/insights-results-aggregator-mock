@@ -16,6 +16,10 @@ limitations under the License.
 
 package tests
 
+import (
+	"fmt"
+)
+
 // ListOfDVONamespaces structure represents response for namespaces/dvo REST
 // API endpoint
 type ListOfDVONamespaces struct {
@@ -48,4 +52,9 @@ type Report struct {
 	Kind        string `json:"kind"`
 	Description string `json:"description"`
 	Remediation string `json:"remediation"`
+}
+
+// dvoNamespacesEndpoint constructs an URL for list of all DVO namespaces
+func dvoNamespacesEndpoint() string {
+	return fmt.Sprintf("%snamespaces/dvo", apiURL)
 }
