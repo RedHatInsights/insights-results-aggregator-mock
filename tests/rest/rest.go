@@ -69,6 +69,8 @@ func BasicTests() {
 	checkReportForFailedClusterNegativeTestCase()
 	checkWrongMethodsForClusterReportEndpoint()
 
+	checkReportsForAllClustersInOrganizationPositiveTestCase()
+
 	// implementations of these tests are stored in content.go
 	checkContentEndpoint()
 	checkWrongMethodsForContentEndpoint()
