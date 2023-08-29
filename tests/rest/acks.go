@@ -112,3 +112,31 @@ func checkRetrieveListOfAcks() {
 	}
 	f.PrintReport()
 }
+
+// checkAckRule checks if it is possible to ack one selected rule
+func checkAckRule() {
+	url := ackListEndpoint()
+	f := frisby.Create("Check the 'ack' REST API point using HTTP POST method").Post(url)
+
+	// set the payload to be sent
+	f.SetJson(RuleAckRequest{
+		Rule:          ackedRule1,
+		Justification: "justification"})
+
+	f.Send()
+	f.ExpectStatus(http.StatusCreated)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := Ack{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+	}
+	f.PrintReport()
+}
