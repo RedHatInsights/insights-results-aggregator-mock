@@ -41,6 +41,7 @@ limitations under the License.
 // apiPrefix+AckGetEndpoint                    server.getAcknowledge                       GET
 // apiPrefix+AckUpdateEndpoint                 server.updateAcknowledge                    PUT
 // apiPrefix+AckDeleteEndpoint                 server.deleteAcknowledge                    DELETE
+// apiPrefix+ListAllRequestIDs                 server.readListOfRequestIDs                 GET
 // apiPrefix+AllDVONamespaces                  server.allDVONamespaces                     GET
 // openAPIURL                                  server.serveAPISpecFile                     GET
 package main
