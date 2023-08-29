@@ -522,6 +522,7 @@ func (server *HTTPServer) ruleClusterDetailEndpoint(writer http.ResponseWriter, 
 	log.Info().Int("cluster count", len(clusters)).Msg("Clusters hitting the rule")
 
 	// prepare response
+	writer.Header().Set(contentType, appJSON)
 	var hittingClusters HittingClusters
 
 	// first fill-in metadata
