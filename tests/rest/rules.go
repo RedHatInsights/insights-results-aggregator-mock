@@ -17,8 +17,12 @@ limitations under the License.
 package tests
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
+
+	"github.com/verdverm/frisby"
 )
 
 // ClustersDetails represents response containing list of clusters for which
@@ -41,4 +45,47 @@ type ClustersDetailsMetadata struct {
 // endpoint
 func clustersDetailsEndpointForRule(component, errorKey string) string {
 	return fmt.Sprintf("%srule/%s|%s/clusters_detail", apiURL, component, errorKey)
+}
+
+// checkRetrieveClusterDetailsForKnownRule checks if the
+// 'rule/{rule}/clusters_detail' point responds correctly to HTTP GET command
+// (for known rule)
+func checkRetrieveClusterDetailsForKnownRule() {
+	const component = "ccx_rules_ocp.external.rules.nodes_requirements_check.report"
+	const errorKey = "NODES_MINIMUM_REQUIREMENTS_NOT_MET"
+
+	url := clustersDetailsEndpointForRule(component, errorKey)
+	f := frisby.Create("Check the 'rule/{rule}/clusters_detail' REST API point using HTTP GET method (known rule)").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := ClustersDetails{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.MetaData.Count != 24 {
+			f.AddError("Improper metadata about number of clusters returned")
+		}
+		if response.MetaData.Component != component {
+			f.AddError("Invalid component")
+		}
+		if response.MetaData.ErrorKey != errorKey {
+			f.AddError("Invalid error key")
+		}
+		if len(response.Clusters) != 24 {
+			f.AddError("Improper number of clusters returned")
+		}
+		// try just few clusters
+		testClusterIDExistence(f, response.Clusters, "00000001-624a-49a5-bab8-4fdc5e51a266")
+		testClusterIDExistence(f, response.Clusters, "00000001-6577-4e80-85e7-697cb646ff37")
+		testClusterIDExistence(f, response.Clusters, "00000001-8933-4a3a-8634-3328fe806e08")
+	}
+	f.PrintReport()
 }
