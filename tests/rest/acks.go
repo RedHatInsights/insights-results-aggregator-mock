@@ -45,9 +45,26 @@ type Ack struct {
 	UpdatedAt     time.Time `json:"updated_at"`
 }
 
+// RuleAckRequest represents structure used to request rule to be acked via
+// REST API
+type RuleAckRequest struct {
+	Rule          string `json:"rule_id"`
+	Justification string `json:"justification"`
+}
+
+// Justification represents structure with justification for acking a rule
+type Justification struct {
+	Justification string `json:"justification"`
+}
+
 // ackListEndpoint constructs an URL for list of acks
 func ackListEndpoint() string {
 	return fmt.Sprintf("%sack", apiURL)
+}
+
+// ackRuleEndpoint constructs an URL for getting/changing/removing rule ack
+func ackRuleEndpoint(ruleSelector string) string {
+	return fmt.Sprintf("%sack/%s", apiURL, ruleSelector)
 }
 
 func testRuleExistence(f *frisby.Frisby, acks []Ack, searchedRule string) {
