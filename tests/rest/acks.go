@@ -225,3 +225,16 @@ func checkUpdateNonExistingRule() {
 	f.ExpectStatus(http.StatusNotFound)
 	f.PrintReport()
 }
+
+// checkUpdateIncorrectRule checks if/how incorrect rule ack can be updated
+func checkUpdateIncorrectRule() {
+	url := ackRuleEndpoint("this is incorrect")
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP PUT method for incorrect rule").Put(url)
+	// set the payload to be sent
+	f.SetJson(Justification{
+		Justification: "justification"})
+
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+	f.PrintReport()
+}
