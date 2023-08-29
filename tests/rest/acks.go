@@ -155,3 +155,25 @@ func checkAckRuleWithIncorrectName() {
 	f.ExpectStatus(http.StatusBadRequest)
 	f.PrintReport()
 }
+
+// checkAckRuleViaGetEndpoint checks if it is possible to ack one selected rule
+func checkAckRuleViaGetEndpoint() {
+	url := ackRuleEndpoint(ackedRule2)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP GET method").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := Ack{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+	}
+	f.PrintReport()
+}
