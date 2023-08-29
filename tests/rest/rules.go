@@ -128,3 +128,18 @@ func checkRetrieveClusterDetailsForUnknownRule() {
 	}
 	f.PrintReport()
 }
+
+// checkRetrieveClusterDetailsForImproperRule checks if the
+// 'rule/clusters_detail' point responds correctly to HTTP GET command for
+// improper rule
+func checkRetrieveClusterDetailsForImproperRule() {
+	const component = ""
+	const errorKey = ""
+
+	url := clustersDetailsEndpointForRule(component, errorKey)
+	f := frisby.Create("Check the 'rule/clusters_detail' REST API point using HTTP GET method (improper rule)").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+
+	f.PrintReport()
+}
