@@ -186,3 +186,29 @@ func checkAckIncorrectRule() {
 	f.ExpectStatus(http.StatusBadRequest)
 	f.PrintReport()
 }
+
+// checkUpdateExistingRule checks if it is possible to update ack for one selected rule
+func checkUpdateExistingRule() {
+	url := ackRuleEndpoint(ackedRule2)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP PUT method").Put(url)
+	// set the payload to be sent
+	f.SetJson(Justification{
+		Justification: "justification"})
+
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := Ack{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+	}
+	f.PrintReport()
+}
