@@ -84,3 +84,39 @@ func checkListAllRequestIDsForKnownCluster() {
 	}
 	f.PrintReport()
 }
+
+// checkListAllRequestIDsEmptyList checks if empty list of request IDs is
+// returned for known cluster
+func checkListAllRequestIDsEmptyList() {
+	// clusterName represents known cluster with no request IDs
+	const clusterName = "eeeeeeee-eeee-eeee-eeee-000000000001"
+
+	url := allRequestsIDsEndpointForCluster(clusterName)
+	f := frisby.Create("Check the 'requests' REST API point using HTTP GET method with known cluster").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := RequestResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != "ok" {
+			f.AddError(statusShouldBeSetToOK)
+		}
+		if response.Cluster != clusterName {
+			f.AddError("Improper cluster name returned")
+		}
+		// no requests IDs should be returned
+		if len(response.Requests) != 0 {
+			f.AddError("Improper number of request IDs returned")
+		}
+	}
+	f.PrintReport()
+}
