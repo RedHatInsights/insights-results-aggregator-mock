@@ -25,6 +25,14 @@ import (
 	"github.com/verdverm/frisby"
 )
 
+// rule names
+const (
+	ackedRule1      = "my|RULE1"
+	ackedRule2      = "my|RULE2"
+	nonExistingRule = "my|RULEX"
+	incorrectRule   = "this is incorrect"
+)
+
 // AckListResponse represents response containing list of acks
 type AckListResponse struct {
 	AckListMetaData AckListMetadata `json:"meta"`
@@ -254,5 +262,14 @@ func checkDeleteNonExistingRule() {
 	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP DELETE method for non-existing rule").Delete(url)
 	f.Send()
 	f.ExpectStatus(http.StatusNotFound)
+	f.PrintReport()
+}
+
+// checkDeleteIncorrectRule checks if/how incorrect rule ack can be deleted
+func checkDeleteIncorrectRule() {
+	url := ackRuleEndpoint(incorrectRule)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP DELETE method for incorrect rule").Delete(url)
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
 	f.PrintReport()
 }
