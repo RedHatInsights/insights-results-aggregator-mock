@@ -40,13 +40,13 @@ type DVOWorkloadItem struct {
 
 // ClusterEntry structure represents cluster info in namespaces/dvo payload
 type ClusterEntry struct {
-	UUID        string `json":"uuid"`
+	UUID        string `json:"uuid"`
 	DisplayName string `json:"display_name"`
 }
 
 // NamespaceEntry structure represents namespace info in namespaces/dvo payload
 type NamespaceEntry struct {
-	UUID string `json":"uuid"`
+	UUID string `json:"uuid"`
 	Name string `json:"name"`
 }
 
