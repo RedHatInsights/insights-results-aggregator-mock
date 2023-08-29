@@ -75,6 +75,11 @@ func BasicTests() {
 	checkContentEndpoint()
 	checkWrongMethodsForContentEndpoint()
 
+	// implementations of these tests are stored in requests.go
+	checkListAllRequestIDsForKnownCluster()
+	checkListAllRequestIDsEmptyList()
+	checkListAllRequestIDsForUnknownCluster()
+
 	// implementations of these tests are stored in rules.go
 	checkRetrieveClusterDetailsForKnownRule()
 	checkRetrieveClusterDetailsForUnknownRule()
