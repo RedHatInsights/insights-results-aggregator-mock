@@ -120,3 +120,17 @@ func checkListAllRequestIDsEmptyList() {
 	}
 	f.PrintReport()
 }
+
+// checkListAllRequestIDsForUnknownCluster checks how unknown cluster is
+// handled by the mock service
+func checkListAllRequestIDsForUnknownCluster() {
+	// clusterName represents unknown cluster
+	const clusterName = "ffffffff-ffff-ffff-ffff-000000000001"
+
+	url := allRequestsIDsEndpointForCluster(clusterName)
+	f := frisby.Create("Check the 'requests' REST API point using HTTP GET method with known cluster").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusNotFound)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+	f.PrintReport()
+}
