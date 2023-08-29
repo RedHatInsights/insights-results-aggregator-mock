@@ -17,6 +17,7 @@ limitations under the License.
 package tests
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -33,4 +34,10 @@ type RequestResponse struct {
 	Cluster  string          `json:"cluster"`
 	Requests []RequestStruct `json:"requests"`
 	Status   string          `json:"status"`
+}
+
+// allRequestsIDsEndpointForCluster helper function constructs URL for
+// accessing endpoint to retrieve list of request IDs for given cluster
+func allRequestsIDsEndpointForCluster(clusterName string) string {
+	return fmt.Sprintf("%scluster/%s/requests/", apiURL, clusterName)
 }
