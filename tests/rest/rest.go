@@ -87,4 +87,8 @@ func BasicTests() {
 	checkDeleteExistingRule()
 	checkDeleteNonExistingRule()
 	checkDeleteIncorrectRule()
+
+	// implementation of these tests are stored in dvo.go
+	checkListOfDVONamespaces()
+	checkListOfDVONamespacesOtherMethods()
 }
