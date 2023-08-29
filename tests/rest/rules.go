@@ -17,6 +17,7 @@ limitations under the License.
 package tests
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -34,4 +35,10 @@ type ClustersDetailsMetadata struct {
 	Component   string    `json:"component"`
 	ErrorKey    string    `json:"error_key"`
 	GeneratedAt time.Time `json:"generated_at"`
+}
+
+// clustersDetailsEndpointForRule constructs an URL for clusters detail
+// endpoint
+func clustersDetailsEndpointForRule(component, errorKey string) string {
+	return fmt.Sprintf("%srule/%s|%s/clusters_detail", apiURL, component, errorKey)
 }
