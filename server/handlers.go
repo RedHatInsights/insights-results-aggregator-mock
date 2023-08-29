@@ -501,7 +501,10 @@ func (server *HTTPServer) ruleClusterDetailEndpoint(writer http.ResponseWriter, 
 	// check for missing/improper selector
 	if err != nil {
 		log.Error().Err(err).Msg("unable to read rule selector")
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 
