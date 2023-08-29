@@ -137,7 +137,6 @@ func checkListOfDVONamespaces() {
 		if report != expected {
 			f.AddError("First report is different from expected one")
 		}
-
 	}
 	f.PrintReport()
 }
