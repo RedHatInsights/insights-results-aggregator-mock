@@ -247,3 +247,12 @@ func checkDeleteExistingRule() {
 	f.ExpectStatus(http.StatusNoContent)
 	f.PrintReport()
 }
+
+// checkDeleteNonExistingRule checks if/how non-existing rule ack can be deleted
+func checkDeleteNonExistingRule() {
+	url := ackRuleEndpoint(nonExistingRule)
+	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP DELETE method for non-existing rule").Delete(url)
+	f.Send()
+	f.ExpectStatus(http.StatusNotFound)
+	f.PrintReport()
+}
