@@ -23,6 +23,13 @@ import (
 	"github.com/verdverm/frisby"
 )
 
+const (
+	knownClusterForOrganization1   = "34c3ecc5-624a-49a5-bab8-4fdc5e51a266"
+	knownCluster2ForOrganization1  = "74ae54aa-6577-4e80-85e7-697cb646ff37"
+	knownCluster3ForOrganization1  = "a7467445-8d6a-43cc-b82c-7007664bdf69"
+	unknownClusterForOrganization1 = "bbbbbbbb-bbbb-bbbb-bbbb-cccccccccccc"
+)
+
 // MultipleReportsResponse represents response from the server that contains
 // results for multiple clusters together with overall status
 type MultipleReportsResponse struct {
@@ -148,4 +155,29 @@ func expectErrorClusterInResponse(f *frisby.Frisby, response MultipleReportsResp
 	}
 	// error for cluster was not found
 	f.AddError(fmt.Sprintf("Cluster %s can not be found in server response in the errors list", clusterName))
+}
+
+// checkMultipleReportsForKnownOrganizationAnd1KnownClusterUsingPostMethod check the endpoint that returns multiple results
+func checkMultipleReportsForKnownOrganizationAnd1KnownClusterUsingPostMethod() {
+	clusterList := []string{
+		knownClusterForOrganization1,
+	}
+
+	// send request to the endpoint
+	url := constructURLForReportForOrgClustersPostMethod()
+	f := frisby.Create("Check the endpoint to return report for existing organization and one cluster ID (POST variant)").Post(url)
+	sendClusterListInPayload(f, clusterList)
+
+	// check the response from server
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the payload returned from server
+	response := readMultipleReportsResponse(f)
+	expectNumberOfClusters(f, response, 1)
+	expectNumberOfErrors(f, response, 0)
+	expectNumberOfReports(f, response, 1)
+	expectClusterInResponse(f, response, knownClusterForOrganization1)
+	expectReportInResponse(f, response, knownClusterForOrganization1)
+
+	f.PrintReport()
 }
