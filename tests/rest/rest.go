@@ -71,6 +71,15 @@ func BasicTests() {
 
 	checkReportsForAllClustersInOrganizationPositiveTestCase()
 
+	// implementations of these tests is stored in multiple_reports.go
+	checkMultipleReportsForKnownOrganizationAnd1KnownClusterUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAnd2KnownClustersUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAnd3KnownClustersUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAndUnknownClusterUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAndKnownAndUnknownClusterUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAnd2KnownAndUnknownClusterUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAnd3KnownAndUnknownClusterUsingPostMethod()
+
 	// implementations of these tests are stored in content.go
 	checkContentEndpoint()
 	checkWrongMethodsForContentEndpoint()
