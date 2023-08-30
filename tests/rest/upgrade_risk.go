@@ -245,3 +245,18 @@ func checkUpgradeRiskEndpointNotFoundCase() {
 
 	f.PrintReport()
 }
+
+// checkUpgradeRiskEndpointForImproperClusterName check how/if improper cluster
+// name is handled by URP.
+func checkUpgradeRiskEndpointForImproperClusterName() {
+	url := constructURLUpgradeRiskEndpoint(clusterWithImproperName)
+
+	// send request to the endpoint
+	f := frisby.Create("Check the endpoint to return upgrade risk predictions for cluster with improper name").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusBadRequest)
+
+	// nothing more should be checked there
+
+	f.PrintReport()
+}
