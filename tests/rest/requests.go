@@ -225,5 +225,65 @@ func checkListAllRequestIDsForUnknownCluster() {
 	f.Send()
 	f.ExpectStatus(http.StatusNotFound)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := RequestResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != "Requests for cluster not found" {
+			f.AddError(unexpectedStatus + response.Status)
+		}
+		if response.Cluster != "" {
+			f.AddError(improperClusterNameReturned + ": " + response.Cluster)
+		}
+		// no requests IDs should be returned
+		if len(response.Requests) != 0 {
+			f.AddError("Improper number of request IDs returned")
+		}
+	}
+	f.PrintReport()
+}
+
+// checkListSelectedRequestIDsForKnownCluster checks how POST variant of
+// 'requests' REST API endpoint is handled when known cluster is used and known
+// list of request IDs is sent to the service
+func checkListSelectedRequestIDsForKnownCluster() {
+	url := allRequestsIDsEndpointForCluster(clusterNameWithReports)
+	f := frisby.Create("Check the 'requests' REST API point using HTTP POST method with known cluster").Post(url)
+
+	// set the payload to be sent
+	f.SetJson(RequestList{knownRequestID})
+
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := RequestResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != "ok" {
+			f.AddError(statusShouldBeSetToOK)
+		}
+		if response.Cluster != clusterNameWithReports {
+			f.AddError(improperClusterNameReturned)
+		}
+		// just one request ID should be returned
+		if len(response.Requests) != 1 {
+			f.AddError("Improper number of request IDs returned")
+		}
+	}
 	f.PrintReport()
 }
