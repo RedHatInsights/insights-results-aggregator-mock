@@ -85,33 +85,34 @@ type RequestStatus struct {
 
 // RequestReport represents response containing report stored under request ID
 //
-// {
-//   "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
-//   "requestID": "3oeiljuhkvbi61hf6tpgk4p2xxa",
-//   "status": "processed",
-//   "report": null
-// }
+//	{
+//	  "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+//	  "requestID": "3oeiljuhkvbi61hf6tpgk4p2xxa",
+//	  "status": "processed",
+//	  "report": null
+//	}
 //
 // or:
-// {
-//   "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
-//   "requestID": "3nl2vda87ld6e3s25jlk7n2dna",
-//   "status": "processed",
-//   "report": [
-//     {
-//       "rule_fqdn": "ccx_rules_ocp.external.rules.nodes_requirements_check.report",
-//       "error_key": "NODES_MINIMUM_REQUIREMENTS_NOT_MET",
-//       "description": "Lorem ipsum...",
-//       "total_risk": 1
-//     },
-//     {
-//       "rule_fqdn": "samples_op_failed_image_import_check.report",
-//       "error_key": "SAMPLES_FAILED_IMAGE_IMPORT_ERR",
-//       "description": "Lorem ipsum...",
-//       "total_risk": 2
-//     }
-//   ]
-// }
+//
+//	{
+//	  "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
+//	  "requestID": "3nl2vda87ld6e3s25jlk7n2dna",
+//	  "status": "processed",
+//	  "report": [
+//	    {
+//	      "rule_fqdn": "ccx_rules_ocp.external.rules.nodes_requirements_check.report",
+//	      "error_key": "NODES_MINIMUM_REQUIREMENTS_NOT_MET",
+//	      "description": "Lorem ipsum...",
+//	      "total_risk": 1
+//	    },
+//	    {
+//	      "rule_fqdn": "samples_op_failed_image_import_check.report",
+//	      "error_key": "SAMPLES_FAILED_IMAGE_IMPORT_ERR",
+//	      "description": "Lorem ipsum...",
+//	      "total_risk": 2
+//	    }
+//	  ]
+//	}
 type RequestReport struct {
 	Cluster   string      `json:"cluster"`
 	RequestID string      `json:"requestID"`
