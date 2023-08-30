@@ -287,3 +287,21 @@ func checkListSelectedRequestIDsForKnownCluster() {
 	}
 	f.PrintReport()
 }
+
+// checkListSelectedRequestIDsForKnownCluster checks how POST variant of
+// 'requests' REST API endpoint is handled when unknown cluster is used
+func checkListSelectedRequestIDsForUnknownCluster() {
+	// clusterName represents unknown cluster
+	const clusterName = "ffffffff-ffff-ffff-ffff-000000000001"
+
+	url := allRequestsIDsEndpointForCluster(clusterName)
+	f := frisby.Create("Check the 'requests' REST API point using HTTP POST method with known cluster").Post(url)
+
+	// set the payload to be sent
+	f.SetJson(RequestList{})
+
+	f.Send()
+	f.ExpectStatus(http.StatusNotFound)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+	f.PrintReport()
+}
