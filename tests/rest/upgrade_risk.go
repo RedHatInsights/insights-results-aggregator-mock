@@ -214,3 +214,34 @@ func checkUpgradeRiskEndpointUnavailableServiceCase() {
 
 	f.PrintReport()
 }
+
+// checkUpgradeRiskEndpointNotFoundCase check how/if URP endpoint returns
+// NotFound status for selected cluster
+func checkUpgradeRiskEndpointNotFoundCase() {
+	url := constructURLUpgradeRiskEndpoint(clusterReturningNotFound)
+
+	// send request to the endpoint
+	f := frisby.Create("Check the endpoint to return upgrade risk predictions for cluster returning NotFound").Get(url)
+	f.Send()
+
+	// check the response from server
+	f.ExpectStatus(http.StatusNotFound)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response payload
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := URPResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != "No data for the cluster" {
+			f.AddError("Unexpected status: " + response.Status)
+		}
+	}
+
+	f.PrintReport()
+}
