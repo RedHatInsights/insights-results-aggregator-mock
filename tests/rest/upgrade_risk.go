@@ -16,7 +16,10 @@ limitations under the License.
 
 package tests
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 const (
 	clusterWithPositiveRisksPrediction = "00000001-624a-49a5-bab8-4fdc5e51a266"
@@ -67,4 +70,10 @@ type OperatorCondition struct {
 	Condition string `json:"condition"`
 	Reason    string `json:"reason"`
 	URL       string `json:"url"`
+}
+
+// access the endpoint to retrieve results for given list of clusters using
+// POST method
+func constructURLUpgradeRiskEndpoint(cluster string) string {
+	return fmt.Sprintf("%scluster/%s/upgrade-risks-prediction", apiURL, cluster)
 }
