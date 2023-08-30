@@ -64,20 +64,19 @@ type RequestResponse struct {
 // RequestStatus represents response containing status of one request.
 // Two states are possible:
 //
-// {
-//   "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
-//   "requestID": "3oeiljuhkvbi61hf6tpgk4p2sk",
-//   "status": "processed"
-// }
+//	{
+//	  "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+//	  "requestID": "3oeiljuhkvbi61hf6tpgk4p2sk",
+//	  "status": "processed"
+//	}
 //
 // and:
 //
-// {
-//   "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
-//   "requestID": "3oeiljuhkvbi61hf6tpgk4p2sp",
-//   "status": "unknown"
-// }
-//
+//	{
+//	  "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+//	  "requestID": "3oeiljuhkvbi61hf6tpgk4p2sp",
+//	  "status": "unknown"
+//	}
 type RequestStatus struct {
 	Cluster   string `json:"cluster"`
 	RequestID string `json:"requestID"`
