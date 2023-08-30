@@ -121,3 +121,47 @@ func checkUpgradeRiskEndpointWithClusterWithPositiveRiskPrediction() {
 
 	f.PrintReport()
 }
+
+// checkUpgradeRiskEndpointWithClusterWithPositiveRiskPrediction check how/if
+// URP endpoint returns negative risk prediction for given cluster
+func checkUpgradeRiskEndpointWithClusterWithNegativeRiskPrediction() {
+	url := constructURLUpgradeRiskEndpoint(clusterWithNegativeRisksPrediction)
+
+	// send request to the endpoint
+	f := frisby.Create("Check the endpoint to return upgrade risk predictions for cluster with negative risk prediction").Get(url)
+	f.Send()
+
+	// check the response from server
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response payload
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := URPResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != "ok" {
+			f.AddError(statusShouldBeSetToOK)
+		}
+		if response.URPRecommendations.UpgradeRecommended {
+			f.AddError("Upgrade should NOT be recommended")
+		}
+		alerts := response.URPRecommendations.UpgradeRiskPredictions.Alerts
+		if len(alerts) != 3 {
+			f.AddError("Exactly 3 alerts are expected")
+		}
+		conditions := response.URPRecommendations.UpgradeRiskPredictions.OperatorConditions
+		if len(conditions) != 4 {
+			f.AddError("Exactly 4 operator conditions are expected")
+		}
+		// TODO: exact check of alerts
+		// TODO: exact check of conditions
+	}
+
+	f.PrintReport()
+}
