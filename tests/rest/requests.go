@@ -25,6 +25,9 @@ import (
 	"github.com/verdverm/frisby"
 )
 
+// RequestList represents trivial list of requests to be send to server
+type RequestList []string
+
 // RequestStruct represents one entry in list of requests
 type RequestStruct struct {
 	RequestID string    `json:"requestID"`
@@ -38,6 +41,66 @@ type RequestResponse struct {
 	Cluster  string          `json:"cluster"`
 	Requests []RequestStruct `json:"requests"`
 	Status   string          `json:"status"`
+}
+
+// RequestStatus represents response containing status of one request.
+// Two states are possible:
+//
+// {
+//   "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+//   "requestID": "3oeiljuhkvbi61hf6tpgk4p2sk",
+//   "status": "processed"
+// }
+//
+// and:
+//
+// {
+//   "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+//   "requestID": "3oeiljuhkvbi61hf6tpgk4p2sp",
+//   "status": "unknown"
+// }
+//
+type RequestStatus struct {
+	Cluster   string `json:"cluster"`
+	RequestID string `json:"requestID"`
+	Status    string `json:"status"`
+}
+
+// RequestReport represents response containing report stored under request ID
+//
+// {
+//   "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+//   "requestID": "3oeiljuhkvbi61hf6tpgk4p2xxa",
+//   "status": "processed",
+//   "report": null
+// }
+//
+// or:
+// {
+//   "cluster": "34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
+//   "requestID": "3nl2vda87ld6e3s25jlk7n2dna",
+//   "status": "processed",
+//   "report": [
+//     {
+//       "rule_fqdn": "ccx_rules_ocp.external.rules.nodes_requirements_check.report",
+//       "error_key": "NODES_MINIMUM_REQUIREMENTS_NOT_MET",
+//       "description": "Lorem ipsum...",
+//       "total_risk": 1
+//     },
+//     {
+//       "rule_fqdn": "samples_op_failed_image_import_check.report",
+//       "error_key": "SAMPLES_FAILED_IMAGE_IMPORT_ERR",
+//       "description": "Lorem ipsum...",
+//       "total_risk": 2
+//     }
+//   ]
+// }
+
+type RequestReport struct {
+	Cluster   string      `json:"cluster"`
+	RequestID string      `json:"requestID"`
+	Status    string      `json:"status"`
+	Report    interface{} `json:"report"`
 }
 
 // allRequestsIDsEndpointForCluster helper function constructs URL for
