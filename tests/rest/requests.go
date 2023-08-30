@@ -462,3 +462,48 @@ func checkRetrieveRequestReportForKnownClusterAndKnownRequest() {
 	}
 	f.PrintReport()
 }
+
+// checkRetrieveRequestReportForKnownClusterAndUnknownRequest check the
+// behavior of 'requests/report' REST API endpoint when known cluster but
+// uknown request are used
+func checkRetrieveRequestReportForKnownClusterAndUnknownRequest() {
+	const requestID = "cccccccccccccccccccccccccc"
+	url := requestIDReportEndpointForCluster(clusterNameWithReports, requestID)
+
+	// construct request object
+	f := frisby.Create("Check the 'requests/report' REST API point using HTTP GET method with known cluster and unknown request").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := RequestReport{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Cluster != clusterNameWithReports {
+			f.AddError(improperClusterNameReturned)
+		}
+		if response.RequestID != requestID {
+			f.AddError(improperRequestIDReturned)
+		}
+	}
+	f.PrintReport()
+}
+
+// checkRetrieveRequestReportForUnknownCluster check the behavior of
+// 'requests/report' REST API endpoint when uknown cluster is used
+func checkRetrieveRequestReportForUnknownCluster() {
+	const requestID = "dddddddddddddddddddddddddd"
+	url := requestIDReportEndpointForCluster(unknownCluster, requestID)
+
+	// construct request object
+	f := frisby.Create("Check the 'requests/report' REST API point using HTTP GET method with unknown cluster").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusNotFound)
+	f.PrintReport()
+}
