@@ -428,3 +428,37 @@ func checkRetrieveRequestStatusForUnknownCluster() {
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
 	f.PrintReport()
 }
+
+// checkRetrieveRequestReportForKnownClusterAndKnownRequest check the behavior
+// of 'requests/report' REST API endpoint when known cluster and know request
+// ID are used
+func checkRetrieveRequestReportForKnownClusterAndKnownRequest() {
+	url := requestIDReportEndpointForCluster(clusterNameWithReports, knownRequestID)
+
+	// construct request object
+	f := frisby.Create("Check the 'requests/report' REST API point using HTTP GET method with known cluster and known request").Get(url)
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := RequestReport{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != requestProcessed {
+			f.AddError(unexpectedStatus + response.Status)
+		}
+		if response.Cluster != clusterNameWithReports {
+			f.AddError(improperClusterNameReturned)
+		}
+		if response.RequestID != knownRequestID {
+			f.AddError(improperRequestIDReturned)
+		}
+	}
+	f.PrintReport()
+}
