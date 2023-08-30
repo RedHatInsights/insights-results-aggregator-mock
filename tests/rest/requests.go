@@ -305,3 +305,41 @@ func checkListSelectedRequestIDsForUnknownCluster() {
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
 	f.PrintReport()
 }
+
+// checkListSelectedRequestIDsForKnownCluster checks how POST variant of
+// 'requests' REST API endpoint is handled when known cluster is used and empty
+// list of request IDs is sent to the service
+func checkListSelectedRequestIDsEmptyList() {
+	url := allRequestsIDsEndpointForCluster(clusterNameWithReports)
+	f := frisby.Create("Check the 'requests' REST API point using HTTP POST method with known cluster and empty list of request IDs").Post(url)
+
+	// set the payload to be sent - empty list
+	f.SetJson(RequestList{})
+
+	f.Send()
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := RequestResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != "ok" {
+			f.AddError(statusShouldBeSetToOK)
+		}
+		if response.Cluster != clusterNameWithReports {
+			f.AddError(improperClusterNameReturned)
+		}
+		// no requests IDs should be returned
+		if len(response.Requests) != 0 {
+			f.AddError("Improper number of request IDs returned")
+		}
+	}
+	f.PrintReport()
+}
