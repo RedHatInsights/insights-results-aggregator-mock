@@ -50,6 +50,7 @@ limitations under the License.
 // apiPrefix+StatusOfRequestID                 server.readStatusOfRequestID                GET
 // apiPrefix+RuleHitsForRequestID              server.readRuleHitsForRequestID             GET
 // apiPrefix+AllDVONamespaces                  server.allDVONamespaces                     GET
+// apiPrefix+UpgradeRisksPredictionEndpoint    server.upgradeRisksPrediction               GET
 // openAPIURL                                  server.serveAPISpecFile                     GET
 package main
 
