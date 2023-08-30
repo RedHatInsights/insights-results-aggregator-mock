@@ -321,3 +321,36 @@ func checkMultipleReportsForKnownOrganizationAnd2KnownAndUnknownClusterUsingPost
 
 	f.PrintReport()
 }
+
+// checkMultipleReportsForKnownOrganizationAnd3KnownAndUnknownClusterUsingPostMethod check the endpoint that returns multiple results
+func checkMultipleReportsForKnownOrganizationAnd3KnownAndUnknownClusterUsingPostMethod() {
+	clusterList := []string{
+		knownClusterForOrganization1,
+		knownCluster2ForOrganization1,
+		knownCluster3ForOrganization1,
+		unknownClusterForOrganization1,
+	}
+
+	// send request to the endpoint
+	url := constructURLForReportForOrgClustersPostMethod()
+	f := frisby.Create("Check the endpoint to return report for existing organization and three knowns and one unknown cluster ID (POST variant)").Post(url)
+	sendClusterListInPayload(f, clusterList)
+
+	// check the response from server
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the payload returned from server
+	response := readMultipleReportsResponse(f)
+	expectNumberOfClusters(f, response, 3)
+	expectNumberOfErrors(f, response, 1)
+	expectNumberOfReports(f, response, 3)
+	expectClusterInResponse(f, response, knownClusterForOrganization1)
+	expectClusterInResponse(f, response, knownCluster2ForOrganization1)
+	expectClusterInResponse(f, response, knownCluster3ForOrganization1)
+	expectReportInResponse(f, response, knownCluster2ForOrganization1)
+	expectReportInResponse(f, response, knownCluster3ForOrganization1)
+	expectReportInResponse(f, response, knownClusterForOrganization1)
+	expectErrorClusterInResponse(f, response, unknownClusterForOrganization1)
+
+	f.PrintReport()
+}
