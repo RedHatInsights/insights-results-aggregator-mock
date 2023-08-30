@@ -79,6 +79,15 @@ func BasicTests() {
 	checkListAllRequestIDsForKnownCluster()
 	checkListAllRequestIDsEmptyList()
 	checkListAllRequestIDsForUnknownCluster()
+	checkListSelectedRequestIDsForKnownCluster()
+	checkListSelectedRequestIDsForUnknownCluster()
+	checkListSelectedRequestIDsEmptyList()
+	checkRetrieveRequestStatusForKnownClusterAndKnownRequest()
+	checkRetrieveRequestStatusForKnownClusterAndUnknownRequest()
+	checkRetrieveRequestStatusForUnknownCluster()
+	checkRetrieveRequestReportForKnownClusterAndKnownRequest()
+	checkRetrieveRequestReportForKnownClusterAndUnknownRequest()
+	checkRetrieveRequestReportForUnknownCluster()
 
 	// implementations of these tests are stored in rules.go
 	checkRetrieveClusterDetailsForKnownRule()
