@@ -17,8 +17,12 @@ limitations under the License.
 package tests
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
+
+	"github.com/verdverm/frisby"
 )
 
 const (
@@ -76,4 +80,44 @@ type OperatorCondition struct {
 // POST method
 func constructURLUpgradeRiskEndpoint(cluster string) string {
 	return fmt.Sprintf("%scluster/%s/upgrade-risks-prediction", apiURL, cluster)
+}
+
+// checkUpgradeRiskEndpointWithClusterWithPositiveRiskPrediction check how/if
+// URP endpoint returns positive risk prediction for given cluster
+func checkUpgradeRiskEndpointWithClusterWithPositiveRiskPrediction() {
+	url := constructURLUpgradeRiskEndpoint(clusterWithPositiveRisksPrediction)
+
+	// send request to the endpoint
+	f := frisby.Create("Check the endpoint to return upgrade risk predictions for cluster with positive risk prediction").Get(url)
+	f.Send()
+
+	// check the response from server
+	f.ExpectStatus(http.StatusOK)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// check the response payload
+	text, err := f.Resp.Content()
+	if err != nil {
+		f.AddError(err.Error())
+	} else {
+		response := URPResponse{}
+		err := json.Unmarshal(text, &response)
+		if err != nil {
+			f.AddError(err.Error())
+		}
+		if response.Status != "ok" {
+			f.AddError(statusShouldBeSetToOK)
+		}
+		if !response.URPRecommendations.UpgradeRecommended {
+			f.AddError("Upgrade should be recommended")
+		}
+		if len(response.URPRecommendations.UpgradeRiskPredictions.Alerts) != 0 {
+			f.AddError("Zero alerts are expected")
+		}
+		if len(response.URPRecommendations.UpgradeRiskPredictions.OperatorConditions) != 0 {
+			f.AddError("Zero operator conditions are expected")
+		}
+	}
+
+	f.PrintReport()
 }
