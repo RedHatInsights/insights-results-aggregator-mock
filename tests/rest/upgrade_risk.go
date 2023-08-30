@@ -165,3 +165,21 @@ func checkUpgradeRiskEndpointWithClusterWithNegativeRiskPrediction() {
 
 	f.PrintReport()
 }
+
+// checkUpgradeRiskEndpointWithClusterWithNoContent check how/if URP endpoint
+// returns NoContent status for selected cluster
+func checkUpgradeRiskEndpointWithClusterWithNoContent() {
+	url := constructURLUpgradeRiskEndpoint(clusterWithNoContent)
+
+	// send request to the endpoint
+	f := frisby.Create("Check the endpoint to return upgrade risk predictions for cluster with no content").Get(url)
+	f.Send()
+
+	// check the response from server
+	f.ExpectStatus(http.StatusNoContent)
+	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
+
+	// nothing more should be checked there
+
+	f.PrintReport()
+}
