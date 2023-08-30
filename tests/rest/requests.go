@@ -112,7 +112,6 @@ type RequestStatus struct {
 //     }
 //   ]
 // }
-
 type RequestReport struct {
 	Cluster   string      `json:"cluster"`
 	RequestID string      `json:"requestID"`
