@@ -36,11 +36,11 @@ const (
 
 // messages used in tests
 const (
-	improperClusterNameReturned       = "Improper cluster name returned"
-	improperRequestIDReturned         = "Improper request ID returned"
-	unexpectedStatus                  = "Unexpected status: "
-	improperRequestID                 = "Improper request ID detected"
-	improperNumberOfRequestIDsReturnd = "Improper number of request IDs returned"
+	improperClusterNameReturned        = "Improper cluster name returned"
+	improperRequestIDReturned          = "Improper request ID returned"
+	unexpectedStatus                   = "Unexpected status: "
+	improperRequestID                  = "Improper request ID detected"
+	improperNumberOfRequestIDsReturned = "Improper number of request IDs returned"
 )
 
 // RequestList represents trivial list of requests to be send to server
@@ -167,7 +167,7 @@ func checkListAllRequestIDsForKnownCluster() {
 			f.AddError(improperClusterNameReturned)
 		}
 		if len(response.Requests) != 12 {
-			f.AddError(improperNumberOfRequestIDsReturnd)
+			f.AddError(improperNumberOfRequestIDsReturned)
 		}
 		// just check the first one
 		if response.Requests[0].RequestID != knownRequestID {
@@ -207,7 +207,7 @@ func checkListAllRequestIDsEmptyList() {
 		}
 		// no requests IDs should be returned
 		if len(response.Requests) != 0 {
-			f.AddError("Improper number of request IDs returned")
+			f.AddError(improperNumberOfRequestIDsReturned)
 		}
 	}
 	f.PrintReport()
@@ -243,7 +243,7 @@ func checkListAllRequestIDsForUnknownCluster() {
 		}
 		// no requests IDs should be returned
 		if len(response.Requests) != 0 {
-			f.AddError("Improper number of request IDs returned")
+			f.AddError(improperNumberOfRequestIDsReturned)
 		}
 	}
 	f.PrintReport()
@@ -281,7 +281,7 @@ func checkListSelectedRequestIDsForKnownCluster() {
 		}
 		// just one request ID should be returned
 		if len(response.Requests) != 1 {
-			f.AddError("Improper number of request IDs returned")
+			f.AddError(improperNumberOfRequestIDsReturned)
 		}
 	}
 	f.PrintReport()
@@ -337,7 +337,7 @@ func checkListSelectedRequestIDsEmptyList() {
 		}
 		// no requests IDs should be returned
 		if len(response.Requests) != 0 {
-			f.AddError("Improper number of request IDs returned")
+			f.AddError(improperNumberOfRequestIDsReturned)
 		}
 	}
 	f.PrintReport()
