@@ -72,7 +72,7 @@ const (
 func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, request *http.Request) {
 	clusterName, err := readClusterName(writer, request)
 	if err != nil {
-		// everything has been handled already
+		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
