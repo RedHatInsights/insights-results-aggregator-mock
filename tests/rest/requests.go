@@ -25,6 +25,24 @@ import (
 	"github.com/verdverm/frisby"
 )
 
+const clusterNameWithReports = "34c3ecc5-624a-49a5-bab8-4fdc5e51a266"
+const knownRequestID = "3nl2vda87ld6e3s25jlk7n2dna"
+
+// request states
+const (
+	requestProcessed = "processed"
+	requestUnknown   = "unknown"
+)
+
+// messages used in tests
+const (
+	improperClusterNameReturned       = "Improper cluster name returned"
+	improperRequestIDReturned         = "Improper request ID returned"
+	unexpectedStatus                  = "Unexpected status: "
+	improperRequestID                 = "Improper request ID detected"
+	improperNumberOfRequestIDsReturnd = "Improper number of request IDs returned"
+)
+
 // RequestList represents trivial list of requests to be send to server
 type RequestList []string
 
@@ -147,14 +165,14 @@ func checkListAllRequestIDsForKnownCluster() {
 			f.AddError(statusShouldBeSetToOK)
 		}
 		if response.Cluster != clusterName {
-			f.AddError("Improper cluster name returned")
+			f.AddError(improperClusterNameReturned)
 		}
 		if len(response.Requests) != 12 {
-			f.AddError("Improper number of request IDs returned")
+			f.AddError(improperNumberOfRequestIDsReturnd)
 		}
 		// just check the first one
-		if response.Requests[0].RequestID != "3nl2vda87ld6e3s25jlk7n2dna" {
-			f.AddError("Improper request ID detected")
+		if response.Requests[0].RequestID != knownRequestID {
+			f.AddError(improperRequestID)
 		}
 	}
 	f.PrintReport()
@@ -186,7 +204,7 @@ func checkListAllRequestIDsEmptyList() {
 			f.AddError(statusShouldBeSetToOK)
 		}
 		if response.Cluster != clusterName {
-			f.AddError("Improper cluster name returned")
+			f.AddError(improperClusterNameReturned)
 		}
 		// no requests IDs should be returned
 		if len(response.Requests) != 0 {
@@ -203,7 +221,7 @@ func checkListAllRequestIDsForUnknownCluster() {
 	const clusterName = "ffffffff-ffff-ffff-ffff-000000000001"
 
 	url := allRequestsIDsEndpointForCluster(clusterName)
-	f := frisby.Create("Check the 'requests' REST API point using HTTP GET method with known cluster").Get(url)
+	f := frisby.Create("Check the 'requests' REST API point using HTTP GET method with unknown cluster").Get(url)
 	f.Send()
 	f.ExpectStatus(http.StatusNotFound)
 	f.ExpectHeader(contentTypeHeader, ContentTypeJSON)
