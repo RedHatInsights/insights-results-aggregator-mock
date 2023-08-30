@@ -109,6 +109,18 @@ func allRequestsIDsEndpointForCluster(clusterName string) string {
 	return fmt.Sprintf("%scluster/%s/requests/", apiURL, clusterName)
 }
 
+// requestIDStatusEndpointForCluster helper function constructs URL for
+// retrieving status for selected cluster and request ID
+func requestIDStatusEndpointForCluster(clusterName string, requestID string) string {
+	return fmt.Sprintf("%scluster/%s/request/%s/status", apiURL, clusterName, requestID)
+}
+
+// requestIDStatusEndpointForCluster helper function constructs URL for
+// retrieving report for selected cluster and request ID
+func requestIDReportEndpointForCluster(clusterName string, requestID string) string {
+	return fmt.Sprintf("%scluster/%s/request/%s/report", apiURL, clusterName, requestID)
+}
+
 // checkListAllRequestIDsForKnownCluster checks if expected structure with
 // request IDs is returned for known cluster
 func checkListAllRequestIDsForKnownCluster() {
