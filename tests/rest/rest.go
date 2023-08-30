@@ -120,4 +120,12 @@ func BasicTests() {
 	// implementation of these tests are stored in dvo.go
 	checkListOfDVONamespaces()
 	checkListOfDVONamespacesOtherMethods()
+
+	// implementation of these tests are stored in upgrade_risk.go
+	checkUpgradeRiskEndpointWithClusterWithPositiveRiskPrediction()
+	checkUpgradeRiskEndpointWithClusterWithNegativeRiskPrediction()
+	checkUpgradeRiskEndpointWithClusterWithNoContent()
+	checkUpgradeRiskEndpointUnavailableServiceCase()
+	checkUpgradeRiskEndpointNotFoundCase()
+	checkUpgradeRiskEndpointForImproperClusterName()
 }
