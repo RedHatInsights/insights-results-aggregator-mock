@@ -82,7 +82,12 @@ func startService(config *conf.ConfigStruct) int {
 
 	storageInstance, err := storage.New(config.Paths.MockDataPath)
 	if err != nil {
-		log.Error().Err(err).Msg("Storage init error")
+		log.Error().Err(err).Msg("Storage construction error")
+		return ExitStatusServerError
+	}
+	err = storageInstance.Init()
+	if err != nil {
+		log.Error().Err(err).Msg("Storage initialization error")
 		return ExitStatusServerError
 	}
 

@@ -825,6 +825,10 @@ func (server *HTTPServer) exit(writer http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}
+	err = server.Storage.Close()
+	if err != nil {
+		log.Error().Err(err).Msg("Storage close error")
+	}
 	err = server.Stop(context.Background())
 	if err != nil {
 		log.Error().Err(err).Msg("Error stopping HTTP server")
