@@ -83,7 +83,6 @@ type Storage interface {
 		ruleID types.RuleID,
 		userID types.UserID,
 	) error
-	GetRuleByID(ruleID types.RuleID) (*types.Rule, error)
 	GetUserFeedbackOnRules(
 		clusterID types.ClusterName,
 		rulesContent []types.RuleContentResponse,
@@ -379,13 +378,6 @@ func (storage MemoryStorage) ReportsCount() (int, error) {
 	count := -1
 
 	return count, nil
-}
-
-// GetRuleByID gets a rule by ID
-func (storage MemoryStorage) GetRuleByID(_ types.RuleID) (*types.Rule, error) {
-	var rule types.Rule
-
-	return &rule, nil
 }
 
 // GetPredictionForCluster gets a prediction for the cluster
