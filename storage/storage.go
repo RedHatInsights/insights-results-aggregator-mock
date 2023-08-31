@@ -85,7 +85,6 @@ type Storage interface {
 		userID types.UserID,
 	) error
 	GetRuleByID(ruleID types.RuleID) (*types.Rule, error)
-	GetOrgIDByClusterID(cluster types.ClusterName) (types.OrgID, error)
 	GetUserFeedbackOnRules(
 		clusterID types.ClusterName,
 		rulesContent []types.RuleContentResponse,
@@ -270,13 +269,6 @@ func (storage MemoryStorage) ListOfClustersForOrg(orgID types.OrgID) ([]types.Cl
 	}
 
 	return clusters, nil
-}
-
-// GetOrgIDByClusterID reads OrgID for specified cluster
-func (storage MemoryStorage) GetOrgIDByClusterID(_ types.ClusterName) (types.OrgID, error) {
-	var orgID uint64 = 42
-
-	return types.OrgID(orgID), nil
 }
 
 func getReportForCluster(clusterName types.ClusterName) (string, bool) {
