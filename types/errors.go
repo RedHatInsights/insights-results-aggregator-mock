@@ -24,53 +24,8 @@ package types
 
 import (
 	"errors"
-	"fmt"
 )
 
 // ErrOldReport is an error returned if a more recent already
 // exists on the storage while attempting to write a report for a cluster.
 var ErrOldReport = errors.New("More recent report already exists in storage")
-
-// ForeignKeyError something violates foreign key error
-// tableName and foreignKeyName can be empty for DBs not supporting it (SQLite)
-type ForeignKeyError struct {
-	TableName      string
-	ForeignKeyName string
-
-	// Details can reveal you information about specific item violating fk
-	Details string
-}
-
-// Error returns error string
-func (err *ForeignKeyError) Error() string {
-	return fmt.Sprintf(
-		`operation violates foreign key "%v" on table "%v"`, err.ForeignKeyName, err.TableName,
-	)
-}
-
-/*
-// ConvertDBError converts sql errors to those defined in this package
-func ConvertDBError(err error, itemID interface{}) error {
-	if err == nil {
-		return nil
-	}
-
-	if err == sql.ErrNoRows {
-		if itemIDArray, ok := itemID.([]interface{}); ok {
-			var strArray []string
-			for _, item := range itemIDArray {
-				strArray = append(strArray, fmt.Sprint(item))
-			}
-
-			itemID = strings.Join(strArray, "/")
-		}
-
-		return &ItemNotFoundError{ItemID: itemID}
-	}
-
-	err = convertPostgresError(err)
-	err = convertSQLiteError(err)
-
-	return err
-}
-*/
