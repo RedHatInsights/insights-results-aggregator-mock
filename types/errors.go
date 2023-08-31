@@ -31,16 +31,6 @@ import (
 // exists on the storage while attempting to write a report for a cluster.
 var ErrOldReport = errors.New("More recent report already exists in storage")
 
-// TableNotFoundError table not found error
-type TableNotFoundError struct {
-	tableName string
-}
-
-// Error returns error string
-func (err *TableNotFoundError) Error() string {
-	return fmt.Sprintf("no such table: %v", err.tableName)
-}
-
 // TableAlreadyExistsError represents table already exists error
 type TableAlreadyExistsError struct {
 	tableName string
