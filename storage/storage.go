@@ -57,11 +57,6 @@ type Storage interface {
 	GetUserFeedbackOnRule(
 		clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID,
 	) (*UserFeedbackOnRule, error)
-	GetContentForRules(
-		rules *types.ReportRules,
-		userID types.UserID,
-		clusterName types.ClusterName,
-	) ([]types.RuleContentResponse, error)
 	ToggleRuleForCluster(
 		clusterID types.ClusterName,
 		ruleID types.RuleID,
@@ -359,17 +354,6 @@ func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 	}
 
 	return types.ClusterReport(report), errors.New(clusterNotFoundMessage)
-}
-
-// GetContentForRules retrieves content for rules that were hit in the report
-func (storage MemoryStorage) GetContentForRules(
-	_ *types.ReportRules,
-	_ types.UserID,
-	_ types.ClusterName,
-) ([]types.RuleContentResponse, error) {
-	rules := make([]types.RuleContentResponse, 0)
-
-	return rules, nil
 }
 
 // GetPredictionForCluster gets a prediction for the cluster
