@@ -42,21 +42,6 @@ type Storage interface {
 	ListOfClustersForOrg(orgID types.OrgID) ([]types.ClusterName, error)
 	ReadReportForCluster(clusterName types.ClusterName) (types.ClusterReport, error)
 	ReadReportForOrganizationAndCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, error)
-	VoteOnRule(
-		clusterID types.ClusterName,
-		ruleID types.RuleID,
-		userID types.UserID,
-		userVote types.UserVote,
-	) error
-	AddOrUpdateFeedbackOnRule(
-		clusterID types.ClusterName,
-		ruleID types.RuleID,
-		userID types.UserID,
-		message string,
-	) error
-	GetUserFeedbackOnRule(
-		clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID,
-	) (*UserFeedbackOnRule, error)
 	ToggleRuleForCluster(
 		clusterID types.ClusterName,
 		ruleID types.RuleID,
@@ -77,11 +62,6 @@ type Storage interface {
 		ruleID types.RuleID,
 		userID types.UserID,
 	) error
-	GetUserFeedbackOnRules(
-		clusterID types.ClusterName,
-		rulesContent []types.RuleContentResponse,
-		userID types.UserID,
-	) (map[types.RuleID]types.UserVote, error)
 	GetRuleWithContent(ruleID types.RuleID, ruleErrorKey types.ErrorKey) (*types.RuleWithContent, error)
 	GetPredictionForCluster(cluster types.ClusterName) (*types.UpgradeRiskPrediction, error)
 }
