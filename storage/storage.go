@@ -42,26 +42,6 @@ type Storage interface {
 	ListOfClustersForOrg(orgID types.OrgID) ([]types.ClusterName, error)
 	ReadReportForCluster(clusterName types.ClusterName) (types.ClusterReport, error)
 	ReadReportForOrganizationAndCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, error)
-	ToggleRuleForCluster(
-		clusterID types.ClusterName,
-		ruleID types.RuleID,
-		userID types.UserID,
-		ruleToggle RuleToggle,
-	) error
-	ListDisabledRulesForCluster(
-		clusterID types.ClusterName,
-		userID types.UserID,
-	) ([]types.DisabledRuleResponse, error)
-	GetFromClusterRuleToggle(
-		types.ClusterName,
-		types.RuleID,
-		types.UserID,
-	) (*ClusterRuleToggle, error)
-	DeleteFromRuleClusterToggle(
-		clusterID types.ClusterName,
-		ruleID types.RuleID,
-		userID types.UserID,
-	) error
 	GetRuleWithContent(ruleID types.RuleID, ruleErrorKey types.ErrorKey) (*types.RuleWithContent, error)
 	GetPredictionForCluster(cluster types.ClusterName) (*types.UpgradeRiskPrediction, error)
 }
