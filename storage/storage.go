@@ -42,7 +42,6 @@ type Storage interface {
 	ListOfClustersForOrg(orgID types.OrgID) ([]types.ClusterName, error)
 	ReadReportForCluster(clusterName types.ClusterName) (types.ClusterReport, error)
 	ReadReportForOrganizationAndCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, error)
-	ReportsCount() (int, error)
 	VoteOnRule(
 		clusterID types.ClusterName,
 		ruleID types.RuleID,
@@ -371,13 +370,6 @@ func (storage MemoryStorage) GetContentForRules(
 	rules := make([]types.RuleContentResponse, 0)
 
 	return rules, nil
-}
-
-// ReportsCount reads number of all records stored in database
-func (storage MemoryStorage) ReportsCount() (int, error) {
-	count := -1
-
-	return count, nil
 }
 
 // GetPredictionForCluster gets a prediction for the cluster
