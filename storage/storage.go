@@ -42,7 +42,6 @@ type Storage interface {
 	ListOfClustersForOrg(orgID types.OrgID) ([]types.ClusterName, error)
 	ReadReportForCluster(clusterName types.ClusterName) (types.ClusterReport, error)
 	ReadReportForOrganizationAndCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, error)
-	ReadReportForClusterByClusterName(clusterName types.ClusterName) (types.ClusterReport, types.Timestamp, error)
 	ReportsCount() (int, error)
 	VoteOnRule(
 		clusterID types.ClusterName,
@@ -362,16 +361,6 @@ func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 	}
 
 	return types.ClusterReport(report), errors.New(clusterNotFoundMessage)
-}
-
-// ReadReportForClusterByClusterName reads result (health status) for selected cluster for given organization
-func (storage MemoryStorage) ReadReportForClusterByClusterName(
-	_ types.ClusterName,
-) (types.ClusterReport, types.Timestamp, error) {
-	var report string
-	var lastChecked time.Time
-
-	return types.ClusterReport(report), types.Timestamp(lastChecked.UTC().Format(time.RFC3339)), nil
 }
 
 // GetContentForRules retrieves content for rules that were hit in the report
