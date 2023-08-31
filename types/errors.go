@@ -31,16 +31,6 @@ import (
 // exists on the storage while attempting to write a report for a cluster.
 var ErrOldReport = errors.New("More recent report already exists in storage")
 
-// TableAlreadyExistsError represents table already exists error
-type TableAlreadyExistsError struct {
-	tableName string
-}
-
-// Error returns error string
-func (err *TableAlreadyExistsError) Error() string {
-	return fmt.Sprintf("table %v already exists", err.tableName)
-}
-
 // ForeignKeyError something violates foreign key error
 // tableName and foreignKeyName can be empty for DBs not supporting it (SQLite)
 type ForeignKeyError struct {
