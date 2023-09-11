@@ -82,6 +82,7 @@ Mock service mimicking Insights Results Aggregator
         * [Response from the service](#response-from-the-service-3)
 * [Debug endpoints](#debug-endpoints)
     * [Exit HTTP server gracefully](#exit-http-server-gracefully)
+* [Definition of Done for new features and fixes](#definition-of-done-for-new-features-and-fixes)
 * [BDD tests](#bdd-tests)
 * [Package manifest](#package-manifest)
 
@@ -1119,6 +1120,11 @@ Response from the service:
 
 None, the server will stop immediatelly.
 
+
+
+## Definition of Done for new features and fixes
+
+Please look at [DoD.md](DoD.md) document for definition of done for new features and fixes.
 
 
 ## BDD tests
