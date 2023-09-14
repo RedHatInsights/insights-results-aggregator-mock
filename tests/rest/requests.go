@@ -128,13 +128,13 @@ func allRequestsIDsEndpointForCluster(clusterName string) string {
 
 // requestIDStatusEndpointForCluster helper function constructs URL for
 // retrieving status for selected cluster and request ID
-func requestIDStatusEndpointForCluster(clusterName string, requestID string) string {
+func requestIDStatusEndpointForCluster(clusterName, requestID string) string {
 	return fmt.Sprintf("%scluster/%s/request/%s/status", apiURL, clusterName, requestID)
 }
 
 // requestIDStatusEndpointForCluster helper function constructs URL for
 // retrieving report for selected cluster and request ID
-func requestIDReportEndpointForCluster(clusterName string, requestID string) string {
+func requestIDReportEndpointForCluster(clusterName, requestID string) string {
 	return fmt.Sprintf("%scluster/%s/request/%s/report", apiURL, clusterName, requestID)
 }
 
