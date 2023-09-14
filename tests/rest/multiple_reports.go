@@ -87,7 +87,7 @@ func readMultipleReportsResponse(f *frisby.Frisby) MultipleReportsResponse {
 
 // expectNumberOfClusters utility function checks if server response contains
 // expected number of clusters
-func expectNumberOfClusters(f *frisby.Frisby, response MultipleReportsResponse, expected int) {
+func expectNumberOfClusters(f *frisby.Frisby, response *MultipleReportsResponse, expected int) {
 	clusters := response.Clusters
 	actual := len(clusters)
 	if actual != expected {
@@ -97,7 +97,7 @@ func expectNumberOfClusters(f *frisby.Frisby, response MultipleReportsResponse, 
 
 // expectNumberOfClusters utility function checks if server response contains
 // expected number of errors
-func expectNumberOfErrors(f *frisby.Frisby, response MultipleReportsResponse, expected int) {
+func expectNumberOfErrors(f *frisby.Frisby, response *MultipleReportsResponse, expected int) {
 	clusters := response.Errors
 	actual := len(clusters)
 	if actual != expected {
@@ -107,7 +107,7 @@ func expectNumberOfErrors(f *frisby.Frisby, response MultipleReportsResponse, ex
 
 // expectNumberOfReports utility function checks if server response contains
 // expected number of errors
-func expectNumberOfReports(f *frisby.Frisby, response MultipleReportsResponse, expected int) {
+func expectNumberOfReports(f *frisby.Frisby, response *MultipleReportsResponse, expected int) {
 	clusters := response.Reports
 	actual := len(clusters)
 	if actual != expected {
@@ -117,7 +117,7 @@ func expectNumberOfReports(f *frisby.Frisby, response MultipleReportsResponse, e
 
 // expectClusterInResponse utility function checks if server response contains
 // expected cluster name
-func expectClusterInResponse(f *frisby.Frisby, response MultipleReportsResponse, clusterName string) {
+func expectClusterInResponse(f *frisby.Frisby, response *MultipleReportsResponse, clusterName string) {
 	clusters := response.Clusters
 	for _, cluster := range clusters {
 		// cluster has been found
@@ -131,7 +131,7 @@ func expectClusterInResponse(f *frisby.Frisby, response MultipleReportsResponse,
 
 // expectClusterInResponse utility function checks if server response contains
 // expected report for specified cluster
-func expectReportInResponse(f *frisby.Frisby, response MultipleReportsResponse, clusterName string) {
+func expectReportInResponse(f *frisby.Frisby, response *MultipleReportsResponse, clusterName string) {
 	reports := response.Reports
 	for cluster := range reports {
 		// cluster has been found
@@ -145,7 +145,7 @@ func expectReportInResponse(f *frisby.Frisby, response MultipleReportsResponse, 
 
 // expectErrorClusterInResponse utility function checks if server response
 // contains expected error
-func expectErrorClusterInResponse(f *frisby.Frisby, response MultipleReportsResponse, clusterName string) {
+func expectErrorClusterInResponse(f *frisby.Frisby, response *MultipleReportsResponse, clusterName string) {
 	errors := response.Errors
 	for _, cluster := range errors {
 		// cluster has been found
