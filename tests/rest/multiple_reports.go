@@ -87,7 +87,7 @@ func readMultipleReportsResponse(f *frisby.Frisby) MultipleReportsResponse {
 
 // expectNumberOfClusters utility function checks if server response contains
 // expected number of clusters
-func expectNumberOfClusters(f *frisby.Frisby, response MultipleReportsResponse, expected int) {
+func expectNumberOfClusters(f *frisby.Frisby, response *MultipleReportsResponse, expected int) {
 	clusters := response.Clusters
 	actual := len(clusters)
 	if actual != expected {
@@ -97,7 +97,7 @@ func expectNumberOfClusters(f *frisby.Frisby, response MultipleReportsResponse, 
 
 // expectNumberOfClusters utility function checks if server response contains
 // expected number of errors
-func expectNumberOfErrors(f *frisby.Frisby, response MultipleReportsResponse, expected int) {
+func expectNumberOfErrors(f *frisby.Frisby, response *MultipleReportsResponse, expected int) {
 	clusters := response.Errors
 	actual := len(clusters)
 	if actual != expected {
@@ -107,7 +107,7 @@ func expectNumberOfErrors(f *frisby.Frisby, response MultipleReportsResponse, ex
 
 // expectNumberOfReports utility function checks if server response contains
 // expected number of errors
-func expectNumberOfReports(f *frisby.Frisby, response MultipleReportsResponse, expected int) {
+func expectNumberOfReports(f *frisby.Frisby, response *MultipleReportsResponse, expected int) {
 	clusters := response.Reports
 	actual := len(clusters)
 	if actual != expected {
@@ -117,7 +117,7 @@ func expectNumberOfReports(f *frisby.Frisby, response MultipleReportsResponse, e
 
 // expectClusterInResponse utility function checks if server response contains
 // expected cluster name
-func expectClusterInResponse(f *frisby.Frisby, response MultipleReportsResponse, clusterName string) {
+func expectClusterInResponse(f *frisby.Frisby, response *MultipleReportsResponse, clusterName string) {
 	clusters := response.Clusters
 	for _, cluster := range clusters {
 		// cluster has been found
@@ -131,7 +131,7 @@ func expectClusterInResponse(f *frisby.Frisby, response MultipleReportsResponse,
 
 // expectClusterInResponse utility function checks if server response contains
 // expected report for specified cluster
-func expectReportInResponse(f *frisby.Frisby, response MultipleReportsResponse, clusterName string) {
+func expectReportInResponse(f *frisby.Frisby, response *MultipleReportsResponse, clusterName string) {
 	reports := response.Reports
 	for cluster := range reports {
 		// cluster has been found
@@ -145,7 +145,7 @@ func expectReportInResponse(f *frisby.Frisby, response MultipleReportsResponse, 
 
 // expectErrorClusterInResponse utility function checks if server response
 // contains expected error
-func expectErrorClusterInResponse(f *frisby.Frisby, response MultipleReportsResponse, clusterName string) {
+func expectErrorClusterInResponse(f *frisby.Frisby, response *MultipleReportsResponse, clusterName string) {
 	errors := response.Errors
 	for _, cluster := range errors {
 		// cluster has been found
@@ -173,11 +173,11 @@ func checkMultipleReportsForKnownOrganizationAnd1KnownClusterUsingPostMethod() {
 
 	// check the payload returned from server
 	response := readMultipleReportsResponse(f)
-	expectNumberOfClusters(f, response, 1)
-	expectNumberOfErrors(f, response, 0)
-	expectNumberOfReports(f, response, 1)
-	expectClusterInResponse(f, response, knownClusterForOrganization1)
-	expectReportInResponse(f, response, knownClusterForOrganization1)
+	expectNumberOfClusters(f, &response, 1)
+	expectNumberOfErrors(f, &response, 0)
+	expectNumberOfReports(f, &response, 1)
+	expectClusterInResponse(f, &response, knownClusterForOrganization1)
+	expectReportInResponse(f, &response, knownClusterForOrganization1)
 
 	f.PrintReport()
 }
@@ -199,13 +199,13 @@ func checkMultipleReportsForKnownOrganizationAnd2KnownClustersUsingPostMethod() 
 
 	// check the payload returned from server
 	response := readMultipleReportsResponse(f)
-	expectNumberOfClusters(f, response, 2)
-	expectNumberOfErrors(f, response, 0)
-	expectNumberOfReports(f, response, 2)
-	expectClusterInResponse(f, response, knownClusterForOrganization1)
-	expectClusterInResponse(f, response, knownCluster2ForOrganization1)
-	expectReportInResponse(f, response, knownClusterForOrganization1)
-	expectReportInResponse(f, response, knownCluster2ForOrganization1)
+	expectNumberOfClusters(f, &response, 2)
+	expectNumberOfErrors(f, &response, 0)
+	expectNumberOfReports(f, &response, 2)
+	expectClusterInResponse(f, &response, knownClusterForOrganization1)
+	expectClusterInResponse(f, &response, knownCluster2ForOrganization1)
+	expectReportInResponse(f, &response, knownClusterForOrganization1)
+	expectReportInResponse(f, &response, knownCluster2ForOrganization1)
 
 	f.PrintReport()
 }
@@ -228,15 +228,15 @@ func checkMultipleReportsForKnownOrganizationAnd3KnownClustersUsingPostMethod() 
 
 	// check the payload returned from server
 	response := readMultipleReportsResponse(f)
-	expectNumberOfClusters(f, response, 3)
-	expectNumberOfErrors(f, response, 0)
-	expectNumberOfReports(f, response, 3)
-	expectClusterInResponse(f, response, knownClusterForOrganization1)
-	expectClusterInResponse(f, response, knownCluster2ForOrganization1)
-	expectClusterInResponse(f, response, knownCluster3ForOrganization1)
-	expectReportInResponse(f, response, knownClusterForOrganization1)
-	expectReportInResponse(f, response, knownCluster2ForOrganization1)
-	expectReportInResponse(f, response, knownCluster3ForOrganization1)
+	expectNumberOfClusters(f, &response, 3)
+	expectNumberOfErrors(f, &response, 0)
+	expectNumberOfReports(f, &response, 3)
+	expectClusterInResponse(f, &response, knownClusterForOrganization1)
+	expectClusterInResponse(f, &response, knownCluster2ForOrganization1)
+	expectClusterInResponse(f, &response, knownCluster3ForOrganization1)
+	expectReportInResponse(f, &response, knownClusterForOrganization1)
+	expectReportInResponse(f, &response, knownCluster2ForOrganization1)
+	expectReportInResponse(f, &response, knownCluster3ForOrganization1)
 
 	f.PrintReport()
 }
@@ -257,10 +257,10 @@ func checkMultipleReportsForKnownOrganizationAndUnknownClusterUsingPostMethod() 
 
 	// check the payload returned from server
 	response := readMultipleReportsResponse(f)
-	expectNumberOfClusters(f, response, 0)
-	expectNumberOfErrors(f, response, 1)
-	expectNumberOfReports(f, response, 0)
-	expectErrorClusterInResponse(f, response, unknownClusterForOrganization1)
+	expectNumberOfClusters(f, &response, 0)
+	expectNumberOfErrors(f, &response, 1)
+	expectNumberOfReports(f, &response, 0)
+	expectErrorClusterInResponse(f, &response, unknownClusterForOrganization1)
 
 	f.PrintReport()
 }
@@ -282,12 +282,12 @@ func checkMultipleReportsForKnownOrganizationAndKnownAndUnknownClusterUsingPostM
 
 	// check the payload returned from server
 	response := readMultipleReportsResponse(f)
-	expectNumberOfClusters(f, response, 1)
-	expectNumberOfErrors(f, response, 1)
-	expectNumberOfReports(f, response, 1)
-	expectClusterInResponse(f, response, knownClusterForOrganization1)
-	expectReportInResponse(f, response, knownClusterForOrganization1)
-	expectErrorClusterInResponse(f, response, unknownClusterForOrganization1)
+	expectNumberOfClusters(f, &response, 1)
+	expectNumberOfErrors(f, &response, 1)
+	expectNumberOfReports(f, &response, 1)
+	expectClusterInResponse(f, &response, knownClusterForOrganization1)
+	expectReportInResponse(f, &response, knownClusterForOrganization1)
+	expectErrorClusterInResponse(f, &response, unknownClusterForOrganization1)
 
 	f.PrintReport()
 }
@@ -310,14 +310,14 @@ func checkMultipleReportsForKnownOrganizationAnd2KnownAndUnknownClusterUsingPost
 
 	// check the payload returned from server
 	response := readMultipleReportsResponse(f)
-	expectNumberOfClusters(f, response, 2)
-	expectNumberOfErrors(f, response, 1)
-	expectNumberOfReports(f, response, 2)
-	expectClusterInResponse(f, response, knownClusterForOrganization1)
-	expectClusterInResponse(f, response, knownCluster2ForOrganization1)
-	expectReportInResponse(f, response, knownClusterForOrganization1)
-	expectReportInResponse(f, response, knownCluster2ForOrganization1)
-	expectErrorClusterInResponse(f, response, unknownClusterForOrganization1)
+	expectNumberOfClusters(f, &response, 2)
+	expectNumberOfErrors(f, &response, 1)
+	expectNumberOfReports(f, &response, 2)
+	expectClusterInResponse(f, &response, knownClusterForOrganization1)
+	expectClusterInResponse(f, &response, knownCluster2ForOrganization1)
+	expectReportInResponse(f, &response, knownClusterForOrganization1)
+	expectReportInResponse(f, &response, knownCluster2ForOrganization1)
+	expectErrorClusterInResponse(f, &response, unknownClusterForOrganization1)
 
 	f.PrintReport()
 }
@@ -341,16 +341,16 @@ func checkMultipleReportsForKnownOrganizationAnd3KnownAndUnknownClusterUsingPost
 
 	// check the payload returned from server
 	response := readMultipleReportsResponse(f)
-	expectNumberOfClusters(f, response, 3)
-	expectNumberOfErrors(f, response, 1)
-	expectNumberOfReports(f, response, 3)
-	expectClusterInResponse(f, response, knownClusterForOrganization1)
-	expectClusterInResponse(f, response, knownCluster2ForOrganization1)
-	expectClusterInResponse(f, response, knownCluster3ForOrganization1)
-	expectReportInResponse(f, response, knownCluster2ForOrganization1)
-	expectReportInResponse(f, response, knownCluster3ForOrganization1)
-	expectReportInResponse(f, response, knownClusterForOrganization1)
-	expectErrorClusterInResponse(f, response, unknownClusterForOrganization1)
+	expectNumberOfClusters(f, &response, 3)
+	expectNumberOfErrors(f, &response, 1)
+	expectNumberOfReports(f, &response, 3)
+	expectClusterInResponse(f, &response, knownClusterForOrganization1)
+	expectClusterInResponse(f, &response, knownCluster2ForOrganization1)
+	expectClusterInResponse(f, &response, knownCluster3ForOrganization1)
+	expectReportInResponse(f, &response, knownCluster2ForOrganization1)
+	expectReportInResponse(f, &response, knownCluster3ForOrganization1)
+	expectReportInResponse(f, &response, knownClusterForOrganization1)
+	expectErrorClusterInResponse(f, &response, unknownClusterForOrganization1)
 
 	f.PrintReport()
 }
