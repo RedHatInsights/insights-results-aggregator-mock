@@ -38,6 +38,27 @@
       (html-renderer/render-index-page)))
 
 
+(defn process-recommendations-page
+  [request]
+    (finish-processing
+      request
+      (html-renderer/render-recommendations-page)))
+
+
+(defn process-clusters-page
+  [request]
+    (finish-processing
+      request
+      (html-renderer/render-clusters-page)))
+
+
+(defn process-workloads-page
+  [request]
+    (finish-processing
+      request
+      (html-renderer/render-workloads-page)))
+
+
 (defn uri->file-name
   [uri]
   (subs uri (inc (.indexOf uri "/"))))
@@ -59,6 +80,9 @@
       (condp = uri
           ; common pages
           "/"                           (process-index-page request)
+          "/recommendations"            (process-recommendations-page request)
+          "/clusters"                   (process-clusters-page request)
+          "/workloads"                  (process-workloads-page request)
           )))
 
 (defn handler
