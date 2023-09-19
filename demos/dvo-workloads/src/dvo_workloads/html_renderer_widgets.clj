@@ -29,7 +29,7 @@
   [url-prefix]
   [:nav {:class "navbar navbar-inverse navbar-fixed-top" :role "navigation"} ; use navbar-default instead of navbar-inverse
       [:div {:class "container-fluid"}
-          [:div {:class "row"}
+          [:div {:class "row" :style "margin-bottom:8px;"}
               [:div {:class "col-md-7"}
                   [:div {:class "navbar-header"}
                       [:a {:href url-prefix :class "navbar-brand"} "Insights Advisor Mock"]
@@ -73,7 +73,7 @@
             :name name,
             :value value,
             :class "btn btn-success",
-            :style "width:12em"} text])
+            :style "width:15em"} text])
 
 
 (defn add-button
@@ -137,4 +137,24 @@
 (defn warning-div
   [text]
   [:div {:class "alert alert-danger" :role "alert"} text])
+
+(defn sidebar
+  []
+  [:div {:class "col-sm-2 navbar navbar-inverse" :style "height:1000px"}
+   [:br]
+   (form/form-to
+     {:name "inputForm1"}
+     [:get "/recommendations"]
+     (submit-button "Recommendations" "recommendations" "recommendations")
+     [:br][:br])
+   (form/form-to
+     {:name "inputForm2"}
+     [:get "/clusters"]
+     (submit-button "Clusters" "clusters" "clusters")
+     [:br][:br])
+   (form/form-to
+     {:name "inputForm3"}
+     [:get "/workloads"]
+     (submit-button "Workloads" "workloads" "workloads")
+     [:br][:br]) ])
 

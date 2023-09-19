@@ -20,25 +20,90 @@
   (page/xhtml
     (widgets/header "/")
     [:body
-     [:div {:class "container"}
+     [:div {:class "container-fluid"}
           (widgets/navigation-bar "/")
           [:h3 "Insights Advisor Mock"]
+          [:div {:class "container-fluid" :style "padding:0px; margin:0px;"}
+            [:div {:class "row justify-content-start"}
+             (widgets/sidebar)
+             [:div {:class "col-sm-2" :style "padding:20px"}
+              "Text text"
+             ]
+            ]
+          ]
           [:div {:style "height: 10ex"}]
-          (form/form-to
-                {:name "inputForm1"}
-                [:get "/select-app-type"]
-                   (widgets/submit-button "Recommendations" "app-type" "app-type")
-                [:br][:br])
-          (form/form-to
-                {:name "inputForm1"}
-                [:get "/select-app-type"]
-                   (widgets/submit-button "Clusters" "app-type" "app-type")
-                [:br][:br])
-          (form/form-to
-                {:name "inputForm1"}
-                [:get "/select-app-type"]
-                   (widgets/submit-button "Workloads" "app-type" "app-type")
-                [:br][:br])
+          [:br]
+          widgets/footer
+     ] ; </div class="container">
+    ] ; </body>
+  ))
+
+
+(defn render-recommendations-page
+  []
+  (page/xhtml
+    (widgets/header "/")
+    [:body
+     [:div {:class "container-fluid"}
+          (widgets/navigation-bar "/")
+          [:h3 "Insights Advisor Mock"]
+          [:div {:class "container-fluid" :style "padding:0px; margin:0px;"}
+            [:div {:class "row justify-content-start"}
+             (widgets/sidebar)
+             [:div {:class "col-sm-2" :style "padding:20px"}
+              "Text text"
+             ]
+            ]
+          ]
+          [:div {:style "height: 10ex"}]
+          [:br]
+          widgets/footer
+     ] ; </div class="container">
+    ] ; </body>
+  ))
+
+
+(defn render-clusters-page
+  []
+  (page/xhtml
+    (widgets/header "/")
+    [:body
+     [:div {:class "container-fluid"}
+          (widgets/navigation-bar "/")
+          [:h3 "Insights Advisor Mock"]
+          [:div {:class "container-fluid" :style "padding:0px; margin:0px;"}
+            [:div {:class "row justify-content-start"}
+             (widgets/sidebar)
+             [:div {:class "col-sm-2" :style "padding:20px"}
+              "Text text"
+             ]
+            ]
+          ]
+          [:div {:style "height: 10ex"}]
+          [:br]
+          widgets/footer
+     ] ; </div class="container">
+    ] ; </body>
+  ))
+
+
+(defn render-workloads-page
+  []
+  (page/xhtml
+    (widgets/header "/")
+    [:body
+     [:div {:class "container-fluid"}
+          (widgets/navigation-bar "/")
+          [:h3 "Insights Advisor Mock"]
+          [:div {:class "container-fluid" :style "padding:0px; margin:0px;"}
+            [:div {:class "row justify-content-start"}
+             (widgets/sidebar)
+             [:div {:class "col-sm-2" :style "padding:20px"}
+              "Text text"
+             ]
+            ]
+          ]
+          [:div {:style "height: 10ex"}]
           [:br]
           widgets/footer
      ] ; </div class="container">
