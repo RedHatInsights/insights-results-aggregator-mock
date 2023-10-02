@@ -268,6 +268,7 @@ const (
 	UserVoteLike UserVote = 1
 )
 
+// DVOWorkload structure represents one item for DVO recommendation for any cluster
 type DVOWorkload struct {
 	Rule             string
 	CheckDescription string
