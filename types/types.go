@@ -267,3 +267,13 @@ const (
 	// UserVoteLike shows user's like
 	UserVoteLike UserVote = 1
 )
+
+type DVOWorkload struct {
+	Rule             string
+	CheckDescription string
+	CheckRemediation string
+	Kind             string
+	UID              string
+	NamespaceName    string
+	NamespaceUID     string
+}
