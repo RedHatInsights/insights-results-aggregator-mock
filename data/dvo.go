@@ -20,6 +20,7 @@ import (
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
+// DVOWorkloads contains a map of DVO recommendations for multiple clusters
 var DVOWorkloads map[types.ClusterName][]types.DVOWorkload
 
 // init is called before the program enters the main function, so it is perfect
