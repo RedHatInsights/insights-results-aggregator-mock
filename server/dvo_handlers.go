@@ -19,6 +19,7 @@ package server
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/rs/zerolog/log"
 )
@@ -30,7 +31,7 @@ const (
 
 	namespace1UUID     = "00000001-0001-0001-0001-000000000001"
 	namespace1FullName = "Namespace #1"
-	namespace2UUID     = "00000001-0001-0001-0001-000000000001"
+	namespace2UUID     = "00000001-0001-0001-0001-000000000002"
 	namespace2FullName = "Namespace #2"
 
 	dvoReport1Check       = "no_anti_affinity"
@@ -52,9 +53,9 @@ type AllDVONamespacesResponse struct {
 
 // Workload structure represents one workload entry in list of workloads
 type Workload struct {
-	ClusterEntry ClusterEntry   `json:"cluster"`
-	Namespace    NamespaceEntry `json:"namespace"`
-	Reports      []DVOReport    `json:"reports"`
+	ClusterEntry  ClusterEntry   `json:"cluster"`
+	Namespace     NamespaceEntry `json:"namespace"`
+	MetadataEntry MetadataEntry  `json:"metadata"`
 }
 
 // ClusterEntry structure contains cluster UUID and cluster name
@@ -67,6 +68,15 @@ type ClusterEntry struct {
 type NamespaceEntry struct {
 	UUID     string `json:"uuid"`
 	FullName string `json:"name"`
+}
+
+// MetadataEntry structure contains basic information about workload metadata
+type MetadataEntry struct {
+	Recommendations int    `json:"recommendations"`
+	Objects         int    `json:"objects"`
+	ReportedAt      string `json:"reported_at"`
+	LastCheckedAt   string `json:"last_checked_at"`
+	HighestSeverity int    `json:"highest_severity"`
 }
 
 // DVOReport structure represents one DVO-related report
@@ -93,14 +103,14 @@ type DVOReport struct {
 //	                "uuid": "{namespace UUID}",
 //	                "name": "{namespace real name}", // optional, might be null
 //	            },
-//	            "reports": [
-//	                {
-//	                    "check": "{for example no_anti_affinity}", // taken from the original full name deploment_validation_operator_no_anti_affinity
-//	                    "kind": "{kind attribute}",
-//	                    "description": {description}",
-//	                    "remediation": {remediation}",
-//	                },
-//	            ]
+//                  metadata": {
+//                      "recommendations": "{number of recommendations"}, // stored in DVO_REPORT table, computed as SELECT count(distinct(recommendation)) WHERE cluster="{cluster UUID}" and namespace="{namespace UUID}"
+//                      "objects": "{number of objects}",                 // stored in DVO_REPORT table, computed as SELECT count(distinct(object)) WHERE cluster="{cluster UUID}" and namespace="{namespace UUID}"
+//                      "reported_at": "{reported_at}",                   // stored in DVO_REPORT table
+//                      "last_checked_at": "{last_checked_at}",           // stored in DVO_REPORT table
+//                      "highest_severity": "{highest_severity}",         // computed with the help of Content Service
+//                  },
+//              },
 //	    ]
 //	}
 func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.Request) {
@@ -121,19 +131,12 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 				UUID:     namespace2UUID,
 				FullName: namespace2FullName,
 			},
-			[]DVOReport{
-				DVOReport{
-					Check:       dvoReport1Check,
-					Kind:        dvoReport1Kind,
-					Description: dvoReport1Description,
-					Remediation: dvoReport1Remediation,
-				},
-				DVOReport{
-					Check:       dvoReport2Check,
-					Kind:        dvoReport2Kind,
-					Description: dvoReport2Description,
-					Remediation: dvoReport2Remediation,
-				},
+			MetadataEntry{
+				Recommendations: 100,
+				Objects:         1000,
+				ReportedAt:      time.Now().Format(time.RFC3339),
+				LastCheckedAt:   time.Now().Format(time.RFC3339),
+				HighestSeverity: 5,
 			},
 		},
 	}
