@@ -79,28 +79,28 @@ type DVOReport struct {
 // does not depend on Organization ID as this information is passed through
 // Bearer token in real Smart Proxy service. The format of output should be:
 //
-//	  {
-//	    "status": "ok",
-//	    "workloads": [
-//	        {
-//	            "cluster": {
-//	                "uuid": "{cluster UUID}",
-//	                "display_name": "{cluster UUID or displayable name}",
-//	            },
-//	            "namespace": {
-//	                "uuid": "{namespace UUID}",
-//	                "name": "{namespace real name}", // optional, might be null
-//	            },
-//                  metadata": {
-//                      "recommendations": "{number of recommendations"}, // stored in DVO_REPORT table, computed as SELECT count(distinct(recommendation)) WHERE cluster="{cluster UUID}" and namespace="{namespace UUID}"
-//                      "objects": "{number of objects}",                 // stored in DVO_REPORT table, computed as SELECT count(distinct(object)) WHERE cluster="{cluster UUID}" and namespace="{namespace UUID}"
-//                      "reported_at": "{reported_at}",                   // stored in DVO_REPORT table
-//                      "last_checked_at": "{last_checked_at}",           // stored in DVO_REPORT table
-//                      "highest_severity": "{highest_severity}",         // computed with the help of Content Service
-//                  },
-//              },
-//	    ]
-//	}
+//		  {
+//		    "status": "ok",
+//		    "workloads": [
+//		        {
+//		            "cluster": {
+//		                "uuid": "{cluster UUID}",
+//		                "display_name": "{cluster UUID or displayable name}",
+//		            },
+//		            "namespace": {
+//		                "uuid": "{namespace UUID}",
+//		                "name": "{namespace real name}", // optional, might be null
+//		            },
+//	                 metadata": {
+//	                     "recommendations": "{number of recommendations"}, // stored in DVO_REPORT table, computed as SELECT count(distinct(recommendation)) WHERE cluster="{cluster UUID}" and namespace="{namespace UUID}"
+//	                     "objects": "{number of objects}",                 // stored in DVO_REPORT table, computed as SELECT count(distinct(object)) WHERE cluster="{cluster UUID}" and namespace="{namespace UUID}"
+//	                     "reported_at": "{reported_at}",                   // stored in DVO_REPORT table
+//	                     "last_checked_at": "{last_checked_at}",           // stored in DVO_REPORT table
+//	                     "highest_severity": "{highest_severity}",         // computed with the help of Content Service
+//	                 },
+//	             },
+//		    ]
+//		}
 func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.Request) {
 	log.Info().Msg("All DVO namespaces handler")
 	// set the response header
