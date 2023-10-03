@@ -29,20 +29,8 @@ const (
 	cluster1UUID        = "00000001-0001-0001-0001-000000000001"
 	cluster1DisplayName = "Cluster #1"
 
-	namespace1UUID     = "00000001-0001-0001-0001-000000000001"
-	namespace1FullName = "Namespace #1"
-	namespace2UUID     = "00000001-0001-0001-0001-000000000002"
+	namespace2UUID     = "00000002-0002-0002-0002-000000000002"
 	namespace2FullName = "Namespace #2"
-
-	dvoReport1Check       = "no_anti_affinity"
-	dvoReport1Kind        = "Deployment"
-	dvoReport1Description = "Indicates when... ... ..."
-	dvoReport1Remediation = "Specify anti-affinity in your pod specification ... ... ..."
-
-	dvoReport2Check       = "run_as_non_root"
-	dvoReport2Kind        = "Runtime"
-	dvoReport2Description = "Indicates when... ... ..."
-	dvoReport2Remediation = "Select different user to run this deployment... ... ..."
 )
 
 // AllDVONamespacesResponse is a data structure that represents list of namespace
