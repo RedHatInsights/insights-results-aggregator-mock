@@ -2597,5 +2597,10 @@ func init() {
 		types.DVOWorkload{Rule: "unset_memory_requirements", CheckDescription: "Indicates when containers do not have memory requests and limits set.", CheckRemediation: "Set memory requests and limits for your container based on its requirements. Refer to https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits for details.", Kind: "Pod", NamespaceUID: "fad82c1f-96db-430f-b3ec-503fb9eeb7bb", UID: "4cd98692-e6a2-4569-94b2-9a47b1fec964"},
 	}
 
-	DVOWorkloads["34c3ecc5-624a-49a5-bab8-4fdc5e51a266"] = workloads
+	DVOWorkloads["00000001-0001-0001-0001-000000000001"] = workloads
+	DVOWorkloads["00000001-0001-0001-0001-000000000002"] = workloads[0:100]
+	DVOWorkloads["00000001-0001-0001-0001-000000000003"] = workloads[100:200]
+	DVOWorkloads["00000001-0001-0001-0001-000000000004"] = workloads[200:300]
+	DVOWorkloads["00000001-0001-0001-0001-000000000005"] = workloads[300:400]
+	DVOWorkloads["00000001-0001-0001-0001-000000000006"] = workloads[400:500]
 }
