@@ -28,8 +28,14 @@ import (
 
 func getTestDVOWorkloads() []types.DVOWorkload {
 	// just static data ATM are needed
+	// first namespace has 3 rules/recommendations
+	//                 and 5 objects
 	return []types.DVOWorkload{
 		types.DVOWorkload{Rule: "host_network", CheckDescription: "Alert on pods/deployment-likes with sharing host's network namespace", CheckRemediation: "Ensure the host's network namespace is not shared.", Kind: "DaemonSet", NamespaceUID: "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f", UID: "be466de5-12fb-4710-bf70-62deb38ae563"},
+		types.DVOWorkload{Rule: "foo", CheckDescription: "Alert on pods/deployment-likes with sharing host's network namespace", CheckRemediation: "Ensure the host's network namespace is not shared.", Kind: "DaemonSet", NamespaceUID: "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f", UID: "be466de5-12fb-4710-bf70-62deb38ae563"},
+		types.DVOWorkload{Rule: "bar", CheckDescription: "Alert on pods/deployment-likes with sharing host's network namespace", CheckRemediation: "Ensure the host's network namespace is not shared.", Kind: "DaemonSet", NamespaceUID: "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f", UID: "be466de5-12fb-4710-bf70-62deb38ae563"},
+		types.DVOWorkload{Rule: "bar", CheckDescription: "Alert on pods/deployment-likes with sharing host's network namespace", CheckRemediation: "Ensure the host's network namespace is not shared.", Kind: "KindX", NamespaceUID: "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f", UID: "be466de5-12fb-4710-bf70-62deb38ae563"},
+		types.DVOWorkload{Rule: "bar", CheckDescription: "Alert on pods/deployment-likes with sharing host's network namespace", CheckRemediation: "Ensure the host's network namespace is not shared.", Kind: "KindY", NamespaceUID: "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f", UID: "be466de5-12fb-4710-bf70-62deb38ae563"},
 		types.DVOWorkload{Rule: "host_network", CheckDescription: "Alert on pods/deployment-likes with sharing host's network namespace", CheckRemediation: "Ensure the host's network namespace is not shared.", Kind: "DaemonSet", NamespaceUID: "e6ed9bb3-efc3-46a6-b3ae-3f1a6e59546c", UID: "da5a07e1-3273-4056-8914-2732beb41b4c"},
 		types.DVOWorkload{Rule: "host_pid", CheckDescription: "Alert on pods/deployment-likes with sharing host's process namespace", CheckRemediation: "Ensure the host's process namespace is not shared.", Kind: "DaemonSet", NamespaceUID: "e6ed9bb3-efc3-46a6-b3ae-3f1a6e59546c", UID: "da5a07e1-3273-4056-8914-2732beb41b4c"},
 		types.DVOWorkload{Rule: "host_pid", CheckDescription: "Alert on pods/deployment-likes with sharing host's process namespace", CheckRemediation: "Ensure the host's process namespace is not shared.", Kind: "DaemonSet", NamespaceUID: "d00b47da-fc6f-4c72-abc1-94f525441c75", UID: "fec695db-b904-4865-b8e6-068f491c9a3b"},
@@ -52,4 +58,13 @@ func TestGetNamespaces(t *testing.T) {
 		"fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f"}
 
 	assert.Equal(t, expected, namespaces)
+}
+
+func TestNumberOfRecommendations(t *testing.T) {
+	workloads := getTestDVOWorkloads()
+	count := server.NumberOfRecommendations(workloads, "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f")
+
+	const expected = 3
+
+	assert.Equal(t, expected, count)
 }
