@@ -44,9 +44,10 @@ type Workload struct {
 
 // WorkloadsForCluster structure represents workload for one selected cluster
 type WorkloadsForCluster struct {
-	Status       string         `json:"status"`
-	ClusterEntry ClusterEntry   `json:"cluster"`
-	Namespace    NamespaceEntry `json:"namespace"`
+	Status        string         `json:"status"`
+	ClusterEntry  ClusterEntry   `json:"cluster"`
+	Namespace     NamespaceEntry `json:"namespace"`
+	MetadataEntry MetadataEntry  `json:"metadata"`
 }
 
 // ClusterEntry structure contains cluster UUID and cluster name
@@ -236,7 +237,7 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 	}
 	log.Info().Str("namespace selector", namespace).Msg("Query parameters")
 
-	_, found := data.DVOWorkloads[types.ClusterName(cluster)]
+	workloadsForCluster, found := data.DVOWorkloads[types.ClusterName(cluster)]
 	if !found {
 		message := fmt.Sprintf("DVO namespaces for cluster %s not found", cluster)
 		log.Info().Msg(message)
@@ -262,6 +263,13 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 	responseData.Namespace = NamespaceEntry{
 		UUID:     namespace,
 		FullName: "Namespace name " + namespace,
+	}
+	responseData.MetadataEntry = MetadataEntry{
+		Recommendations: numberOfRecommendations(workloadsForCluster, namespace),
+		Objects:         numberOfObjects(workloadsForCluster, namespace),
+		ReportedAt:      time.Now().Format(time.RFC3339),
+		LastCheckedAt:   time.Now().Format(time.RFC3339),
+		HighestSeverity: 5,
 	}
 
 	// transform response structure into proper JSON payload
