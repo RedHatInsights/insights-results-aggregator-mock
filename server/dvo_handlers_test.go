@@ -68,3 +68,12 @@ func TestNumberOfRecommendations(t *testing.T) {
 
 	assert.Equal(t, expected, count)
 }
+
+func TestNumberOfObjects(t *testing.T) {
+	workloads := getTestDVOWorkloads()
+	count := server.NumberOfObjects(workloads, "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f")
+
+	const expected = 5
+
+	assert.Equal(t, expected, count)
+}
