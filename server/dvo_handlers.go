@@ -296,7 +296,7 @@ func getNamespaces(workloads []types.DVOWorkload) []string {
 
 	// convert map to slice of keys.
 	keys := []string{}
-	for key, _ := range namespaces {
+	for key := range namespaces {
 		keys = append(keys, key)
 	}
 
