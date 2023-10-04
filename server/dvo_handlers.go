@@ -179,3 +179,17 @@ func numberOfRecommendations(workloads []types.DVOWorkload, namespace string) in
 	}
 	return len(rules)
 }
+
+// numberOfObjects computes number of objects for a cluster and namespace
+func numberOfObjects(workloads []types.DVOWorkload, namespace string) int {
+	// object counter
+	objects := 0
+
+	for _, workload := range workloads {
+		// count an object just if it is from the same namespace
+		if workload.NamespaceUID == namespace {
+			objects++
+		}
+	}
+	return objects
+}
