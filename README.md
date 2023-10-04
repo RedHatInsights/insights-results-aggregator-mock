@@ -80,6 +80,7 @@ Mock service mimicking Insights Results Aggregator
     * [List of all DVO namespaces](#list-of-all-dvo-namespaces)
         * [Request to the service](#request-to-the-service)
         * [Response from the service](#response-from-the-service-3)
+    * [DVO Recommendations for selected cluster and namespace](#dvo-recommendations-for-selected-cluster-and-namespace)
 * [Debug endpoints](#debug-endpoints)
     * [Exit HTTP server gracefully](#exit-http-server-gracefully)
 * [Definition of Done for new features and fixes](#definition-of-done-for-new-features-and-fixes)
@@ -1102,6 +1103,21 @@ curl -v localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo
     }
   ]
 }
+```
+
+### DVO Recommendations for selected cluster and namespace
+
+Returns recommendations for selected cluster and namespace.
+
+Request:
+```
+curl localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo/{namespace_uuid}/cluster/{cluster_uuid}
+```
+
+Example with data:
+
+```
+curl localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo/fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f/cluster/00000001-0001-0001-0001-000000000002
 ```
 
 ## Debug endpoints
