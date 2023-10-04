@@ -68,7 +68,7 @@ style: fmt vet lint cyclo shellcheck errcheck goconst gosec ineffassign abcgo ##
 run: clean build ## Build the project and executes the binary
 	./insights-results-aggregator-mock
 
-test: clean build ## Run the unit tests
+test: ## Run the unit tests
 	@go test -coverprofile coverage.out $(shell go list ./... | grep -v tests)
 	@go tool cover -func=coverage.out
 
