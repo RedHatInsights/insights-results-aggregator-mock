@@ -18,11 +18,13 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/rs/zerolog/log"
 
+	"github.com/RedHatInsights/insights-operator-utils/responses"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/data"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
@@ -35,6 +37,14 @@ type AllDVONamespacesResponse struct {
 
 // Workload structure represents one workload entry in list of workloads
 type Workload struct {
+	ClusterEntry  ClusterEntry   `json:"cluster"`
+	Namespace     NamespaceEntry `json:"namespace"`
+	MetadataEntry MetadataEntry  `json:"metadata"`
+}
+
+// WorkloadsForCluster structure represents workload for one selected cluster
+type WorkloadsForCluster struct {
+	Status        string         `json:"status"`
 	ClusterEntry  ClusterEntry   `json:"cluster"`
 	Namespace     NamespaceEntry `json:"namespace"`
 	MetadataEntry MetadataEntry  `json:"metadata"`
@@ -133,6 +143,134 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 	var responseData AllDVONamespacesResponse
 	responseData.Status = "ok"
 	responseData.Workloads = workloads
+
+	// transform response structure into proper JSON payload
+	bytes, err := json.MarshalIndent(responseData, "", "\t")
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+		return
+	}
+
+	// and send the response to client
+	_, err = writer.Write(bytes)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+	}
+}
+
+// dvoNamespaceForCluster implements handler for endpoint that
+// returns the list of results for selected cluster and namespace.
+//
+// The format of the output should be:
+//
+//	  {
+//	    "status": "ok",
+//	    "cluster": {
+//	        "uuid": "{cluster UUID}",
+//	        "display_name": "{cluster UUID or displayable name}",
+//	    },
+//	    "namespace": {
+//	        "uuid": "{namespace UUID}",                       // in this case "namespace-1"
+//	        "name": "{namespace real name}",                  // optional, might be null
+//	    },
+//	    metadata": {
+//	        "recommendations": "{number of recommendations"}, // stored in DVO_REPORT table, computed as SELECT count(distinct(recommendation)) WHERE cluster="{cluster UUID}" and namespace="{namespace UUID}"
+//	        "objects": "{number of objects}",                 // stored in DVO_REPORT table, computed as SELECT count(distinct(object)) WHERE cluster="{cluster UUID}" and namespace="{namespace UUID}"
+//	        "reported_at": "{reported_at}",                   // stored in DVO_REPORT table
+//	        "last_checked_at": "{last_checked_at}",           // stored in DVO_REPORT table
+//	        "highest_severity": "{highest_severity}",         // computed with the help of Content Service
+//	    },
+//	    "recommendations": [                                  // list of recommendations for the namespace
+//	        {
+//	            "check": "{for example no_anti_affinity}",    // taken from the original full name deploment_validation_operator_no_anti_affinity
+//	            "description": {description}",                // taken from Content Service
+//	            "remediation": {remediation}",                // taken from Content Service
+//	            "objects": [
+//	                {
+//	                    "kind": "{kind attribute}",           // taken from the original report, stored in JSON in DVO_REPORT_TABLE
+//	                    "uid":  "{UUID}",
+//	                },
+//	                {
+//	                    "kind": "{kind attribute}",           // taken from the original report, stored in JSON in DVO_REPORT_TABLE
+//	                    "uid":  "{UUID}",
+//	                }
+//	             ],
+//	        },
+//	        {
+//	            "check": "{for unset_memory_requirements}",// taken from the original full name deploment_validation_operator_no_anti_affinity
+//	            "description": {description}",             // taken from Content Service
+//	            "remediation": {remediation}",             // taken from Content Service
+//	            "objects": [
+//	            ],
+//	        },
+//	    ]
+//	}
+func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, request *http.Request) {
+	log.Info().Msg("DVO namespace for cluster handler")
+	cluster, err := getRouterParam(request, "cluster_name")
+	if err != nil {
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+	log.Info().Str("cluster selector", cluster).Msg("Query parameters")
+
+	_, err = ValidateClusterName(cluster)
+	if err != nil {
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+	log.Info().Msg("Cluster name is correct")
+
+	namespace, err := getRouterParam(request, "namespace")
+	if err != nil {
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+	log.Info().Str("namespace selector", namespace).Msg("Query parameters")
+
+	workloadsForCluster, found := data.DVOWorkloads[types.ClusterName(cluster)]
+	if !found {
+		message := fmt.Sprintf("DVO namespaces for cluster %s not found", cluster)
+		log.Info().Msg(message)
+		err = responses.SendNotFound(writer, message)
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+
+	// set the response header
+	writer.Header().Set(contentType, appJSON)
+
+	// prepare response structure
+	var responseData WorkloadsForCluster
+
+	// fill in elementary metadata
+	responseData.Status = "ok"
+	responseData.ClusterEntry = ClusterEntry{
+		UUID:        cluster,
+		DisplayName: "Cluster name " + cluster,
+	}
+	responseData.Namespace = NamespaceEntry{
+		UUID:     namespace,
+		FullName: "Namespace name " + namespace,
+	}
+	responseData.MetadataEntry = MetadataEntry{
+		Recommendations: numberOfRecommendations(workloadsForCluster, namespace),
+		Objects:         numberOfObjects(workloadsForCluster, namespace),
+		ReportedAt:      time.Now().Format(time.RFC3339),
+		LastCheckedAt:   time.Now().Format(time.RFC3339),
+		HighestSeverity: 5,
+	}
 
 	// transform response structure into proper JSON payload
 	bytes, err := json.MarshalIndent(responseData, "", "\t")

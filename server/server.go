@@ -174,6 +174,8 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	// DVONamespaceInfo = "namespaces/dvo/{namespace_id}/info"
 	// DVONamespaceReports = "namespaces/dvo/{namespace_id}/reports"
 	router.HandleFunc(apiPrefix+AllDVONamespaces, server.allDVONamespaces).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+DVONamespaceForCluster1, server.dvoNamespaceForCluster).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+DVONamespaceForCluster2, server.dvoNamespaceForCluster).Methods(http.MethodGet)
 
 	// OpenAPI specs
 	router.HandleFunc(openAPIURL, server.serveAPISpecFile).Methods(http.MethodGet)
