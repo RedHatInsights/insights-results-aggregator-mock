@@ -24,6 +24,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/RedHatInsights/insights-results-aggregator-mock/data"
+	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
 // AllDVONamespacesResponse is a data structure that represents list of namespace
@@ -145,4 +146,21 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}
+}
+
+// getNamespaces returns set of all namespaces, i.e. all items will be unique
+func getNamespaces(workloads []types.DVOWorkload) []string {
+	// set of all namespaces for given cluster
+	var namespaces = make(map[string]struct{})
+	for _, workload := range workloads {
+		namespaces[workload.NamespaceUID] = struct{}{}
+	}
+
+	// convert map to slice of keys.
+	keys := []string{}
+	for key, _ := range namespaces {
+		keys = append(keys, key)
+	}
+
+	return keys
 }
