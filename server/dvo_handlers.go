@@ -22,6 +22,8 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
+
+	"github.com/RedHatInsights/insights-results-aggregator-mock/data"
 )
 
 // AllDVONamespacesResponse is a data structure that represents list of namespace
@@ -97,28 +99,39 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 	// set the response header
 	writer.Header().Set(contentType, appJSON)
 
+	dvoWorkloads := data.DVOWorkloads
+	var workloads []Workload
+
+	for clusterUUID, workloadsForCluster := range dvoWorkloads {
+		// retrieve set of all namespaces for given cluster
+		namespaces := getNamespaces(workloadsForCluster)
+		// construct one workload entry
+		for _, namespace := range namespaces {
+			workload := Workload{
+				ClusterEntry{
+					UUID:        string(clusterUUID),
+					DisplayName: "Cluster name " + string(clusterUUID),
+				},
+				NamespaceEntry{
+					UUID:     namespace,
+					FullName: "Namespace name " + namespace,
+				},
+				MetadataEntry{
+					Recommendations: numberOfRecommendations(workloadsForCluster, namespace),
+					Objects:         numberOfObjects(workloadsForCluster, namespace),
+					ReportedAt:      time.Now().Format(time.RFC3339),
+					LastCheckedAt:   time.Now().Format(time.RFC3339),
+					HighestSeverity: 5,
+				},
+			}
+			workloads = append(workloads, workload)
+		}
+	}
+
 	// prepare response structure
 	var responseData AllDVONamespacesResponse
 	responseData.Status = "ok"
-	responseData.Workloads = []Workload{
-		Workload{
-			ClusterEntry{
-				UUID:        cluster1UUID,
-				DisplayName: cluster1DisplayName,
-			},
-			NamespaceEntry{
-				UUID:     namespace2UUID,
-				FullName: namespace2FullName,
-			},
-			MetadataEntry{
-				Recommendations: 100,
-				Objects:         1000,
-				ReportedAt:      time.Now().Format(time.RFC3339),
-				LastCheckedAt:   time.Now().Format(time.RFC3339),
-				HighestSeverity: 5,
-			},
-		},
-	}
+	responseData.Workloads = workloads
 
 	// transform response structure into proper JSON payload
 	bytes, err := json.MarshalIndent(responseData, "", "\t")
