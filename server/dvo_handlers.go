@@ -42,6 +42,11 @@ type Workload struct {
 	MetadataEntry MetadataEntry  `json:"metadata"`
 }
 
+// WorkloadsForCluster structure represents workload for one selected cluster
+type WorkloadsForCluster struct {
+	Status string `json:"status"`
+}
+
 // ClusterEntry structure contains cluster UUID and cluster name
 type ClusterEntry struct {
 	UUID        string `json:"uuid"`
@@ -233,6 +238,26 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 			log.Error().Err(err).Msg(responseDataError)
 		}
 		return
+	}
+
+	// set the response header
+	writer.Header().Set(contentType, appJSON)
+
+	// prepare response structure
+	var responseData WorkloadsForCluster
+	responseData.Status = "ok"
+
+	// transform response structure into proper JSON payload
+	bytes, err := json.MarshalIndent(responseData, "", "\t")
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
+		return
+	}
+
+	// and send the response to client
+	_, err = writer.Write(bytes)
+	if err != nil {
+		log.Error().Err(err).Msg(responseDataError)
 	}
 }
 
