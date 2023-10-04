@@ -164,3 +164,18 @@ func getNamespaces(workloads []types.DVOWorkload) []string {
 
 	return keys
 }
+
+// numberOfRecommendations computes number of recommendations for a cluster and
+// namespace
+func numberOfRecommendations(workloads []types.DVOWorkload, namespace string) int {
+	// set of unique rules
+	var rules = make(map[string]struct{})
+
+	for _, workload := range workloads {
+		// add a rule just if it is from the same namespace
+		if workload.NamespaceUID == namespace {
+			rules[workload.Rule] = struct{}{}
+		}
+	}
+	return len(rules)
+}
