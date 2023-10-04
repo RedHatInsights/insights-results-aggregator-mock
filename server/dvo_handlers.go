@@ -24,15 +24,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// Constants used to produce HTTP responses
-const (
-	cluster1UUID        = "00000001-0001-0001-0001-000000000001"
-	cluster1DisplayName = "Cluster #1"
-
-	namespace2UUID     = "00000002-0002-0002-0002-000000000002"
-	namespace2FullName = "Namespace #2"
-)
-
 // AllDVONamespacesResponse is a data structure that represents list of namespace
 type AllDVONamespacesResponse struct {
 	Status    string     `json:"status"`
