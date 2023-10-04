@@ -49,7 +49,7 @@ func TestGetNamespaces(t *testing.T) {
 	namespaces := server.GetNamespaces(workloads)
 
 	// maintain expected order
-	sort.Sort(sort.StringSlice(namespaces))
+	sort.Strings(namespaces)
 
 	expected := []string{
 		"4354a80c-a7a6-405b-bfa6-9666b24e3b48",
