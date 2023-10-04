@@ -153,7 +153,7 @@ const (
 	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for improper cluster UUID
 	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for improper organization
 	//
-	DVONamespaceForCluster1 = "cluster/{cluster_name}/namespaces/dvo"
+	DVONamespaceForCluster1 = "cluster/{cluster_name}/namespaces/dvo/{namespace}"
 
 	// DVONamespaceForCluster2 endpoint address.
 	//
@@ -169,7 +169,7 @@ const (
 	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for improper organization
 	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces when cluster is not specified
 	//
-	DVONamespaceForCluster2 = "namespaces/dvo/cluster/{cluster_name}"
+	DVONamespaceForCluster2 = "namespaces/dvo/{namespace}/cluster/{cluster_name}"
 
 	// DVONamespaceInfo endpoint address.
 	//

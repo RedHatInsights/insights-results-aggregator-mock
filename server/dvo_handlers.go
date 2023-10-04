@@ -44,7 +44,9 @@ type Workload struct {
 
 // WorkloadsForCluster structure represents workload for one selected cluster
 type WorkloadsForCluster struct {
-	Status string `json:"status"`
+	Status       string         `json:"status"`
+	ClusterEntry ClusterEntry   `json:"cluster"`
+	Namespace    NamespaceEntry `json:"namespace"`
 }
 
 // ClusterEntry structure contains cluster UUID and cluster name
@@ -156,12 +158,7 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 }
 
 // dvoNamespaceForCluster implements handler for endpoint that
-// returns the list of all namespaces (i.e. array of objects) to which
-// this particular account has access filtered by {cluster_name}. Each
-// object contains the namespace ID, the namespace display name if
-// available, the cluster ID under which this namespace is created
-// (repeated input), and the number of affecting recommendations for
-// this namespace as well.
+// returns the list of results for selected cluster and namespace.
 //
 // The format of the output should be:
 //
@@ -208,7 +205,7 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 //	    ]
 //	}
 func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, request *http.Request) {
-	log.Info().Msg("DVO namespaces for cluster handler")
+	log.Info().Msg("DVO namespace for cluster handler")
 	cluster, err := getRouterParam(request, "cluster_name")
 	if err != nil {
 		err = responses.SendBadRequest(writer, err.Error())
@@ -229,6 +226,16 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 	}
 	log.Info().Msg("Cluster name is correct")
 
+	namespace, err := getRouterParam(request, "namespace")
+	if err != nil {
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+	log.Info().Str("namespace selector", namespace).Msg("Query parameters")
+
 	_, found := data.DVOWorkloads[types.ClusterName(cluster)]
 	if !found {
 		message := fmt.Sprintf("DVO namespaces for cluster %s not found", cluster)
@@ -245,7 +252,17 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 
 	// prepare response structure
 	var responseData WorkloadsForCluster
+
+	// fill in elementary metadata
 	responseData.Status = "ok"
+	responseData.ClusterEntry = ClusterEntry{
+		UUID:        cluster,
+		DisplayName: "Cluster name " + cluster,
+	}
+	responseData.Namespace = NamespaceEntry{
+		UUID:     namespace,
+		FullName: "Namespace name " + namespace,
+	}
 
 	// transform response structure into proper JSON payload
 	bytes, err := json.MarshalIndent(responseData, "", "\t")
