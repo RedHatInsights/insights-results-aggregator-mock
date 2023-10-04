@@ -22,15 +22,9 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-)
 
-// Constants used to produce HTTP responses
-const (
-	cluster1UUID        = "00000001-0001-0001-0001-000000000001"
-	cluster1DisplayName = "Cluster #1"
-
-	namespace2UUID     = "00000002-0002-0002-0002-000000000002"
-	namespace2FullName = "Namespace #2"
+	"github.com/RedHatInsights/insights-results-aggregator-mock/data"
+	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
 // AllDVONamespacesResponse is a data structure that represents list of namespace
@@ -106,28 +100,39 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 	// set the response header
 	writer.Header().Set(contentType, appJSON)
 
+	dvoWorkloads := data.DVOWorkloads
+	var workloads []Workload
+
+	for clusterUUID, workloadsForCluster := range dvoWorkloads {
+		// retrieve set of all namespaces for given cluster
+		namespaces := getNamespaces(workloadsForCluster)
+		// construct one workload entry
+		for _, namespace := range namespaces {
+			workload := Workload{
+				ClusterEntry{
+					UUID:        string(clusterUUID),
+					DisplayName: "Cluster name " + string(clusterUUID),
+				},
+				NamespaceEntry{
+					UUID:     namespace,
+					FullName: "Namespace name " + namespace,
+				},
+				MetadataEntry{
+					Recommendations: numberOfRecommendations(workloadsForCluster, namespace),
+					Objects:         numberOfObjects(workloadsForCluster, namespace),
+					ReportedAt:      time.Now().Format(time.RFC3339),
+					LastCheckedAt:   time.Now().Format(time.RFC3339),
+					HighestSeverity: 5,
+				},
+			}
+			workloads = append(workloads, workload)
+		}
+	}
+
 	// prepare response structure
 	var responseData AllDVONamespacesResponse
 	responseData.Status = "ok"
-	responseData.Workloads = []Workload{
-		Workload{
-			ClusterEntry{
-				UUID:        cluster1UUID,
-				DisplayName: cluster1DisplayName,
-			},
-			NamespaceEntry{
-				UUID:     namespace2UUID,
-				FullName: namespace2FullName,
-			},
-			MetadataEntry{
-				Recommendations: 100,
-				Objects:         1000,
-				ReportedAt:      time.Now().Format(time.RFC3339),
-				LastCheckedAt:   time.Now().Format(time.RFC3339),
-				HighestSeverity: 5,
-			},
-		},
-	}
+	responseData.Workloads = workloads
 
 	// transform response structure into proper JSON payload
 	bytes, err := json.MarshalIndent(responseData, "", "\t")
@@ -141,4 +146,50 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 	}
+}
+
+// getNamespaces returns set of all namespaces, i.e. all items will be unique
+func getNamespaces(workloads []types.DVOWorkload) []string {
+	// set of all namespaces for given cluster
+	var namespaces = make(map[string]struct{})
+	for _, workload := range workloads {
+		namespaces[workload.NamespaceUID] = struct{}{}
+	}
+
+	// convert map to slice of keys.
+	keys := []string{}
+	for key := range namespaces {
+		keys = append(keys, key)
+	}
+
+	return keys
+}
+
+// numberOfRecommendations computes number of recommendations for a cluster and
+// namespace
+func numberOfRecommendations(workloads []types.DVOWorkload, namespace string) int {
+	// set of unique rules
+	var rules = make(map[string]struct{})
+
+	for _, workload := range workloads {
+		// add a rule just if it is from the same namespace
+		if workload.NamespaceUID == namespace {
+			rules[workload.Rule] = struct{}{}
+		}
+	}
+	return len(rules)
+}
+
+// numberOfObjects computes number of objects for a cluster and namespace
+func numberOfObjects(workloads []types.DVOWorkload, namespace string) int {
+	// object counter
+	objects := 0
+
+	for _, workload := range workloads {
+		// count an object just if it is from the same namespace
+		if workload.NamespaceUID == namespace {
+			objects++
+		}
+	}
+	return objects
 }
