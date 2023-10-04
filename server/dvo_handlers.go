@@ -18,11 +18,13 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/rs/zerolog/log"
 
+	"github.com/RedHatInsights/insights-operator-utils/responses"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/data"
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
@@ -148,6 +150,92 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 	}
 }
 
+// dvoNamespaceForCluster implements handler for endpoint that
+// returns the list of all namespaces (i.e. array of objects) to which
+// this particular account has access filtered by {cluster_name}. Each
+// object contains the namespace ID, the namespace display name if
+// available, the cluster ID under which this namespace is created
+// (repeated input), and the number of affecting recommendations for
+// this namespace as well.
+//
+// The format of the output should be:
+//
+//	  {
+//	    "status": "ok",
+//	    "cluster": {
+//	        "uuid": "{cluster UUID}",
+//	        "display_name": "{cluster UUID or displayable name}",
+//	    },
+//	    "namespace": {
+//	        "uuid": "{namespace UUID}",                       // in this case "namespace-1"
+//	        "name": "{namespace real name}",                  // optional, might be null
+//	    },
+//	    metadata": {
+//	        "recommendations": "{number of recommendations"}, // stored in DVO_REPORT table, computed as SELECT count(distinct(recommendation)) WHERE cluster="{cluster UUID}" and namespace="{namespace UUID}"
+//	        "objects": "{number of objects}",                 // stored in DVO_REPORT table, computed as SELECT count(distinct(object)) WHERE cluster="{cluster UUID}" and namespace="{namespace UUID}"
+//	        "reported_at": "{reported_at}",                   // stored in DVO_REPORT table
+//	        "last_checked_at": "{last_checked_at}",           // stored in DVO_REPORT table
+//	        "highest_severity": "{highest_severity}",         // computed with the help of Content Service
+//	    },
+//	    "recommendations": [                                  // list of recommendations for the namespace
+//	        {
+//	            "check": "{for example no_anti_affinity}",    // taken from the original full name deploment_validation_operator_no_anti_affinity
+//	            "description": {description}",                // taken from Content Service
+//	            "remediation": {remediation}",                // taken from Content Service
+//	            "objects": [
+//	                {
+//	                    "kind": "{kind attribute}",           // taken from the original report, stored in JSON in DVO_REPORT_TABLE
+//	                    "uid":  "{UUID}",
+//	                },
+//	                {
+//	                    "kind": "{kind attribute}",           // taken from the original report, stored in JSON in DVO_REPORT_TABLE
+//	                    "uid":  "{UUID}",
+//	                }
+//	             ],
+//	        },
+//	        {
+//	            "check": "{for unset_memory_requirements}",// taken from the original full name deploment_validation_operator_no_anti_affinity
+//	            "description": {description}",             // taken from Content Service
+//	            "remediation": {remediation}",             // taken from Content Service
+//	            "objects": [
+//	            ],
+//	        },
+//	    ]
+//	}
+func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, request *http.Request) {
+	log.Info().Msg("DVO namespaces for cluster handler")
+	cluster, err := getRouterParam(request, "cluster_name")
+	if err != nil {
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+	log.Info().Str("cluster selector", cluster).Msg("Query parameters")
+
+	_, err = ValidateClusterName(cluster)
+	if err != nil {
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+	log.Info().Msg("Cluster name is correct")
+
+	_, found := data.DVOWorkloads[types.ClusterName(cluster)]
+	if !found {
+		message := fmt.Sprintf("DVO namespaces for cluster %s not found", cluster)
+		log.Info().Msg(message)
+		err = responses.SendNotFound(writer, message)
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
+		return
+	}
+}
+
 // getNamespaces returns set of all namespaces, i.e. all items will be unique
 func getNamespaces(workloads []types.DVOWorkload) []string {
 	// set of all namespaces for given cluster
@@ -158,7 +246,7 @@ func getNamespaces(workloads []types.DVOWorkload) []string {
 
 	// convert map to slice of keys.
 	keys := []string{}
-	for key := range namespaces {
+	for key, _ := range namespaces {
 		keys = append(keys, key)
 	}
 
