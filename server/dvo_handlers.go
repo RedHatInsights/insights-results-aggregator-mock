@@ -29,7 +29,8 @@ import (
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
-// AllDVONamespacesResponse is a data structure that represents list of namespace
+// AllDVONamespacesResponse is a data structure that represents list of namespaces
+// that is returned from REST API endpoint used for Workloads page
 type AllDVONamespacesResponse struct {
 	Status    string     `json:"status"`
 	Workloads []Workload `json:"workloads"`
@@ -44,10 +45,11 @@ type Workload struct {
 
 // WorkloadsForCluster structure represents workload for one selected cluster
 type WorkloadsForCluster struct {
-	Status        string         `json:"status"`
-	ClusterEntry  ClusterEntry   `json:"cluster"`
-	Namespace     NamespaceEntry `json:"namespace"`
-	MetadataEntry MetadataEntry  `json:"metadata"`
+	Status          string              `json:"status"`
+	ClusterEntry    ClusterEntry        `json:"cluster"`
+	Namespace       NamespaceEntry      `json:"namespace"`
+	MetadataEntry   MetadataEntry       `json:"metadata"`
+	Recommendations []DVORecommendation `json:"recommendations"`
 }
 
 // ClusterEntry structure contains cluster UUID and cluster name
@@ -71,12 +73,18 @@ type MetadataEntry struct {
 	HighestSeverity int    `json:"highest_severity"`
 }
 
-// DVOReport structure represents one DVO-related report
-type DVOReport struct {
-	Check       string `json:"check"`
-	Kind        string `json:"kind"`
-	Description string `json:"description"`
-	Remediation string `json:"remediation"`
+// DVORecommendation structure represents one DVO-related recommendation
+type DVORecommendation struct {
+	Check       string      `json:"check"`
+	Description string      `json:"description"`
+	Remediation string      `json:"remediation"`
+	Objects     []DVOObject `json:"objects"`
+}
+
+// DVOObject structure
+type DVOObject struct {
+	Kind string `json:"kind"`
+	UID  string `json:"uid"`
 }
 
 // allDVONamespaces handler returns list of all DVO namespaces. Currently it
