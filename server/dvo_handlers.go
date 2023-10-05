@@ -29,7 +29,8 @@ import (
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
-// AllDVONamespacesResponse is a data structure that represents list of namespace
+// AllDVONamespacesResponse is a data structure that represents list of namespaces
+// that is returned from REST API endpoint used for Workloads page
 type AllDVONamespacesResponse struct {
 	Status    string     `json:"status"`
 	Workloads []Workload `json:"workloads"`
@@ -44,10 +45,11 @@ type Workload struct {
 
 // WorkloadsForCluster structure represents workload for one selected cluster
 type WorkloadsForCluster struct {
-	Status        string         `json:"status"`
-	ClusterEntry  ClusterEntry   `json:"cluster"`
-	Namespace     NamespaceEntry `json:"namespace"`
-	MetadataEntry MetadataEntry  `json:"metadata"`
+	Status          string              `json:"status"`
+	ClusterEntry    ClusterEntry        `json:"cluster"`
+	Namespace       NamespaceEntry      `json:"namespace"`
+	MetadataEntry   MetadataEntry       `json:"metadata"`
+	Recommendations []DVORecommendation `json:"recommendations"`
 }
 
 // ClusterEntry structure contains cluster UUID and cluster name
@@ -71,12 +73,18 @@ type MetadataEntry struct {
 	HighestSeverity int    `json:"highest_severity"`
 }
 
-// DVOReport structure represents one DVO-related report
-type DVOReport struct {
-	Check       string `json:"check"`
-	Kind        string `json:"kind"`
-	Description string `json:"description"`
-	Remediation string `json:"remediation"`
+// DVORecommendation structure represents one DVO-related recommendation
+type DVORecommendation struct {
+	Check       string      `json:"check"`
+	Description string      `json:"description"`
+	Remediation string      `json:"remediation"`
+	Objects     []DVOObject `json:"objects"`
+}
+
+// DVOObject structure
+type DVOObject struct {
+	Kind string `json:"kind"`
+	UID  string `json:"uid"`
 }
 
 // allDVONamespaces handler returns list of all DVO namespaces. Currently it
@@ -254,7 +262,7 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 	// prepare response structure
 	var responseData WorkloadsForCluster
 
-	// fill in elementary metadata
+	// fill-in elementary metadata
 	responseData.Status = "ok"
 	responseData.ClusterEntry = ClusterEntry{
 		UUID:        cluster,
@@ -271,6 +279,9 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 		LastCheckedAt:   time.Now().Format(time.RFC3339),
 		HighestSeverity: 5,
 	}
+
+	// fill-in all recommendations
+	responseData.Recommendations = recommendationsForNamespace(workloadsForCluster, namespace)
 
 	// transform response structure into proper JSON payload
 	bytes, err := json.MarshalIndent(responseData, "", "\t")
@@ -289,7 +300,9 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 // getNamespaces returns set of all namespaces, i.e. all items will be unique
 func getNamespaces(workloads []types.DVOWorkload) []string {
 	// set of all namespaces for given cluster
+	// (we don't know size of map, so it will be empty)
 	var namespaces = make(map[string]struct{})
+
 	for _, workload := range workloads {
 		namespaces[workload.NamespaceUID] = struct{}{}
 	}
@@ -329,5 +342,60 @@ func numberOfObjects(workloads []types.DVOWorkload, namespace string) int {
 			objects++
 		}
 	}
+	return objects
+}
+
+// recommendationsForNamespace constructs "recommendations" structure for DVO
+// reports all from specified namespace
+func recommendationsForNamespace(workloads []types.DVOWorkload, namespace string) []DVORecommendation {
+	// return value
+	// (we don't know size of the slice, so it is empty at beginning)
+	recommendations := make([]DVORecommendation, 0)
+
+	// set of unique rules
+	var rules = make(map[string]struct{})
+
+	for _, workload := range workloads {
+		// found workload from specified namespace
+		if workload.NamespaceUID == namespace {
+			// check if the rule is new
+			_, found := rules[workload.Rule]
+
+			// if it is new, add it to report
+			if !found {
+				rules[workload.Rule] = struct{}{}
+				recommendation := DVORecommendation{
+					Check:       workload.Rule,
+					Description: workload.CheckDescription,
+					Remediation: workload.CheckRemediation,
+					Objects:     objectsForRule(workloads, namespace, workload.Rule),
+				}
+				// add the newly found recommendation into the slice
+				recommendations = append(recommendations, recommendation)
+			}
+		}
+	}
+
+	return recommendations
+}
+
+func objectsForRule(workloads []types.DVOWorkload, namespace, rule string) []DVOObject {
+	// return value
+	// (we don't know size of the slice, so it is empty at beginning)
+	objects := make([]DVOObject, 0)
+
+	for _, workload := range workloads {
+		// try to found workload for given namespace and rule
+		if workload.NamespaceUID == namespace && workload.Rule == rule {
+			// workload has been found, so it's time to add a new
+			// object into slice of objects
+			object := DVOObject{
+				Kind: workload.Kind,
+				UID:  workload.UID,
+			}
+			objects = append(objects, object)
+		}
+	}
+
 	return objects
 }

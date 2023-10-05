@@ -81,6 +81,9 @@ Mock service mimicking Insights Results Aggregator
         * [Request to the service](#request-to-the-service)
         * [Response from the service](#response-from-the-service-3)
     * [DVO Recommendations for selected cluster and namespace](#dvo-recommendations-for-selected-cluster-and-namespace)
+        * [Request to the service](#request-to-the-service-1)
+        * [Example with data:](#example-with-data)
+        * [Response from the service](#response-from-the-service-4)
 * [Debug endpoints](#debug-endpoints)
     * [Exit HTTP server gracefully](#exit-http-server-gracefully)
 * [Definition of Done for new features and fixes](#definition-of-done-for-new-features-and-fixes)
@@ -1079,28 +1082,41 @@ curl -v localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo
   "workloads": [
     {
       "cluster": {
-        "uuid": "00000001-0001-0001-0001-000000000001",
-        "display_name": "Cluster #1"
+        "uuid": "00000001-0001-0001-0001-000000000002",
+        "display_name": "Cluster name 00000001-0001-0001-0001-000000000002"
       },
       "namespace": {
-        "uuid": "00000002-0002-0002-0002-000000000002",
-        "name": "Namespace #2"
+        "uuid": "d00b47da-fc6f-4c72-abc1-94f525441c75",
+        "name": "Namespace name d00b47da-fc6f-4c72-abc1-94f525441c75"
       },
-      "reports": [
-        {
-          "check": "no_anti_affinity",
-          "kind": "Deployment",
-          "description": "Indicates when... ... ...",
-          "remediation": "Specify anti-affinity in your pod specification ... ... ..."
-        },
-        {
-          "check": "run_as_non_root",
-          "kind": "Runtime",
-          "description": "Indicates when... ... ...",
-          "remediation": "Select different user to run this deployment... ... ..."
-        }
-      ]
-    }
+      "metadata": {
+        "recommendations": 3,
+        "objects": 3,
+        "reported_at": "2023-10-05T07:37:59+02:00",
+        "last_checked_at": "2023-10-05T07:37:59+02:00",
+        "highest_severity": 5
+      }
+    },
+    {
+      "cluster": {
+        "uuid": "00000001-0001-0001-0001-000000000002",
+        "display_name": "Cluster name 00000001-0001-0001-0001-000000000002"
+      },
+      "namespace": {
+        "uuid": "0fab74ee-61ce-498d-bcd4-070ad950b0d7",
+        "name": "Namespace name 0fab74ee-61ce-498d-bcd4-070ad950b0d7"
+      },
+      "metadata": {
+        "recommendations": 1,
+        "objects": 2,
+        "reported_at": "2023-10-05T07:37:59+02:00",
+        "last_checked_at": "2023-10-05T07:37:59+02:00",
+        "highest_severity": 5
+      }
+    },
+    ...
+    ...
+    ...
   ]
 }
 ```
@@ -1108,16 +1124,78 @@ curl -v localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo
 ### DVO Recommendations for selected cluster and namespace
 
 Returns recommendations for selected cluster and namespace.
+Please note that there are two REST API variants with different selector order, but the same results.
 
-Request:
+#### Request to the service
+
+First variant:
+
 ```
 curl localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo/{namespace_uuid}/cluster/{cluster_uuid}
 ```
 
-Example with data:
+Second variant:
+
+```
+curl localhost:8080/api/insights-results-aggregator/v2/cluster/{cluster_name}/namespaces/dvo/{namespace}
+```
+
+
+#### Example with data:
 
 ```
 curl localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo/fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f/cluster/00000001-0001-0001-0001-000000000002
+```
+
+#### Response from the service
+
+```json
+{
+  "status": "ok",
+  "cluster": {
+    "uuid": "00000001-0001-0001-0001-000000000002",
+    "display_name": "Cluster name 00000001-0001-0001-0001-000000000002"
+  },
+  "namespace": {
+    "uuid": "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f",
+    "name": "Namespace name fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f"
+  },
+  "metadata": {
+    "recommendations": 2,
+    "objects": 3,
+    "reported_at": "2023-10-05T07:38:51+02:00",
+    "last_checked_at": "2023-10-05T07:38:51+02:00",
+    "highest_severity": 5
+  },
+  "recommendations": [
+    {
+      "check": "host_network",
+      "description": "Alert on pods/deployment-likes with sharing host's network namespace",
+      "remediation": "Ensure the host's network namespace is not shared.",
+      "objects": [
+        {
+          "kind": "DaemonSet",
+          "uid": "be466de5-12fb-4710-bf70-62deb38ae563"
+        }
+      ]
+    },
+    {
+      "check": "non_isolated_pod",
+      "description": "Alert on deployment-like objects that are not selected by any NetworkPolicy.",
+      "remediation": "Ensure pod does not accept unsafe traffic by isolating it with a NetworkPolicy. See https://cloud.redhat.com/blog/gUID:e-to-kubernetes-ingress-network-policies for more details.",
+      "objects": [
+        {
+          "kind": "DaemonSet",
+          "uid": "be466de5-12fb-4710-bf70-62deb38ae563"
+        },
+        {
+          "kind": "DaemonSet",
+          "uid": "b51716a3-886b-4a67-b153-ce092fc91047"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ## Debug endpoints
