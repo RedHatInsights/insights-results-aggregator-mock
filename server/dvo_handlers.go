@@ -344,3 +344,58 @@ func numberOfObjects(workloads []types.DVOWorkload, namespace string) int {
 	}
 	return objects
 }
+
+// recommendationsForNamespace constructs "recommendations" structure for DVO
+// reports all from specified namespace
+func recommendationsForNamespace(workloads []types.DVOWorkload, namespace string) []DVORecommendation {
+	// return value
+	// (we don't know size of the slice, so it is empty at beginning)
+	recommendations := make([]DVORecommendation, 0)
+
+	// set of unique rules
+	var rules = make(map[string]struct{})
+
+	for _, workload := range workloads {
+		// found workload from specified namespace
+		if workload.NamespaceUID == namespace {
+			// check if the rule is new
+			_, found := rules[workload.Rule]
+
+			// if it is new, add it to report
+			if !found {
+				rules[workload.Rule] = struct{}{}
+				recommendation := DVORecommendation{
+					Check:       workload.Rule,
+					Description: workload.CheckDescription,
+					Remediation: workload.CheckRemediation,
+					Objects:     objectsForRule(workloads, namespace, workload.Rule),
+				}
+				// add the newly found recommendation into the slice
+				recommendations = append(recommendations, recommendation)
+			}
+		}
+	}
+
+	return recommendations
+}
+
+func objectsForRule(workloads []types.DVOWorkload, namespace, rule string) []DVOObject {
+	// return value
+	// (we don't know size of the slice, so it is empty at beginning)
+	objects := make([]DVOObject, 0)
+
+	for _, workload := range workloads {
+		// try to found workload for given namespace and rule
+		if workload.NamespaceUID == namespace && workload.Rule == rule {
+			// workload has been found, so it's time to add a new
+			// object into slice of objects
+			object := DVOObject{
+				Kind: workload.Kind,
+				UID:  workload.UID,
+			}
+			objects = append(objects, object)
+		}
+	}
+
+	return objects
+}
