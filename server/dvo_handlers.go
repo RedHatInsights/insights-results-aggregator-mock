@@ -262,7 +262,7 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 	// prepare response structure
 	var responseData WorkloadsForCluster
 
-	// fill in elementary metadata
+	// fill-in elementary metadata
 	responseData.Status = "ok"
 	responseData.ClusterEntry = ClusterEntry{
 		UUID:        cluster,
@@ -279,6 +279,9 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 		LastCheckedAt:   time.Now().Format(time.RFC3339),
 		HighestSeverity: 5,
 	}
+
+	// fill-in all recommendations
+	responseData.Recommendations = recommendationsForNamespace(workloadsForCluster, namespace)
 
 	// transform response structure into proper JSON payload
 	bytes, err := json.MarshalIndent(responseData, "", "\t")
@@ -297,7 +300,9 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 // getNamespaces returns set of all namespaces, i.e. all items will be unique
 func getNamespaces(workloads []types.DVOWorkload) []string {
 	// set of all namespaces for given cluster
+	// (we don't know size of map, so it will be empty)
 	var namespaces = make(map[string]struct{})
+
 	for _, workload := range workloads {
 		namespaces[workload.NamespaceUID] = struct{}{}
 	}
