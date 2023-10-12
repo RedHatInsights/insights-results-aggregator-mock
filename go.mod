@@ -13,4 +13,5 @@ require (
 	github.com/spf13/viper v1.17.0
 	github.com/stretchr/testify v1.8.4
 	github.com/verdverm/frisby v0.0.0-20170604211311-b16556248a9a
+	google.golang.org/grpc v1.58.3
 )
