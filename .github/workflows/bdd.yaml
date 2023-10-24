@@ -24,3 +24,5 @@ jobs:
         run: wget -O docker-compose.yml https://raw.githubusercontent.com/RedHatInsights/insights-behavioral-spec/main/docker-compose.yml
       - name: Retrieve BDD runner
         run: wget -O bdd_runner.sh https://raw.githubusercontent.com/RedHatInsights/insights-behavioral-spec/main/run_in_docker.sh && chmod +x bdd_runner.sh
+      - name: Run BDD
+        run: ./bdd_runner.sh aggregator-mock-tests .
