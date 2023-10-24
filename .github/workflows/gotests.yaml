@@ -21,9 +21,11 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Unit tests
         run: env
+      - name: Retrieve code coverage
         run: go test -coverprofile coverage.out $(go list ./... | grep -v tests)
+      - name: Display code coverage
         run: go tool cover -func=coverage.out
-        run: bash <(curl -s https://codecov.io/bash)
-      - name: REST API tests
+      - name: REST API tests setup
         run: ./run_on_ci.sh
+      - name: Run REST API tests
         run: ./test.sh
