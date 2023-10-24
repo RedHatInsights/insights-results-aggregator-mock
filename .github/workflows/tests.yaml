@@ -1,4 +1,4 @@
-name: Go linters
+name: Go tests
 
 on:
   - push
