@@ -20,3 +20,5 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Build project
         run: make build
+      - name: Retrieve Docker compose file
+        run: wget -O docker-compose.yml https://raw.githubusercontent.com/RedHatInsights/insights-behavioral-spec/main/docker-compose.yml
