@@ -1094,7 +1094,13 @@ curl -v localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo
         "objects": 3,
         "reported_at": "2023-10-05T07:37:59+02:00",
         "last_checked_at": "2023-10-05T07:37:59+02:00",
-        "highest_severity": 5
+        "highest_severity": 4,
+        "hits_by_severity": {
+          "1": 0,
+          "2": 2,
+          "3": 0,
+          "4": 1
+        }
       }
     },
     {
@@ -1111,7 +1117,13 @@ curl -v localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo
         "objects": 2,
         "reported_at": "2023-10-05T07:37:59+02:00",
         "last_checked_at": "2023-10-05T07:37:59+02:00",
-        "highest_severity": 5
+        "highest_severity": 3,
+        "hits_by_severity": {
+          "1": 0,
+          "2": 0,
+          "3": 1,
+          "4": 0
+        }
       }
     },
     ...
@@ -1165,7 +1177,13 @@ curl localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo/fbcbe2d3-e
     "objects": 3,
     "reported_at": "2023-10-05T07:38:51+02:00",
     "last_checked_at": "2023-10-05T07:38:51+02:00",
-    "highest_severity": 5
+    "highest_severity": 4,
+    "hits_by_severity": {
+          "1": 0,
+          "2": 1,
+          "3": 0,
+          "4": 1
+    }
   },
   "recommendations": [
     {

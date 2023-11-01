@@ -66,11 +66,12 @@ type NamespaceEntry struct {
 
 // MetadataEntry structure contains basic information about workload metadata
 type MetadataEntry struct {
-	Recommendations int    `json:"recommendations"`
-	Objects         int    `json:"objects"`
-	ReportedAt      string `json:"reported_at"`
-	LastCheckedAt   string `json:"last_checked_at"`
-	HighestSeverity int    `json:"highest_severity"`
+	Recommendations int            `json:"recommendations"`
+	Objects         int            `json:"objects"`
+	ReportedAt      string         `json:"reported_at"`
+	LastCheckedAt   string         `json:"last_checked_at"`
+	HighestSeverity int            `json:"highest_severity"`
+	HitsBySeverity  map[string]int `json:"hits_by_severity"`
 }
 
 // DVORecommendation structure represents one DVO-related recommendation
@@ -109,6 +110,7 @@ type DVOObject struct {
 //	                     "reported_at": "{reported_at}",                   // stored in DVO_REPORT table
 //	                     "last_checked_at": "{last_checked_at}",           // stored in DVO_REPORT table
 //	                     "highest_severity": "{highest_severity}",         // computed with the help of Content Service
+//	                     "hits_by_severity": "{hits_by_severity}",         // computed with the help of Content Service
 //	                 },
 //	             },
 //		    ]
@@ -126,6 +128,8 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 		namespaces := getNamespaces(workloadsForCluster)
 		// construct one workload entry
 		for _, namespace := range namespaces {
+			numberOfRecommendations := numberOfRecommendations(workloadsForCluster, namespace)
+
 			workload := Workload{
 				ClusterEntry{
 					UUID:        string(clusterUUID),
@@ -136,11 +140,17 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 					FullName: "Namespace name " + namespace,
 				},
 				MetadataEntry{
-					Recommendations: numberOfRecommendations(workloadsForCluster, namespace),
+					Recommendations: numberOfRecommendations,
 					Objects:         numberOfObjects(workloadsForCluster, namespace),
 					ReportedAt:      time.Now().Format(time.RFC3339),
 					LastCheckedAt:   time.Now().Format(time.RFC3339),
-					HighestSeverity: 5,
+					HighestSeverity: 4,
+					HitsBySeverity: map[string]int{
+						"1": 0,
+						"2": 0,
+						"3": 0,
+						"4": numberOfRecommendations,
+					},
 				},
 			}
 			workloads = append(workloads, workload)
@@ -187,6 +197,7 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 //	        "reported_at": "{reported_at}",                   // stored in DVO_REPORT table
 //	        "last_checked_at": "{last_checked_at}",           // stored in DVO_REPORT table
 //	        "highest_severity": "{highest_severity}",         // computed with the help of Content Service
+//	        "hits_by_severity": "{hits_by_severity}",         // computed with the help of Content Service
 //	    },
 //	    "recommendations": [                                  // list of recommendations for the namespace
 //	        {
@@ -272,12 +283,19 @@ func (server *HTTPServer) dvoNamespaceForCluster(writer http.ResponseWriter, req
 		UUID:     namespace,
 		FullName: "Namespace name " + namespace,
 	}
+	numberOfRecommendations := numberOfRecommendations(workloadsForCluster, namespace)
 	responseData.MetadataEntry = MetadataEntry{
-		Recommendations: numberOfRecommendations(workloadsForCluster, namespace),
+		Recommendations: numberOfRecommendations,
 		Objects:         numberOfObjects(workloadsForCluster, namespace),
 		ReportedAt:      time.Now().Format(time.RFC3339),
 		LastCheckedAt:   time.Now().Format(time.RFC3339),
-		HighestSeverity: 5,
+		HighestSeverity: 4,
+		HitsBySeverity: map[string]int{
+			"1": 0,
+			"2": 0,
+			"3": 0,
+			"4": numberOfRecommendations,
+		},
 	}
 
 	// fill-in all recommendations
