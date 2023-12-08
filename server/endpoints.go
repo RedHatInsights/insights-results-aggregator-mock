@@ -26,6 +26,9 @@ const (
 	// ContentEndpoint defines suffix of the content request endpoint
 	ContentEndpoint = "content"
 
+	// InfoEndpoint defines suffix for the endpoint to return services info
+	InfoEndpoint = "info"
+
 	// DeleteOrganizationsEndpoint deletes all {organizations}(comma separated array). DEBUG only
 	DeleteOrganizationsEndpoint = "organizations/{organizations}"
 	// DeleteClustersEndpoint deletes all {clusters}(comma separated array). DEBUG only

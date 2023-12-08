@@ -206,6 +206,51 @@ func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, _ *
 	}
 }
 
+// serviceInfo method implements the /info endpoint
+func (server *HTTPServer) serviceInfo(writer http.ResponseWriter, _ *http.Request) {
+	log.Info().Msg("Info about the service handler")
+
+	// prepare data structure with mock(!) info
+	responseData := `
+{
+  "info": {
+    "SmartProxy": {
+      "BuildBranch": "master",
+      "BuildCommit": "9e5196b79ef7003265ed6aea67cf20ab9b8439ac",
+      "BuildTime": "Fri 08 Dec 2023 03:35:19 PM CET",
+      "BuildVersion": "v1.0.0",
+      "UtilsVersion": "v1.24.11",
+      "status": "ok"
+    },
+    "Aggregator": {
+      "BuildBranch": "master",
+      "BuildCommit": "43428604c1b972f94635587ac62e9cee04d25b28",
+      "BuildTime": "Fri 08 Dec 2023 03:45:28 PM CET",
+      "BuildVersion": "v1.3.4",
+      "DB_version": "31",
+      "UtilsVersion": "v1.24.12",
+      "status": "ok"
+    },
+    "ContentService": {
+      "BuildBranch": "master",
+      "BuildCommit": "ff305a07cf0bca484355590ac62e9c54320af456",
+      "BuildTime": "Fri 08 Dec 2023 03:45:28 PM CET",
+      "BuildVersion": "v1.0.0",
+      "UtilsVersion": "v1.24.12",
+      "status": "ok"
+    }
+  },
+  "status": "ok"
+}
+`
+
+	err := responses.Send(http.StatusOK, writer, []byte(responseData))
+	if err != nil {
+		handleServerError(err)
+		return
+	}
+}
+
 /*
 // serveContent method implements the /content endpoint
 func (server *HTTPServer) serveContent(writer http.ResponseWriter, request *http.Request) {

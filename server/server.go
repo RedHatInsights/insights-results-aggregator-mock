@@ -136,6 +136,7 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	router.HandleFunc(apiPrefix+MainEndpoint, server.mainEndpoint).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+GroupsEndpoint, server.listOfGroups).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc(apiPrefix+ContentEndpoint, server.serveContentWithGroups).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc(apiPrefix+InfoEndpoint, server.serviceInfo).Methods(http.MethodGet, http.MethodOptions)
 
 	router.HandleFunc(apiPrefix+OrganizationsEndpoint, server.listOfOrganizations).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+ClustersForOrganizationEndpoint, server.listOfClustersForOrganization).Methods(http.MethodGet)

@@ -22,6 +22,7 @@ Mock service mimicking Insights Results Aggregator
 * [Accessing results](#accessing-results)
     * [Settings for localhost](#settings-for-localhost)
     * [Basic endpoints](#basic-endpoints)
+    * [Info endpoint](#info-endpoint)
     * [Rule content](#rule-content)
     * [Groups](#groups)
     * [Clusters per organization](#clusters-per-organization)
@@ -182,10 +183,54 @@ ADDRESS=localhost:8080/api/insights-results-aggregator/v2
 
 ```
 curl -k -v $ADDRESS/
+curl -k -v $ADDRESS/info
 curl -k -v $ADDRESS/groups
 curl -k -v $ADDRESS/content
 curl -k -v $ADDRESS/organizations
 curl -k -v $ADDRESS/clusters
+```
+
+### Info endpoint
+
+Compatible with Smart Proxy:
+
+```
+curl -k -v $ADDRESS/info
+```
+
+Example output:
+
+```
+{
+  "info": {
+    "SmartProxy": {
+      "BuildBranch": "master",
+      "BuildCommit": "9e5196b79ef7003265ed6aea67cf20ab9b8439ac",
+      "BuildTime": "Fri 08 Dec 2023 03:35:19 PM CET",
+      "BuildVersion": "v1.0.0",
+      "UtilsVersion": "v1.24.11",
+      "status": "ok"
+    },
+    "Aggregator": {
+      "BuildBranch": "master",
+      "BuildCommit": "43428604c1b972f94635587ac62e9cee04d25b28",
+      "BuildTime": "Fri 08 Dec 2023 03:45:28 PM CET",
+      "BuildVersion": "v1.3.4",
+      "DB_version": "31",
+      "UtilsVersion": "v1.24.12",
+      "status": "ok"
+    },
+    "ContentService": {
+      "BuildBranch": "master",
+      "BuildCommit": "ff305a07cf0bca484355590ac62e9c54320af456",
+      "BuildTime": "Fri 08 Dec 2023 03:45:28 PM CET",
+      "BuildVersion": "v1.0.0",
+      "UtilsVersion": "v1.24.12",
+      "status": "ok"
+    }
+  },
+  "status": "ok"
+}
 ```
 
 ### Rule content
