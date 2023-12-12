@@ -79,6 +79,7 @@ type DVORecommendation struct {
 	Check      string      `json:"check"`
 	Details    string      `json:"details"`
 	Resolution string      `json:"resolution"`
+	Modified   string      `json:"modified"`
 	Objects    []DVOObject `json:"objects"`
 }
 
@@ -386,6 +387,7 @@ func recommendationsForNamespace(workloads []types.DVOWorkload, namespace string
 					Check:      workload.Rule,
 					Details:    workload.CheckDescription,
 					Resolution: workload.CheckRemediation,
+					Modified:   modifiedForRule(workload.Rule),
 					Objects:    objectsForRule(workloads, namespace, workload.Rule),
 				}
 				// add the newly found recommendation into the slice
@@ -395,6 +397,15 @@ func recommendationsForNamespace(workloads []types.DVOWorkload, namespace string
 	}
 
 	return recommendations
+}
+
+func modifiedForRule(rule string) string {
+	const defaultModifiedTimestamp = "1999-01-02T03:04:05Z"
+	modified, found := data.DVOModifiedMap[rule]
+	if !found {
+		return defaultModifiedTimestamp
+	}
+	return modified
 }
 
 func objectsForRule(workloads []types.DVOWorkload, namespace, rule string) []DVOObject {
