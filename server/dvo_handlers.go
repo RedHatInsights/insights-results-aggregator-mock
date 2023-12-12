@@ -76,10 +76,13 @@ type MetadataEntry struct {
 
 // DVORecommendation structure represents one DVO-related recommendation
 type DVORecommendation struct {
-	Check       string      `json:"check"`
-	Description string      `json:"description"`
-	Remediation string      `json:"remediation"`
-	Objects     []DVOObject `json:"objects"`
+	Check        string      `json:"check"`
+	Details      string      `json:"details"`
+	Resolution   string      `json:"resolution"`
+	Modified     string      `json:"modified"`
+	MoreInfo     string      `json:"more_info"`
+	TemplateData interface{} `json:"extra_data"`
+	Objects      []DVOObject `json:"objects"`
 }
 
 // DVOObject structure
@@ -383,10 +386,13 @@ func recommendationsForNamespace(workloads []types.DVOWorkload, namespace string
 			if !found {
 				rules[workload.Rule] = struct{}{}
 				recommendation := DVORecommendation{
-					Check:       workload.Rule,
-					Description: workload.CheckDescription,
-					Remediation: workload.CheckRemediation,
-					Objects:     objectsForRule(workloads, namespace, workload.Rule),
+					Check:        workload.Rule,
+					Details:      workload.CheckDescription,
+					Resolution:   workload.CheckRemediation,
+					Modified:     modifiedForRule(workload.Rule),
+					MoreInfo:     moreInfoForRule(workload.Rule),
+					TemplateData: templateDataForRule(workload.Rule),
+					Objects:      objectsForRule(workloads, namespace, workload.Rule),
 				}
 				// add the newly found recommendation into the slice
 				recommendations = append(recommendations, recommendation)
@@ -395,6 +401,36 @@ func recommendationsForNamespace(workloads []types.DVOWorkload, namespace string
 	}
 
 	return recommendations
+}
+
+// moreInfoForRule function retrieves `more_info` field value for given rule
+func moreInfoForRule(rule string) string {
+	const defaultMoreInfoValue = "no additional info provided for this rule"
+	moreInfo, found := data.DVOMoreInfoMap[rule]
+	if !found {
+		return defaultMoreInfoValue
+	}
+	return moreInfo
+}
+
+// templateDataForRule function retrieves `extra_data` field value for given rule
+func templateDataForRule(rule string) interface{} {
+	var emptyExtraData = struct{}{}
+	extraData, found := data.DVOTemplateDataMap[rule]
+	if !found {
+		return emptyExtraData
+	}
+	return extraData
+}
+
+// modifiedForRule function retrieves `modified` field value for given rule
+func modifiedForRule(rule string) string {
+	const defaultModifiedTimestamp = "1999-01-02T03:04:05Z"
+	modified, found := data.DVOModifiedMap[rule]
+	if !found {
+		return defaultModifiedTimestamp
+	}
+	return modified
 }
 
 func objectsForRule(workloads []types.DVOWorkload, namespace, rule string) []DVOObject {

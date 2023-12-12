@@ -17,15 +17,117 @@ limitations under the License.
 package data
 
 import (
+	"encoding/json"
+
 	"github.com/RedHatInsights/insights-results-aggregator-mock/types"
 )
 
 // DVOWorkloads contains a map of DVO recommendations for multiple clusters
 var DVOWorkloads map[types.ClusterName][]types.DVOWorkload
 
+// DVOModifiedMap contains map between rule and it's `modification` timestamp
+var DVOModifiedMap map[string]string
+
+// DVOMoreInfoMap contains map between rule and it's `more_info` template field
+var DVOMoreInfoMap map[string]string
+
+// DVOTemplateDataMap contains map between rule and it's `extra_data` field
+var DVOTemplateDataMap map[string]interface{}
+
 // init is called before the program enters the main function, so it is perfect
 // time to initialize maps etc.
 func init() {
+	DVOModifiedMap = make(map[string]string)
+	DVOModifiedMap["host_network"] = "2020-04-08T00:42:00Z"
+	DVOModifiedMap["host_pid"] = "2021-04-08T00:42:00Z"
+	DVOModifiedMap["non_isolated_pod"] = "2022-01-01T00:00:00Z"
+	DVOModifiedMap["unset_memory_requirements"] = "2023-01-01T00:00:00Z"
+
+	DVOMoreInfoMap = make(map[string]string)
+	DVOMoreInfoMap["host_network"] = "For more info about the host network, refer to [documentation](https://www.google.com)"
+	DVOMoreInfoMap["host_pid"] = "For more info about host pid, refer to man page 8 ip"
+	DVOMoreInfoMap["non_isolated_pod"] = "There is no more info about this rule, sorry"
+	DVOMoreInfoMap["unset_memory_requirements"] = "Don't panic"
+
+	DVOTemplateDataMap = make(map[string]interface{})
+	DVOTemplateDataMap["host_network"] = stringToJSONRawMessage(`{
+		"degraded_operators": [
+			{
+				"available": {
+					"last_trans_time": "2020-04-21T12:45:10Z",
+					"message": "Available: 2 nodes are active; 1 nodes are at revision 0; 2 nodes are at revision 2; 0 nodes have achieved new revision 3",
+					"reason": "AsExpected",
+					"status": true
+				},
+				"degraded": {
+					"last_trans_time": "2020-04-21T12:46:14Z",
+					"message": "NodeControllerDegraded: All master nodes are ready\nStaticPodsDegraded: nodes/ip-10-0-137-172.us-east-2.compute.internal pods/kube-apiserver-ip-10-0-137-172.us-east-2.compute.internal container=\"kube-apiserver-3\" is not ready",
+					"reason": "NodeInstallerDegradedInstallerPodFailed",
+					"status": true
+				},
+				"name": "kube-apiserver",
+				"progressing": {
+					"last_trans_time": "2020-04-21T12:43:00Z",
+					"message": "Progressing: 1 nodes are at revision 0; 2 nodes are at revision 2; 0 nodes have achieved new revision 3",
+					"reason": null,
+					"status": true
+				},
+				"upgradeable": {
+					"last_trans_time": "2020-04-21T12:42:52Z",
+					"message": null,
+					"reason": "AsExpected",
+					"status": true
+				},
+				"version": "4.3.13"
+			}
+		],
+		"error_key": "NODE_INSTALLER_DEGRADED",
+		"type": "rule"
+	}`)
+	DVOTemplateDataMap["host_pid"] = stringToJSONRawMessage(`{
+	    "nodes": [
+		{
+		    "name": "foo1",
+		    "role": "master",
+		    "memory": 8.16,
+		    "memory_req": 16
+		}
+	    ],
+	    "link": "https://docs.openshift.com/container-platform/4.1/installing/installing_bare_metal/installing-bare-metal.html#minimum-resource-requirements_installing-bare-metal",
+	    "type": "rule",
+	    "error_key": "NODES_MINIMUM_REQUIREMENTS_NOT_MET"
+	}`)
+	DVOTemplateDataMap["non_isolated_pod"] = stringToJSONRawMessage(`{
+	    "type": "rule",
+	    "error_key": "BUGZILLA_BUG_1766907"
+	}`)
+	DVOTemplateDataMap["unset_memory_requirements"] = stringToJSONRawMessage(`{
+	    "nodes_with_different_version": [
+		{
+		    "Node": "oc1",
+		    "Kubelet Version": "v1.14.6+0a21dd3b3",
+		    "role": "worker"
+		},
+		{
+		    "Node": "oc2",
+		    "Kubelet Version": "v1.14.6+0a21dd3b3",
+		    "role": "worker"
+		},
+		{
+		    "Node": "oc3",
+		    "Kubelet Version": "v1.14.6+d39ad8449",
+		    "role": "worker"
+		}
+	    ],
+	    "kcs_link": "https://access.redhat.com/solutions/4602641",
+	    "type": "rule",
+	    "error_key": "NODE_KUBELET_VERSION"
+	}`)
+	DVOTemplateDataMap["unset_cpu_requirements"] = stringToJSONRawMessage(`{
+	    "type": "rule",
+	    "error_key": "BUGZILLA_BUG_1766907"
+	}`)
+
 	DVOWorkloads = make(map[types.ClusterName][]types.DVOWorkload, 1)
 	workloads := []types.DVOWorkload{
 		types.DVOWorkload{Rule: "host_network", CheckDescription: "Alert on pods/deployment-likes with sharing host's network namespace", CheckRemediation: "Ensure the host's network namespace is not shared.", Kind: "DaemonSet", NamespaceUID: "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f", UID: "be466de5-12fb-4710-bf70-62deb38ae563"},
@@ -2603,4 +2705,15 @@ func init() {
 	DVOWorkloads["00000001-0001-0001-0001-000000000004"] = workloads[200:300]
 	DVOWorkloads["00000001-0001-0001-0001-000000000005"] = workloads[300:400]
 	DVOWorkloads["00000001-0001-0001-0001-000000000006"] = workloads[400:500]
+}
+
+func stringToJSONRawMessage(obj string) json.RawMessage {
+	var res json.RawMessage
+
+	err := json.Unmarshal([]byte(obj), &res)
+	if err != nil {
+		panic(err)
+	}
+
+	return res
 }
