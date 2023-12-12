@@ -1208,58 +1208,98 @@ curl localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo/fbcbe2d3-e
 
 ```json
 {
-  "status": "ok",
-  "cluster": {
-    "uuid": "00000001-0001-0001-0001-000000000002",
-    "display_name": "Cluster name 00000001-0001-0001-0001-000000000002"
-  },
-  "namespace": {
-    "uuid": "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f",
-    "name": "Namespace name fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f"
-  },
-  "metadata": {
-    "recommendations": 2,
-    "objects": 3,
-    "reported_at": "2023-10-05T07:38:51+02:00",
-    "last_checked_at": "2023-10-05T07:38:51+02:00",
-    "highest_severity": 4,
-    "hits_by_severity": {
-          "1": 0,
-          "2": 1,
-          "3": 0,
-          "4": 1
-    }
-  },
-  "recommendations": [
-    {
-      "check": "host_network",
-      "details": "Alert on pods/deployment-likes with sharing host's network namespace",
-      "resolution": "Ensure the host's network namespace is not shared.",
-      "modified": "2022-01-01T00:00:00Z",
-      "objects": [
-        {
-          "kind": "DaemonSet",
-          "uid": "be466de5-12fb-4710-bf70-62deb38ae563"
-        }
-      ]
+    "status": "ok",
+    "cluster": {
+        "uuid": "00000001-0001-0001-0001-000000000002",
+        "display_name": "Cluster name 00000001-0001-0001-0001-000000000002"
     },
-    {
-      "check": "non_isolated_pod",
-      "details": "Alert on deployment-like objects that are not selected by any NetworkPolicy.",
-      "resolution": "Ensure pod does not accept unsafe traffic by isolating it with a NetworkPolicy. See https://cloud.redhat.com/blog/gUID:e-to-kubernetes-ingress-network-policies for more details.",
-      "modified": "2022-01-01T00:00:00Z",
-      "objects": [
+    "namespace": {
+        "uuid": "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f",
+        "name": "Namespace name fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f"
+    },
+    "metadata": {
+        "recommendations": 2,
+        "objects": 3,
+        "reported_at": "2023-12-12T10:35:17+01:00",
+        "last_checked_at": "2023-12-12T10:35:17+01:00",
+        "highest_severity": 4,
+        "hits_by_severity": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 2
+        }
+    },
+    "recommendations": [
         {
-          "kind": "DaemonSet",
-          "uid": "be466de5-12fb-4710-bf70-62deb38ae563"
+            "check": "host_network",
+            "details": "Alert on pods/deployment-likes with sharing host's network namespace",
+            "resolution": "Ensure the host's network namespace is not shared.",
+            "modified": "2020-04-08T00:42:00Z",
+            "more_info": "For more info about the host network, refer to [documentation](https://www.google.com)",
+            "extra_data": {
+                "degraded_operators": [
+                    {
+                        "available": {
+                            "last_trans_time": "2020-04-21T12:45:10Z",
+                            "message": "Available: 2 nodes are active; 1 nodes are at revision 0; 2 nodes are at revision 2; 0 nodes have achieved new revision 3",
+                            "reason": "AsExpected",
+                            "status": true
+                        },
+                        "degraded": {
+                            "last_trans_time": "2020-04-21T12:46:14Z",
+                            "message": "NodeControllerDegraded: All master nodes are ready\nStaticPodsDegraded: nodes/ip-10-0-137-172.us-east-2.compute.internal pods/kube-apiserver-ip-10-0-137-172.us-east-2.compute.internal container=\"kube-apiserver-3\" is not ready",
+                            "reason": "NodeInstallerDegradedInstallerPodFailed",
+                            "status": true
+                        },
+                        "name": "kube-apiserver",
+                        "progressing": {
+                            "last_trans_time": "2020-04-21T12:43:00Z",
+                            "message": "Progressing: 1 nodes are at revision 0; 2 nodes are at revision 2; 0 nodes have achieved new revision 3",
+                            "reason": null,
+                            "status": true
+                        },
+                        "upgradeable": {
+                            "last_trans_time": "2020-04-21T12:42:52Z",
+                            "message": null,
+                            "reason": "AsExpected",
+                            "status": true
+                        },
+                        "version": "4.3.13"
+                    }
+                ],
+                "error_key": "NODE_INSTALLER_DEGRADED",
+                "type": "rule"
+            },
+            "objects": [
+                {
+                    "kind": "DaemonSet",
+                    "uid": "be466de5-12fb-4710-bf70-62deb38ae563"
+                }
+            ]
         },
         {
-          "kind": "DaemonSet",
-          "uid": "b51716a3-886b-4a67-b153-ce092fc91047"
+            "check": "non_isolated_pod",
+            "details": "Alert on deployment-like objects that are not selected by any NetworkPolicy.",
+            "resolution": "Ensure pod does not accept unsafe traffic by isolating it with a NetworkPolicy. See https://cloud.redhat.com/blog/gUID:e-to-kubernetes-ingress-network-policies for more details.",
+            "modified": "2022-01-01T00:00:00Z",
+            "more_info": "There is no more info about this rule, sorry",
+            "extra_data": {
+                "type": "rule",
+                "error_key": "BUGZILLA_BUG_1766907"
+            },
+            "objects": [
+                {
+                    "kind": "DaemonSet",
+                    "uid": "be466de5-12fb-4710-bf70-62deb38ae563"
+                },
+                {
+                    "kind": "DaemonSet",
+                    "uid": "b51716a3-886b-4a67-b153-ce092fc91047"
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
 ```
 
