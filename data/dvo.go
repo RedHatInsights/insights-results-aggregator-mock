@@ -23,9 +23,18 @@ import (
 // DVOWorkloads contains a map of DVO recommendations for multiple clusters
 var DVOWorkloads map[types.ClusterName][]types.DVOWorkload
 
+// DVOModifiedMap contains map between rule and it's modificatin timestamp
+var DVOModifiedMap map[string]string
+
 // init is called before the program enters the main function, so it is perfect
 // time to initialize maps etc.
 func init() {
+	DVOModifiedMap = make(map[string]string)
+	DVOModifiedMap["host_network"] = "2020-04-08T00:42:00Z"
+	DVOModifiedMap["host_pid"] = "2021-04-08T00:42:00Z"
+	DVOModifiedMap["non_isolated_pod"] = "2022-01-01T00:00:00Z"
+	DVOModifiedMap["unset_memory_requirements"] = "2023-01-01T00:00:00Z"
+
 	DVOWorkloads = make(map[types.ClusterName][]types.DVOWorkload, 1)
 	workloads := []types.DVOWorkload{
 		types.DVOWorkload{Rule: "host_network", CheckDescription: "Alert on pods/deployment-likes with sharing host's network namespace", CheckRemediation: "Ensure the host's network namespace is not shared.", Kind: "DaemonSet", NamespaceUID: "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f", UID: "be466de5-12fb-4710-bf70-62deb38ae563"},
