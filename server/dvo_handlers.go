@@ -78,7 +78,7 @@ type MetadataEntry struct {
 type DVORecommendation struct {
 	Check       string      `json:"check"`
 	Description string      `json:"description"`
-	Remediation string      `json:"remediation"`
+	Resolution  string      `json:"resolution"`
 	Objects     []DVOObject `json:"objects"`
 }
 
@@ -385,7 +385,7 @@ func recommendationsForNamespace(workloads []types.DVOWorkload, namespace string
 				recommendation := DVORecommendation{
 					Check:       workload.Rule,
 					Description: workload.CheckDescription,
-					Remediation: workload.CheckRemediation,
+					Resolution:  workload.CheckRemediation,
 					Objects:     objectsForRule(workloads, namespace, workload.Rule),
 				}
 				// add the newly found recommendation into the slice

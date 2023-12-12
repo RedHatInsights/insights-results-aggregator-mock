@@ -1234,7 +1234,7 @@ curl localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo/fbcbe2d3-e
     {
       "check": "host_network",
       "description": "Alert on pods/deployment-likes with sharing host's network namespace",
-      "remediation": "Ensure the host's network namespace is not shared.",
+      "resolution": "Ensure the host's network namespace is not shared.",
       "objects": [
         {
           "kind": "DaemonSet",
@@ -1245,7 +1245,7 @@ curl localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo/fbcbe2d3-e
     {
       "check": "non_isolated_pod",
       "description": "Alert on deployment-like objects that are not selected by any NetworkPolicy.",
-      "remediation": "Ensure pod does not accept unsafe traffic by isolating it with a NetworkPolicy. See https://cloud.redhat.com/blog/gUID:e-to-kubernetes-ingress-network-policies for more details.",
+      "resolution": "Ensure pod does not accept unsafe traffic by isolating it with a NetworkPolicy. See https://cloud.redhat.com/blog/gUID:e-to-kubernetes-ingress-network-policies for more details.",
       "objects": [
         {
           "kind": "DaemonSet",
