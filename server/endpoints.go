@@ -119,7 +119,7 @@ const (
 	UpgradeRisksPredictionEndpoint = "cluster/{cluster}/upgrade-risks-prediction"
 	// UpgradeRisksPredictionMultiClusterEndpoint returns the predictions about
 	// upgrading a list of clusters
-	UpgradeRisksPredictionMultiClusterEndpoint = "upgrade-risks-prediction"
+	UpgradeRisksPredictionMultiClusterEndpoint = "upgrade-risks-prediction" // #nosec G101
 
 	// MetricsEndpoint returns prometheus metrics
 	MetricsEndpoint = "metrics"
