@@ -40,6 +40,8 @@ const (
 	ClusterUnavailable = "897ec1a1-4679-4122-aacb-f0ae9f9e1a5f"
 	// ClusterNoData is the cluster name for the response when the Upgrade risks prediction service returns a 404
 	ClusterNoData = "234ec1a1-4679-4122-aacb-f0ae9f9e1a56"
+
+	clusterHasNoData = "No data for the cluster"
 )
 
 // method upgradeRisksPrediction return a recommendation to upgrade or not a cluster
@@ -100,8 +102,8 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 		}
 
 	case ClusterNoData:
-		log.Info().Msg("No data for the cluster")
-		err = responses.SendNotFound(writer, "No data for the cluster")
+		log.Info().Msg(clusterHasNoData)
+		err = responses.SendNotFound(writer, clusterHasNoData)
 		if err != nil {
 			log.Error().Err(err).Msg(responseDataError)
 		}
@@ -168,10 +170,10 @@ func (server *HTTPServer) upgradeRisksPredictionMultiCluster(writer http.Respons
 
 		case ClusterNoData:
 		default:
-			log.Info().Msg("No data for the cluster")
+			log.Info().Msg(clusterHasNoData)
 			responseArray = append(responseArray, types.ClusterUpgradeRiskPrediction{
 				Cluster: cluster,
-				Status:  "No data for the cluster",
+				Status:  clusterHasNoData,
 			})
 		}
 	}
