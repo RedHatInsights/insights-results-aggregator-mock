@@ -165,6 +165,7 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	// Upgrade risks prediction endpoints. Please look into upgrade_risks_prediction.go
 	// for more information about this endpoint
 	router.HandleFunc(apiPrefix+UpgradeRisksPredictionEndpoint, server.upgradeRisksPrediction).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+UpgradeRisksPredictionMultiClusterEndpoint, server.upgradeRisksPredictionMultiCluster).Methods(http.MethodPost)
 
 	// OpenAPI specs
 	router.HandleFunc(openAPIURL, server.serveAPISpecFile).Methods(http.MethodGet)

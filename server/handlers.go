@@ -140,7 +140,7 @@ func readRequestID(writer http.ResponseWriter, request *http.Request) (types.Req
 func getRouterParam(request *http.Request, paramName string) (string, error) {
 	value, found := mux.Vars(request)[paramName]
 	if !found {
-		return "", errors.New("Missing param")
+		return "", errors.New("missing param")
 	}
 
 	return value, nil
