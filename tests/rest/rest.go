@@ -29,26 +29,30 @@ func ServerTests() {
 
 // BasicTests implements basic tests for REST API apiPrefix
 func BasicTests() {
-	// implementation of these tests is stored in entrypoint.go
+	// tests for OpenAPI specification that is accessible via its endpoint as well
+	// implementation of these tests is stored in openapi.go
+	checkOpenAPISpecification()
+
+	// implementations of these tests are stored in entrypoint.go
 	checkRestAPIEntryPoint()
 	checkNonExistentEntryPoint()
 	checkWrongEntryPoint()
 	checkWrongMethodsForEntryPoint()
 
-	// implementation of these tests is stored in groups.go
+	// implementations of these tests are stored in groups.go
 	checkGroupsEndpoint()
 	checkWrongMethodsForGroupsEndpoint()
 
-	// implementation of these tests is stored in organizations.go
+	// implementations of these tests are stored in organizations.go
 	checkOrganizationsEndpoint()
 	checkWrongMethodsForOrganizationsEndpoint()
 
-	// implementation of these tests is stored in clusters.go
+	// implementations of these tests are stored in clusters.go
 	checkClustersEndpointForOrganization1()
 	checkClustersEndpointForOrganization2()
 	checkWrongMethodsForClustersEndpoint()
 
-	// implementation of these tests is stored in reports.go
+	// implementations of these tests are stored in reports.go
 	checkReportForKnownOrganizationKnownCluster()
 	checkReportForUnknownOrganization()
 	checkReportForImproperOrganization()
@@ -59,5 +63,69 @@ func BasicTests() {
 	checkReportForKnownCluster()
 	checkReportForUnknownCluster()
 	checkReportForImproperCluster()
+	checkReportForFailedCluster200()
+	checkReportForFailedCluster400()
+	checkReportForFailedCluster500()
+	checkReportForFailedClusterNegativeTestCase()
 	checkWrongMethodsForClusterReportEndpoint()
+
+	checkReportsForAllClustersInOrganizationPositiveTestCase()
+
+	// implementations of these tests is stored in multiple_reports.go
+	checkMultipleReportsForKnownOrganizationAnd1KnownClusterUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAnd2KnownClustersUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAnd3KnownClustersUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAndUnknownClusterUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAndKnownAndUnknownClusterUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAnd2KnownAndUnknownClusterUsingPostMethod()
+	checkMultipleReportsForKnownOrganizationAnd3KnownAndUnknownClusterUsingPostMethod()
+
+	// implementations of these tests are stored in content.go
+	checkContentEndpoint()
+	checkWrongMethodsForContentEndpoint()
+
+	// implementations of these tests are stored in requests.go
+	checkListAllRequestIDsForKnownCluster()
+	checkListAllRequestIDsEmptyList()
+	checkListAllRequestIDsForUnknownCluster()
+	checkListSelectedRequestIDsForKnownCluster()
+	checkListSelectedRequestIDsForUnknownCluster()
+	checkListSelectedRequestIDsEmptyList()
+	checkRetrieveRequestStatusForKnownClusterAndKnownRequest()
+	checkRetrieveRequestStatusForKnownClusterAndUnknownRequest()
+	checkRetrieveRequestStatusForUnknownCluster()
+	checkRetrieveRequestReportForKnownClusterAndKnownRequest()
+	checkRetrieveRequestReportForKnownClusterAndUnknownRequest()
+	checkRetrieveRequestReportForUnknownCluster()
+
+	// implementations of these tests are stored in rules.go
+	checkRetrieveClusterDetailsForKnownRule()
+	checkRetrieveClusterDetailsForUnknownRule()
+	checkRetrieveClusterDetailsForImproperRule()
+
+	// implementation of these tests are stored in acks.go
+	checkRetrieveListOfAcks()
+	checkAckRule()
+	checkAckRuleWithIncorrectName()
+	checkAckRuleViaGetEndpoint()
+	checkAckRuleSeveralTimes()
+	checkAckIncorrectRule()
+	checkUpdateExistingRule()
+	checkUpdateNonExistingRule()
+	checkUpdateIncorrectRule()
+	checkDeleteExistingRule()
+	checkDeleteNonExistingRule()
+	checkDeleteIncorrectRule()
+
+	// implementation of these tests are stored in dvo.go
+	checkListOfDVONamespaces()
+	checkListOfDVONamespacesOtherMethods()
+
+	// implementation of these tests are stored in upgrade_risk.go
+	checkUpgradeRiskEndpointWithClusterWithPositiveRiskPrediction()
+	checkUpgradeRiskEndpointWithClusterWithNegativeRiskPrediction()
+	checkUpgradeRiskEndpointWithClusterWithNoContent()
+	checkUpgradeRiskEndpointUnavailableServiceCase()
+	checkUpgradeRiskEndpointNotFoundCase()
+	checkUpgradeRiskEndpointForImproperClusterName()
 }

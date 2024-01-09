@@ -53,7 +53,7 @@ const StatusProcessed = "processed"
 
 // readOrganizationID retrieves organization id from request
 // if it's not possible, it writes http error to the writer and returns error
-func readOrganizationID(writer http.ResponseWriter, request *http.Request) (types.OrgID, error) {
+func readOrganizationID(_ http.ResponseWriter, request *http.Request) (types.OrgID, error) {
 	organizationID, err := getRouterPositiveIntParam(request, "organization")
 	if err != nil {
 		return 0, err
@@ -62,7 +62,7 @@ func readOrganizationID(writer http.ResponseWriter, request *http.Request) (type
 }
 
 // readRuleSelector retrieves rule selector from request
-func readRuleSelector(writer http.ResponseWriter, request *http.Request) (types.RuleSelector, error) {
+func readRuleSelector(_ http.ResponseWriter, request *http.Request) (types.RuleSelector, error) {
 	ruleSelector, err := getRouterParam(request, "rule_selector")
 	if err != nil {
 		return "", err
@@ -106,7 +106,7 @@ func ValidateRequestID(requestID string) (types.RequestID, error) {
 
 // readClusterName retrieves cluster name from request
 // if it's not possible, it writes http error to the writer and returns error
-func readClusterName(writer http.ResponseWriter, request *http.Request) (types.ClusterName, error) {
+func readClusterName(_ http.ResponseWriter, request *http.Request) (types.ClusterName, error) {
 	clusterName, err := getRouterParam(request, "cluster")
 	if err != nil {
 		return "", err
@@ -122,7 +122,7 @@ func readClusterName(writer http.ResponseWriter, request *http.Request) (types.C
 
 // readRequestID retrieves request ID from request
 // if it's not possible, it writes http error to the writer and returns error
-func readRequestID(writer http.ResponseWriter, request *http.Request) (types.RequestID, error) {
+func readRequestID(_ http.ResponseWriter, request *http.Request) (types.RequestID, error) {
 	requestID, err := getRouterParam(request, "request_id")
 	if err != nil {
 		return "", err
@@ -189,7 +189,7 @@ func (server *HTTPServer) serveAPISpecFile(writer http.ResponseWriter, request *
 
 // serveContentWithGroups method implements the /content endpoint that also
 // returns group info
-func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, _ *http.Request) {
 	log.Info().Msg("Content with groups handler")
 
 	server.initGroupList()
@@ -200,6 +200,51 @@ func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, req
 	responseData["groups"] = server.groupsList
 
 	err := responses.SendOK(writer, responseData)
+	if err != nil {
+		handleServerError(err)
+		return
+	}
+}
+
+// serviceInfo method implements the /info endpoint
+func (server *HTTPServer) serviceInfo(writer http.ResponseWriter, _ *http.Request) {
+	log.Info().Msg("Info about the service handler")
+
+	// prepare data structure with mock(!) info
+	responseData := `
+{
+  "info": {
+    "SmartProxy": {
+      "BuildBranch": "master",
+      "BuildCommit": "9e5196b79ef7003265ed6aea67cf20ab9b8439ac",
+      "BuildTime": "Fri 08 Dec 2023 03:35:19 PM CET",
+      "BuildVersion": "v1.0.0",
+      "UtilsVersion": "v1.24.11",
+      "status": "ok"
+    },
+    "Aggregator": {
+      "BuildBranch": "master",
+      "BuildCommit": "43428604c1b972f94635587ac62e9cee04d25b28",
+      "BuildTime": "Fri 08 Dec 2023 03:45:28 PM CET",
+      "BuildVersion": "v1.3.4",
+      "DB_version": "31",
+      "UtilsVersion": "v1.24.12",
+      "status": "ok"
+    },
+    "ContentService": {
+      "BuildBranch": "master",
+      "BuildCommit": "ff305a07cf0bca484355590ac62e9c54320af456",
+      "BuildTime": "Fri 08 Dec 2023 03:45:28 PM CET",
+      "BuildVersion": "v1.0.0",
+      "UtilsVersion": "v1.24.12",
+      "status": "ok"
+    }
+  },
+  "status": "ok"
+}
+`
+
+	err := responses.Send(http.StatusOK, writer, []byte(responseData))
 	if err != nil {
 		handleServerError(err)
 		return
@@ -233,14 +278,14 @@ func (server *HTTPServer) initGroupList() {
 }
 
 // listOfGroups returns the list of defined groups
-func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) listOfGroups(writer http.ResponseWriter, _ *http.Request) {
 	log.Info().Msg("List of groups handler")
 
 	server.initGroupList()
 
 	err := responses.SendOK(writer, responses.BuildOkResponseWithData("groups", server.groupsList))
 	if err != nil {
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("List of groups handler")
 		handleServerError(err)
 		return
 	}
@@ -298,7 +343,7 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 			handleServerError(err)
 			return
 		}
-		log.Info().Int("Code", int(code)).Msg("Failed clusters")
+		log.Info().Int("Code", code).Msg("Failed clusters")
 		writer.WriteHeader(code)
 		return
 	}
@@ -380,6 +425,10 @@ func (server *HTTPServer) readReportForClusters(writer http.ResponseWriter, requ
 		return
 	}
 
+	// server response has JSON format for this endpoint
+	writer.Header().Set(contentType, appJSON)
+
+	// construct reports for all clusters in a list
 	for _, clusterName := range clusterList.Clusters {
 		log.Info().Str("cluster name", clusterName).Msg("result for cluster")
 		clusterName := types.ClusterName(clusterName)
@@ -401,11 +450,15 @@ func (server *HTTPServer) readReportForClusters(writer http.ResponseWriter, requ
 		generatedReports.ClusterList = append(generatedReports.ClusterList, clusterName)
 		generatedReports.Reports[clusterName] = report
 	}
+
+	// try to serialize all reports
 	bytes, err := json.MarshalIndent(generatedReports, "", "\t")
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
 		return
 	}
+
+	// send report back to client
 	_, err = writer.Write(bytes)
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
@@ -447,7 +500,7 @@ func parseRuleSelector(ruleSelector types.RuleSelector) (types.Component, types.
 
 	if len(splitedRuleID) != 2 {
 		err := fmt.Errorf("invalid rule ID, it must contain only rule ID and error key separated by |")
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("parse rule selector")
 		return types.Component(""), types.ErrorKey(""), err
 	}
 
@@ -458,7 +511,7 @@ func parseRuleSelector(ruleSelector types.RuleSelector) (types.Component, types.
 
 	if !isRuleIDValid || !isErrorKeyValid {
 		err := fmt.Errorf("invalid rule ID, each part of ID must contain only latin characters, number, underscores or dots")
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("rule name validity check")
 		return types.Component(""), types.ErrorKey(""), err
 	}
 
@@ -501,7 +554,10 @@ func (server *HTTPServer) ruleClusterDetailEndpoint(writer http.ResponseWriter, 
 	// check for missing/improper selector
 	if err != nil {
 		log.Error().Err(err).Msg("unable to read rule selector")
-		// everything has been handled already
+		err = responses.SendBadRequest(writer, err.Error())
+		if err != nil {
+			log.Error().Err(err).Msg(responseDataError)
+		}
 		return
 	}
 
@@ -522,6 +578,7 @@ func (server *HTTPServer) ruleClusterDetailEndpoint(writer http.ResponseWriter, 
 	log.Info().Int("cluster count", len(clusters)).Msg("Clusters hitting the rule")
 
 	// prepare response
+	writer.Header().Set(contentType, appJSON)
 	var hittingClusters HittingClusters
 
 	// first fill-in metadata
@@ -808,10 +865,14 @@ func (server *HTTPServer) readRuleHitsForRequestID(writer http.ResponseWriter, r
 	}
 }
 
-func (server *HTTPServer) exit(writer http.ResponseWriter, request *http.Request) {
+func (server *HTTPServer) exit(writer http.ResponseWriter, _ *http.Request) {
 	err := responses.SendOK(writer, responses.BuildOkResponse())
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
+	}
+	err = server.Storage.Close()
+	if err != nil {
+		log.Error().Err(err).Msg("Storage close error")
 	}
 	err = server.Stop(context.Background())
 	if err != nil {

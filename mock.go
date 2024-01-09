@@ -49,16 +49,16 @@ var (
 	serverInstance *server.HTTPServer
 
 	// BuildVersion contains the major.minor version of the CLI client
-	BuildVersion string = "*not set*"
+	BuildVersion = "*not set*"
 
 	// BuildTime contains timestamp when the CLI client has been built
-	BuildTime string = "*not set*"
+	BuildTime = "*not set*"
 
 	// BuildBranch contains Git branch used to build this application
-	BuildBranch string = "*not set*"
+	BuildBranch = "*not set*"
 
 	// BuildCommit contains Git commit used to build this application
-	BuildCommit string = "*not set*"
+	BuildCommit = "*not set*"
 )
 
 // startService starts service and returns error code
@@ -82,7 +82,12 @@ func startService(config *conf.ConfigStruct) int {
 
 	storageInstance, err := storage.New(config.Paths.MockDataPath)
 	if err != nil {
-		log.Error().Err(err).Msg("Storage init error")
+		log.Error().Err(err).Msg("Storage construction error")
+		return ExitStatusServerError
+	}
+	err = storageInstance.Init()
+	if err != nil {
+		log.Error().Err(err).Msg("Storage initialization error")
 		return ExitStatusServerError
 	}
 
@@ -158,7 +163,7 @@ func printConfig(config *conf.ConfigStruct) int {
 	configBytes, err := json.MarshalIndent(config, "", "    ")
 
 	if err != nil {
-		log.Error().Err(err)
+		log.Error().Err(err).Msg("print config")
 		return ExitStatusOther
 	}
 

@@ -22,6 +22,7 @@ Mock service mimicking Insights Results Aggregator
 * [Accessing results](#accessing-results)
     * [Settings for localhost](#settings-for-localhost)
     * [Basic endpoints](#basic-endpoints)
+    * [Info endpoint](#info-endpoint)
     * [Rule content](#rule-content)
     * [Groups](#groups)
     * [Clusters per organization](#clusters-per-organization)
@@ -76,8 +77,17 @@ Mock service mimicking Insights Results Aggregator
         * [Response from the service](#response-from-the-service-2)
         * [Response in case of empty result set](#response-in-case-of-empty-result-set)
         * [Response in case of improper request](#response-in-case-of-improper-request)
+* [Endpoints to retrieve information about DVO namespaces](#endpoints-to-retrieve-information-about-dvo-namespaces)
+    * [List of all DVO namespaces](#list-of-all-dvo-namespaces)
+        * [Request to the service](#request-to-the-service)
+        * [Response from the service](#response-from-the-service-3)
+    * [DVO Recommendations for selected cluster and namespace](#dvo-recommendations-for-selected-cluster-and-namespace)
+        * [Request to the service](#request-to-the-service-1)
+        * [Example with data:](#example-with-data)
+        * [Response from the service](#response-from-the-service-4)
 * [Debug endpoints](#debug-endpoints)
     * [Exit HTTP server gracefully](#exit-http-server-gracefully)
+* [Definition of Done for new features and fixes](#definition-of-done-for-new-features-and-fixes)
 * [BDD tests](#bdd-tests)
 * [Package manifest](#package-manifest)
 
@@ -173,10 +183,54 @@ ADDRESS=localhost:8080/api/insights-results-aggregator/v2
 
 ```
 curl -k -v $ADDRESS/
+curl -k -v $ADDRESS/info
 curl -k -v $ADDRESS/groups
 curl -k -v $ADDRESS/content
 curl -k -v $ADDRESS/organizations
 curl -k -v $ADDRESS/clusters
+```
+
+### Info endpoint
+
+Compatible with Smart Proxy:
+
+```
+curl -k -v $ADDRESS/info
+```
+
+Example output:
+
+```
+{
+  "info": {
+    "SmartProxy": {
+      "BuildBranch": "master",
+      "BuildCommit": "9e5196b79ef7003265ed6aea67cf20ab9b8439ac",
+      "BuildTime": "Fri 08 Dec 2023 03:35:19 PM CET",
+      "BuildVersion": "v1.0.0",
+      "UtilsVersion": "v1.24.11",
+      "status": "ok"
+    },
+    "Aggregator": {
+      "BuildBranch": "master",
+      "BuildCommit": "43428604c1b972f94635587ac62e9cee04d25b28",
+      "BuildTime": "Fri 08 Dec 2023 03:45:28 PM CET",
+      "BuildVersion": "v1.3.4",
+      "DB_version": "31",
+      "UtilsVersion": "v1.24.12",
+      "status": "ok"
+    },
+    "ContentService": {
+      "BuildBranch": "master",
+      "BuildCommit": "ff305a07cf0bca484355590ac62e9c54320af456",
+      "BuildTime": "Fri 08 Dec 2023 03:45:28 PM CET",
+      "BuildVersion": "v1.0.0",
+      "UtilsVersion": "v1.24.12",
+      "status": "ok"
+    }
+  },
+  "status": "ok"
+}
 ```
 
 ### Rule content
@@ -1049,6 +1103,206 @@ curl -v localhost:8080/api/insights-results-aggregator/v2/cluster/34c3ecc5-624a-
 }
 ```
 
+## Endpoints to retrieve information about DVO namespaces
+
+### List of all DVO namespaces
+
+Returns the list of all DVO namespaces (i.e. array of objects) to which this
+particular account has access.  Each object contains the namespace ID, the
+namespace display name if available, the cluster ID under which this namespace
+is created, and the number of affecting recommendations for this namespace as
+well.
+
+#### Request to the service
+
+```
+curl -v localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo
+```
+
+#### Response from the service
+
+```json
+{
+  "status": "ok",
+  "workloads": [
+    {
+      "cluster": {
+        "uuid": "00000001-0001-0001-0001-000000000002",
+        "display_name": "Cluster name 00000001-0001-0001-0001-000000000002"
+      },
+      "namespace": {
+        "uuid": "d00b47da-fc6f-4c72-abc1-94f525441c75",
+        "name": "Namespace name d00b47da-fc6f-4c72-abc1-94f525441c75"
+      },
+      "metadata": {
+        "recommendations": 3,
+        "objects": 3,
+        "reported_at": "2023-10-05T07:37:59+02:00",
+        "last_checked_at": "2023-10-05T07:37:59+02:00",
+        "highest_severity": 4,
+        "hits_by_severity": {
+          "1": 0,
+          "2": 2,
+          "3": 0,
+          "4": 1
+        }
+      }
+    },
+    {
+      "cluster": {
+        "uuid": "00000001-0001-0001-0001-000000000002",
+        "display_name": "Cluster name 00000001-0001-0001-0001-000000000002"
+      },
+      "namespace": {
+        "uuid": "0fab74ee-61ce-498d-bcd4-070ad950b0d7",
+        "name": "Namespace name 0fab74ee-61ce-498d-bcd4-070ad950b0d7"
+      },
+      "metadata": {
+        "recommendations": 1,
+        "objects": 2,
+        "reported_at": "2023-10-05T07:37:59+02:00",
+        "last_checked_at": "2023-10-05T07:37:59+02:00",
+        "highest_severity": 3,
+        "hits_by_severity": {
+          "1": 0,
+          "2": 0,
+          "3": 1,
+          "4": 0
+        }
+      }
+    },
+    ...
+    ...
+    ...
+  ]
+}
+```
+
+### DVO Recommendations for selected cluster and namespace
+
+Returns recommendations for selected cluster and namespace.
+Please note that there are two REST API variants with different selector order, but the same results.
+
+#### Request to the service
+
+First variant:
+
+```
+curl localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo/{namespace_uuid}/cluster/{cluster_uuid}
+```
+
+Second variant:
+
+```
+curl localhost:8080/api/insights-results-aggregator/v2/cluster/{cluster_name}/namespaces/dvo/{namespace}
+```
+
+
+#### Example with data:
+
+```
+curl localhost:8080/api/insights-results-aggregator/v2/namespaces/dvo/fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f/cluster/00000001-0001-0001-0001-000000000002
+```
+
+#### Response from the service
+
+```json
+{
+    "status": "ok",
+    "cluster": {
+        "uuid": "00000001-0001-0001-0001-000000000002",
+        "display_name": "Cluster name 00000001-0001-0001-0001-000000000002"
+    },
+    "namespace": {
+        "uuid": "fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f",
+        "name": "Namespace name fbcbe2d3-e398-4b40-9d5e-4eb46fe8286f"
+    },
+    "metadata": {
+        "recommendations": 2,
+        "objects": 3,
+        "reported_at": "2023-12-12T10:35:17+01:00",
+        "last_checked_at": "2023-12-12T10:35:17+01:00",
+        "highest_severity": 4,
+        "hits_by_severity": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 2
+        }
+    },
+    "recommendations": [
+        {
+            "check": "host_network",
+            "details": "Alert on pods/deployment-likes with sharing host's network namespace",
+            "resolution": "Ensure the host's network namespace is not shared.",
+            "modified": "2020-04-08T00:42:00Z",
+            "more_info": "For more info about the host network, refer to [documentation](https://www.google.com)",
+            "extra_data": {
+                "degraded_operators": [
+                    {
+                        "available": {
+                            "last_trans_time": "2020-04-21T12:45:10Z",
+                            "message": "Available: 2 nodes are active; 1 nodes are at revision 0; 2 nodes are at revision 2; 0 nodes have achieved new revision 3",
+                            "reason": "AsExpected",
+                            "status": true
+                        },
+                        "degraded": {
+                            "last_trans_time": "2020-04-21T12:46:14Z",
+                            "message": "NodeControllerDegraded: All master nodes are ready\nStaticPodsDegraded: nodes/ip-10-0-137-172.us-east-2.compute.internal pods/kube-apiserver-ip-10-0-137-172.us-east-2.compute.internal container=\"kube-apiserver-3\" is not ready",
+                            "reason": "NodeInstallerDegradedInstallerPodFailed",
+                            "status": true
+                        },
+                        "name": "kube-apiserver",
+                        "progressing": {
+                            "last_trans_time": "2020-04-21T12:43:00Z",
+                            "message": "Progressing: 1 nodes are at revision 0; 2 nodes are at revision 2; 0 nodes have achieved new revision 3",
+                            "reason": null,
+                            "status": true
+                        },
+                        "upgradeable": {
+                            "last_trans_time": "2020-04-21T12:42:52Z",
+                            "message": null,
+                            "reason": "AsExpected",
+                            "status": true
+                        },
+                        "version": "4.3.13"
+                    }
+                ],
+                "error_key": "NODE_INSTALLER_DEGRADED",
+                "type": "rule"
+            },
+            "objects": [
+                {
+                    "kind": "DaemonSet",
+                    "uid": "be466de5-12fb-4710-bf70-62deb38ae563"
+                }
+            ]
+        },
+        {
+            "check": "non_isolated_pod",
+            "details": "Alert on deployment-like objects that are not selected by any NetworkPolicy.",
+            "resolution": "Ensure pod does not accept unsafe traffic by isolating it with a NetworkPolicy. See https://cloud.redhat.com/blog/gUID:e-to-kubernetes-ingress-network-policies for more details.",
+            "modified": "2022-01-01T00:00:00Z",
+            "more_info": "There is no more info about this rule, sorry",
+            "extra_data": {
+                "type": "rule",
+                "error_key": "BUGZILLA_BUG_1766907"
+            },
+            "objects": [
+                {
+                    "kind": "DaemonSet",
+                    "uid": "be466de5-12fb-4710-bf70-62deb38ae563"
+                },
+                {
+                    "kind": "DaemonSet",
+                    "uid": "b51716a3-886b-4a67-b153-ce092fc91047"
+                }
+            ]
+        }
+    ]
+}
+```
+
 ## Debug endpoints
 
 The following endpoints needs to be enabled via configuration file by setting `debug` option to `true`.
@@ -1065,6 +1319,11 @@ Response from the service:
 
 None, the server will stop immediatelly.
 
+
+
+## Definition of Done for new features and fixes
+
+Please look at [DoD.md](DoD.md) document for definition of done for new features and fixes.
 
 
 ## BDD tests

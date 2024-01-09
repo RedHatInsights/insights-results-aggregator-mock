@@ -42,55 +42,6 @@ type Storage interface {
 	ListOfClustersForOrg(orgID types.OrgID) ([]types.ClusterName, error)
 	ReadReportForCluster(clusterName types.ClusterName) (types.ClusterReport, error)
 	ReadReportForOrganizationAndCluster(orgID types.OrgID, clusterName types.ClusterName) (types.ClusterReport, error)
-	ReadReportForClusterByClusterName(clusterName types.ClusterName) (types.ClusterReport, types.Timestamp, error)
-	ReportsCount() (int, error)
-	VoteOnRule(
-		clusterID types.ClusterName,
-		ruleID types.RuleID,
-		userID types.UserID,
-		userVote types.UserVote,
-	) error
-	AddOrUpdateFeedbackOnRule(
-		clusterID types.ClusterName,
-		ruleID types.RuleID,
-		userID types.UserID,
-		message string,
-	) error
-	GetUserFeedbackOnRule(
-		clusterID types.ClusterName, ruleID types.RuleID, userID types.UserID,
-	) (*UserFeedbackOnRule, error)
-	GetContentForRules(
-		rules *types.ReportRules,
-		userID types.UserID,
-		clusterName types.ClusterName,
-	) ([]types.RuleContentResponse, error)
-	ToggleRuleForCluster(
-		clusterID types.ClusterName,
-		ruleID types.RuleID,
-		userID types.UserID,
-		ruleToggle RuleToggle,
-	) error
-	ListDisabledRulesForCluster(
-		clusterID types.ClusterName,
-		userID types.UserID,
-	) ([]types.DisabledRuleResponse, error)
-	GetFromClusterRuleToggle(
-		types.ClusterName,
-		types.RuleID,
-		types.UserID,
-	) (*ClusterRuleToggle, error)
-	DeleteFromRuleClusterToggle(
-		clusterID types.ClusterName,
-		ruleID types.RuleID,
-		userID types.UserID,
-	) error
-	GetRuleByID(ruleID types.RuleID) (*types.Rule, error)
-	GetOrgIDByClusterID(cluster types.ClusterName) (types.OrgID, error)
-	GetUserFeedbackOnRules(
-		clusterID types.ClusterName,
-		rulesContent []types.RuleContentResponse,
-		userID types.UserID,
-	) (map[types.RuleID]types.UserVote, error)
 	GetRuleWithContent(ruleID types.RuleID, ruleErrorKey types.ErrorKey) (*types.RuleWithContent, error)
 	GetPredictionForCluster(cluster types.ClusterName) (*types.UpgradeRiskPrediction, error)
 }
@@ -106,7 +57,7 @@ const changingClustersPeriodInMinutes = 15
 
 const noPermissionsForOrg = "You have no permissions to get or change info about this organization"
 
-var reports map[string]string = make(map[string]string)
+var reports = make(map[string]string)
 
 func readReport(path, clusterName string) (string, error) {
 	absPath, err := filepath.Abs(path + "/report_" + clusterName + ".json")
@@ -272,13 +223,6 @@ func (storage MemoryStorage) ListOfClustersForOrg(orgID types.OrgID) ([]types.Cl
 	return clusters, nil
 }
 
-// GetOrgIDByClusterID reads OrgID for specified cluster
-func (storage MemoryStorage) GetOrgIDByClusterID(cluster types.ClusterName) (types.OrgID, error) {
-	var orgID uint64 = 42
-
-	return types.OrgID(orgID), nil
-}
-
 func getReportForCluster(clusterName types.ClusterName) (string, bool) {
 	report, ok := reports[string(clusterName)]
 	if !ok {
@@ -372,43 +316,8 @@ func (storage MemoryStorage) ReadReportForOrganizationAndCluster(
 	return types.ClusterReport(report), errors.New(clusterNotFoundMessage)
 }
 
-// ReadReportForClusterByClusterName reads result (health status) for selected cluster for given organization
-func (storage MemoryStorage) ReadReportForClusterByClusterName(
-	clusterName types.ClusterName,
-) (types.ClusterReport, types.Timestamp, error) {
-	var report string
-	var lastChecked time.Time
-
-	return types.ClusterReport(report), types.Timestamp(lastChecked.UTC().Format(time.RFC3339)), nil
-}
-
-// GetContentForRules retrieves content for rules that were hit in the report
-func (storage MemoryStorage) GetContentForRules(
-	reportRules *types.ReportRules,
-	userID types.UserID,
-	clusterName types.ClusterName,
-) ([]types.RuleContentResponse, error) {
-	rules := make([]types.RuleContentResponse, 0)
-
-	return rules, nil
-}
-
-// ReportsCount reads number of all records stored in database
-func (storage MemoryStorage) ReportsCount() (int, error) {
-	count := -1
-
-	return count, nil
-}
-
-// GetRuleByID gets a rule by ID
-func (storage MemoryStorage) GetRuleByID(ruleID types.RuleID) (*types.Rule, error) {
-	var rule types.Rule
-
-	return &rule, nil
-}
-
 // GetPredictionForCluster gets a prediction for the cluster
-func (storage MemoryStorage) GetPredictionForCluster(cluster types.ClusterName) (*types.UpgradeRiskPrediction, error) {
+func (storage MemoryStorage) GetPredictionForCluster(_ types.ClusterName) (*types.UpgradeRiskPrediction, error) {
 	return &types.UpgradeRiskPrediction{
 		Recommended: true,
 		Predictors: types.UpgradeRisksPredictors{

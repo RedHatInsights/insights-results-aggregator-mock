@@ -136,6 +136,7 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	router.HandleFunc(apiPrefix+MainEndpoint, server.mainEndpoint).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+GroupsEndpoint, server.listOfGroups).Methods(http.MethodGet, http.MethodOptions)
 	router.HandleFunc(apiPrefix+ContentEndpoint, server.serveContentWithGroups).Methods(http.MethodGet, http.MethodOptions)
+	router.HandleFunc(apiPrefix+InfoEndpoint, server.serviceInfo).Methods(http.MethodGet, http.MethodOptions)
 
 	router.HandleFunc(apiPrefix+OrganizationsEndpoint, server.listOfOrganizations).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+ClustersForOrganizationEndpoint, server.listOfClustersForOrganization).Methods(http.MethodGet)
@@ -166,6 +167,17 @@ func (server *HTTPServer) addEndpointsToRouter(router *mux.Router) {
 	// for more information about this endpoint
 	router.HandleFunc(apiPrefix+UpgradeRisksPredictionEndpoint, server.upgradeRisksPrediction).Methods(http.MethodGet)
 	router.HandleFunc(apiPrefix+UpgradeRisksPredictionMultiClusterEndpoint, server.upgradeRisksPredictionMultiCluster).Methods(http.MethodPost)
+
+	// DVO-related endpoints:
+	//
+	// AllDVONamespaces = "namespaces/dvo"
+	// DVONamespaceForCluster1 = "cluster/{cluster_name}/namespaces/dvo"
+	// DVONamespaceForCluster2 = "namespaces/dvo/cluster/{cluster_name}"
+	// DVONamespaceInfo = "namespaces/dvo/{namespace_id}/info"
+	// DVONamespaceReports = "namespaces/dvo/{namespace_id}/reports"
+	router.HandleFunc(apiPrefix+AllDVONamespaces, server.allDVONamespaces).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+DVONamespaceForCluster1, server.dvoNamespaceForCluster).Methods(http.MethodGet)
+	router.HandleFunc(apiPrefix+DVONamespaceForCluster2, server.dvoNamespaceForCluster).Methods(http.MethodGet)
 
 	// OpenAPI specs
 	router.HandleFunc(openAPIURL, server.serveAPISpecFile).Methods(http.MethodGet)

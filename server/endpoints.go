@@ -26,6 +26,9 @@ const (
 	// ContentEndpoint defines suffix of the content request endpoint
 	ContentEndpoint = "content"
 
+	// InfoEndpoint defines suffix for the endpoint to return services info
+	InfoEndpoint = "info"
+
 	// DeleteOrganizationsEndpoint deletes all {organizations}(comma separated array). DEBUG only
 	DeleteOrganizationsEndpoint = "organizations/{organizations}"
 	// DeleteClustersEndpoint deletes all {clusters}(comma separated array). DEBUG only
@@ -123,4 +126,86 @@ const (
 
 	// ExitEndpoint perform server shutdown (in Debug mode only)
 	ExitEndpoint = "exit"
+
+	// AllDVONamespaces endpoint address.
+	//
+	// Returns the list of all DVO namespaces (i.e. array of objects) to
+	// which this particular account has access.  Each object contains the
+	// namespace ID, the namespace display name if available, the cluster
+	// ID under which this namespace is created, and the number of
+	// affecting recommendations for this namespace as well.
+	//
+	// BDD scenarios for this endpoint:
+	// https://github.com/RedHatInsights/insights-behavioral-spec/blob/main/features/DVO_Recommendations/Smart_Proxy_REST_API.feature
+	// - Accessing Smart Proxy REST API endpoint to retrieve list of all DVO namespaces for current organization
+	// - Returning just active clusters in Smart Proxy REST API endpoint to retrieve list of all DVO namespaces for current organization
+	// - Checking organization in Smart Proxy REST API endpoint to retrieve list of all DVO namespaces for current organization
+	//
+	AllDVONamespaces = "namespaces/dvo"
+
+	// DVONamespaceForCluster1 endpoint address.
+	//
+	// Returns the list of all namespaces (i.e. array of objects) to which
+	// this particular account has access filtered by {cluster_name}.  Each
+	// object contains the namespace ID, the namespace display name if
+	// available, the cluster ID under which this namespace is created
+	// (repeated input), and the number of affecting recommendations for
+	// this namespace as well.
+	//
+	// BDD scenarios for this endpoint:
+	// https://github.com/RedHatInsights/insights-behavioral-spec/blob/main/features/DVO_Recommendations/Smart_Proxy_REST_API.feature
+	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for not known cluster
+	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for known cluster without DVO namespaces
+	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for improper cluster UUID
+	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for improper organization
+	//
+	DVONamespaceForCluster1 = "cluster/{cluster_name}/namespaces/dvo/{namespace}"
+
+	// DVONamespaceForCluster2 endpoint address.
+	//
+	// This endpoint has the same meaning as DVONamespaceForCluster1, but
+	// order of selectors is different.
+	//
+	// BDD scenarios for this endpoint:
+	// https://github.com/RedHatInsights/insights-behavioral-spec/blob/main/features/DVO_Recommendations/Smart_Proxy_REST_API.feature
+	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for selected existing cluster
+	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for not known cluster
+	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for known cluster without DVO namespaces
+	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for improper cluster UUID
+	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces for improper organization
+	// - Accessing Smart Proxy REST API endpoint to retrieve DVO namespaces when cluster is not specified
+	//
+	DVONamespaceForCluster2 = "namespaces/dvo/{namespace}/cluster/{cluster_name}"
+
+	// DVONamespaceInfo endpoint address.
+	//
+	// Returns information about the requested namespace. Contains the display name,
+	// associated cluster ID. Probably, some other metadata like last seen (but not
+	// needed according to current UX pre-design).
+	//
+	// BDD scenarios for this endpoint:
+	// https://github.com/RedHatInsights/insights-behavioral-spec/blob/main/features/DVO_Recommendations/Smart_Proxy_REST_API.feature
+	// - Accessing Smart Proxy REST API endpoint to retrieve information about selected DVO namespace
+	// - Accessing Smart Proxy REST API endpoint to retrieve information about selected DVO namespace when no such namespace exists
+	// - Accessing Smart Proxy REST API endpoint to retrieve information about selected DVO namespace for improper organization
+	// - Accessing Smart Proxy REST API endpoint to retrieve information about selected DVO namespace for improper user
+	//
+	DVONamespaceInfo = "namespaces/dvo/{namespace_id}/info"
+
+	// DVONamespaceReports endpoint address.
+	//
+	// Returns the list of all recommendations affecting this namespace. It
+	// is basically an array with objects meeting the
+	// https://github.com/RedHatInsights/insights-results-smart-proxy/blob/master/server/api/v2/openapi.json#L1537
+	//
+	// BDD scenarios for this endpoint:
+	// https://github.com/RedHatInsights/insights-behavioral-spec/blob/main/features/DVO_Recommendations/Smart_Proxy_REST_API.feature
+	// - Accessing Smart Proxy REST API endpoint to retrieve list of all recommendations affecting the selected namespace when no rules are hitting
+	// - Accessing Smart Proxy REST API endpoint to retrieve list of all recommendations affecting the selected namespace when just one rule is hitting
+	// - Accessing Smart Proxy REST API endpoint to retrieve list of all recommendations affecting the selected namespace when two rules are hitting
+	// - Accessing Smart Proxy REST API endpoint to retrieve list of all recommendations affecting the selected namespace when no such namespace exists
+	// - Accessing Smart Proxy REST API endpoint to retrieve list of all recommendations affecting the selected namespace for improper organization
+	// - Accessing Smart Proxy REST API endpoint to retrieve list of all recommendations affecting the selected namespace for improper user
+	//
+	DVONamespaceReports = "namespaces/dvo/{namespace_id}/reports"
 )

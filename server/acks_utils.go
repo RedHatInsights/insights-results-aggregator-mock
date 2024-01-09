@@ -53,7 +53,7 @@ func handleImproperSelector(writer http.ResponseWriter, err error) {
 // handleMissingRule function handles situation when rule acknowledge can not
 // be found in internal data structure.  HTTP code 404 Not Found is returned in
 // this situation.
-func handleMissingRule(writer http.ResponseWriter, ruleSelector string) {
+func handleMissingRule(writer http.ResponseWriter, _ string) {
 	err := errors.New("rule not found -> justification can not be changed")
 	log.Error().Err(err).Msg("")
 	// return 404
