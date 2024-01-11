@@ -150,11 +150,12 @@ func (server *HTTPServer) upgradeRisksPredictionMultiCluster(writer http.Respons
 
 		case ClusterOkFailUpgrade:
 			log.Info().Msg("Cluster is not recommended to upgrade")
+			predictors := buildNotEmptyPredictors()
 			responseArray = append(responseArray, types.ClusterUpgradeRiskPrediction{
 				Cluster:     cluster,
 				Status:      "ok",
 				Recommended: false,
-				Predictors:  buildNotEmptyPredictors(),
+				Predictors:  &predictors,
 			})
 
 		case ClusterOk:
@@ -162,7 +163,7 @@ func (server *HTTPServer) upgradeRisksPredictionMultiCluster(writer http.Respons
 				Cluster:     cluster,
 				Status:      "ok",
 				Recommended: true,
-				Predictors: types.UpgradeRisksPredictors{
+				Predictors: &types.UpgradeRisksPredictors{
 					Alerts:             []types.Alert{},
 					OperatorConditions: []types.OperatorCondition{},
 				},

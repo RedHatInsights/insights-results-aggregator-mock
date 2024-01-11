@@ -237,10 +237,10 @@ type UpgradeRiskPrediction struct {
 // ClusterUpgradeRiskPrediction data structure represents body of the reponse
 // for a multi-cluster upgrade-risk-prediction request
 type ClusterUpgradeRiskPrediction struct {
-	Cluster     string                 `json:"cluster_id"`
-	Status      string                 `json:"prediction_status"`
-	Recommended bool                   `json:"upgrade_recommended"`
-	Predictors  UpgradeRisksPredictors `json:"upgrade_risks_predictors"`
+	Cluster     string                  `json:"cluster_id"`
+	Status      string                  `json:"prediction_status"`
+	Recommended bool                    `json:"upgrade_recommended,omitempty"`
+	Predictors  *UpgradeRisksPredictors `json:"upgrade_risks_predictors,omitempty"`
 }
 
 // SimplifiedReport is structure returned by the service to IO to handle On Demand Data Gathering
