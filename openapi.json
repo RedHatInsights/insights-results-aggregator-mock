@@ -985,7 +985,7 @@
                                   "url": {
                                     "type": "string"
                                   }
-                                }                                
+                                }
                               }
                             },
                             "operator_conditions": {
@@ -1054,18 +1054,18 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "clusters": { 
+                  "clusters": {
                     "description": "List of the clusters to get the prediction for",
                     "type": "array"
                   }
                 },
-                "required": ["clusters"] 
+                "required": ["clusters"]
               },
               "example": {
                 "clusters" : [
                   "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
                   "44444444-3333-2222-1111-111111111111"
-                ] 
+                ]
               }
             }
           }
@@ -1088,106 +1088,100 @@
                     },
                     "predictions": {
                       "type": "array",
-                      "items": [
-                        {
-                          "type": "object",
-                          "required": [
-                            "cluster_id",
-                            "prediction_status"
-                          ],
-                          "properties": {
-                            "cluster_id": {
-                              "type": "string",
-                              "example": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
-                            },
-                            "prediction_status": {
-                              "type": "string",
-                              "example": "ok"
-                            },
-                            "upgrade_recommended": {
-                              "type": "boolean",
-                              "example": true
-                            },
-                            "upgrade_risks_predictors": {
-                              "type": "object",
-                              "properties": {
-                                "alerts": {
-                                  "type": "array",
-                                  "items": [
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "name": {
-                                          "type": "string",
-                                          "example": "SomeCriticalAlert"
-                                        },
-                                        "namespace": {
-                                          "type": "string",
-                                          "example": "openshift-kube-apiserver"
-                                        },
-                                        "severity": {
-                                          "type": "string",
-                                          "example": "critical"
-                                        },
-                                        "url": {
-                                          "type": "string",
-                                          "example": "https://some_url.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=SomeCriticalAlert"
-                                        }
-                                      },
-                                      "required": [
-                                        "name",
-                                        "namespace",
-                                        "severity",
-                                        "url"
-                                      ]
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "cluster_id",
+                          "prediction_status"
+                        ],
+                        "properties": {
+                          "cluster_id": {
+                            "type": "string",
+                            "example": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+                          },
+                          "prediction_status": {
+                            "type": "string",
+                            "example": "ok"
+                          },
+                          "upgrade_recommended": {
+                            "type": "boolean",
+                            "example": true
+                          },
+                          "upgrade_risks_predictors": {
+                            "type": "object",
+                            "properties": {
+                              "alerts": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "SomeCriticalAlert"
+                                    },
+                                    "namespace": {
+                                      "type": "string",
+                                      "example": "openshift-kube-apiserver"
+                                    },
+                                    "severity": {
+                                      "type": "string",
+                                      "example": "critical"
+                                    },
+                                    "url": {
+                                      "type": "string",
+                                      "example": "https://some_url.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=SomeCriticalAlert"
                                     }
-                                  ]
-                                },
-                                "operator_conditions": {
-                                  "type": "array",
-                                  "items": [
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "name": {
-                                          "type": "string",
-                                          "example": "authentication"
-                                        },
-                                        "condition": {
-                                          "type": "string",
-                                          "example": "Degraded"
-                                        },
-                                        "reason": {
-                                          "type": "string",
-                                          "example": "AsExpected"
-                                        },
-                                        "url": {
-                                          "type": "string",
-                                          "example": "https://some_url.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/authentication"
-                                        }
-                                      },
-                                      "required": [
-                                        "name",
-                                        "condition",
-                                        "reason",
-                                        "url"
-                                      ]
-                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "namespace",
+                                    "severity",
+                                    "url"
                                   ]
                                 }
                               },
-                              "required": [
-                                "alerts",
-                                "operator_conditions"
-                              ]
+                              "operator_conditions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "name": {
+                                        "type": "string",
+                                        "example": "authentication"
+                                      },
+                                      "condition": {
+                                        "type": "string",
+                                        "example": "Degraded"
+                                      },
+                                      "reason": {
+                                        "type": "string",
+                                        "example": "AsExpected"
+                                      },
+                                      "url": {
+                                        "type": "string",
+                                        "example": "https://some_url.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/authentication"
+                                      }
+                                    },
+                                    "required": [
+                                      "name",
+                                      "condition",
+                                      "reason",
+                                      "url"
+                                    ]
+                                  }
+                              }
                             },
-                            "last_checked_at": {
-                              "type": "string",
-                              "example": "2011-15-04T00:05:23Z"
-                            }
+                            "required": [
+                              "alerts",
+                              "operator_conditions"
+                            ]
+                          },
+                          "last_checked_at": {
+                            "type": "string",
+                            "example": "2011-15-04T00:05:23Z"
                           }
                         }
-                      ],
+                      },
                       "example": [
                         {
                           "cluster_id": "not-an-uuid",
@@ -1241,7 +1235,7 @@
                           },
                           "last_checked_at": "2011-15-04T00:05:23Z"
                         }
-                    ]
+                      ]
                     }
                   }
                 }
