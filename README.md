@@ -651,7 +651,7 @@ Response from the service:
 < Content-Type: application/json; charset=utf-8
 < Date: Sun, 05 Sep 2021 14:29:33 GMT
 < Content-Length: 168
-< 
+<
 {
         "rule": "foo|bar",
         "justification": "xyzzy",
@@ -676,7 +676,7 @@ Response from the service:
 < Content-Type: application/json; charset=utf-8
 < Date: Sun, 05 Sep 2021 14:35:51 GMT
 < Content-Length: 168
-< 
+<
 {
         "rule": "foo|bar",
         "justification": "xyzzy",
@@ -710,7 +710,7 @@ Response from the service:
 < Content-Type: application/json; charset=utf-8
 < Date: Sat, 04 Sep 2021 18:46:20 GMT
 < Content-Length: 165
-< 
+<
 {
         "rule": "new|rule",
         "justification": "?",
@@ -735,7 +735,7 @@ Response from the service:
 < Content-Type: application/json; charset=utf-8
 < Date: Sat, 04 Sep 2021 18:32:58 GMT
 < Content-Length: 260
-< 
+<
 {
         "rule": "ccx_rules_ocp.external.rules.cluster_wide_proxy_auth_check.report|AUTH_OPERATOR_PROXY_ERROR",
         "justification": "Justification5",
@@ -764,7 +764,7 @@ Response from the service:
 < Date: Sun, 05 Sep 2021 05:47:46 GMT
 < Content-Length: 169
 < Content-Type: text/plain; charset=utf-8
-< 
+<
 {
         "rule": "existing|rule",
         "justification": "xyzzy",
@@ -794,7 +794,7 @@ Response from the service:
 < X-Content-Type-Options: nosniff
 < Date: Sun, 05 Sep 2021 06:13:27 GMT
 < Content-Length: 51
-< 
+<
 rule not found -> justification can not be changed
 ```
 
@@ -816,7 +816,7 @@ Response from the service:
 ```
 < HTTP/1.1 204 No Content
 < Date: Sat, 04 Sep 2021 17:44:32 GMT
-< 
+<
 ```
 
 #### Delete nonexisting rule
@@ -833,7 +833,7 @@ Response from the service:
 < HTTP/1.1 404 Not Found
 < Date: Sat, 04 Sep 2021 17:44:35 GMT
 < Content-Length: 0
-< 
+<
 ```
 
 ### Upgrade risks prediction results
@@ -851,9 +851,113 @@ Response from the service:
 < Content-Type: application/json; charset=utf-8
 < Date: Thu, 13 Apr 2023 12:38:44 GMT
 < Content-Length: 186
-< 
+<
 {"meta":{"last_checked_at":"2023-04-13T12:38:44Z"},"status":"ok","upgrade_recommendation":{"upgrade_recommended":true,"upgrade_risks_predictors":{"alerts":[],"operator_conditions":[]}}}
 ```
+
+### Upgrade risks predictions for multiple clusters
+
+To use the Upgrade Risks Predicions for multiple clusters endpoint:
+
+```
+curl -s -k -X POST \
+-H "Content-Type: application/json" \
+-d '{
+  "clusters": [
+    "00000001-624a-49a5-bab8-4fdc5e51a266",
+    "00000003-eeee-eeee-eeee-000000000001",
+    "6cab9726-c2be-438e-af11-db846a678abb",
+    "c60ba611-6af4-4d62-9b9e-36344da5e7bc",
+    "897ec1a1-4679-4122-aacb-f0ae9f9e1a5f",
+    "234ec1a1-4679-4122-aacb-f0ae9f9e1a56"
+  ]
+}' localhost:8080/api/insights-results-aggregator/v2/upgrade-risks-prediction
+```
+
+The response from the service will depend on the clusters used in the list from the request
+shown above, but it should look like the following:
+
+```
+{
+  "predictions": [
+    {
+      "cluster_id": "00000001-624a-49a5-bab8-4fdc5e51a266",
+      "prediction_status": "ok",
+      "upgrade_recommended": true,
+      "upgrade_risks_predictors": {
+        "alerts": [],
+        "operator_conditions": []
+      }
+    },
+    {
+      "cluster_id": "00000003-eeee-eeee-eeee-000000000001",
+      "prediction_status": "ok",
+      "upgrade_risks_predictors": {
+        "alerts": [
+          {
+            "name": "alert1",
+            "namespace": "namespace1",
+            "severity": "info",
+            "url": "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert1"
+          },
+          {
+            "name": "alert2",
+            "namespace": "namespace2",
+            "severity": "warning",
+            "url": "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert2"
+          },
+          {
+            "name": "alert3",
+            "namespace": "namespace3",
+            "severity": "critical",
+            "url": "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert3"
+          }
+        ],
+        "operator_conditions": [
+          {
+            "name": "foc1",
+            "condition": "Degraded",
+            "reason": "NotExpected",
+            "url": "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc1"
+          },
+          {
+            "name": "foc2",
+            "condition": "Failing",
+            "reason": "NotExpected",
+            "url": "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc2"
+          },
+          {
+            "name": "foc3",
+            "condition": "Not Available",
+            "reason": "NotExpected",
+            "url": "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc3"
+          },
+          {
+            "name": "foc4",
+            "condition": "Not Upgradeable",
+            "reason": "NotExpected",
+            "url": "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc4"
+          }
+        ]
+      }
+    },
+    {
+      "cluster_id": "6cab9726-c2be-438e-af11-db846a678abb",
+      "prediction_status": "ok"
+    },
+    {
+      "cluster_id": "c60ba611-6af4-4d62-9b9e-36344da5e7bc",
+      "prediction_status": "AMS service not available"
+    },
+    {
+      "cluster_id": "897ec1a1-4679-4122-aacb-f0ae9f9e1a5f",
+      "prediction_status": "Upgrade Risks Prediction service unavailable"
+    }
+  ],
+  "status": "ok"
+}
+```
+
 
 #### Clusters that return valid data
 

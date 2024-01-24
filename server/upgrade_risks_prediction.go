@@ -20,6 +20,7 @@ import (
 	"net/http"
 	"time"
 
+	httputils "github.com/RedHatInsights/insights-operator-utils/http"
 	"github.com/RedHatInsights/insights-operator-utils/responses"
 	"github.com/rs/zerolog/log"
 
@@ -39,6 +40,8 @@ const (
 	ClusterUnavailable = "897ec1a1-4679-4122-aacb-f0ae9f9e1a5f"
 	// ClusterNoData is the cluster name for the response when the Upgrade risks prediction service returns a 404
 	ClusterNoData = "234ec1a1-4679-4122-aacb-f0ae9f9e1a56"
+
+	clusterHasNoData = "No data for the cluster"
 )
 
 // method upgradeRisksPrediction return a recommendation to upgrade or not a cluster
@@ -99,14 +102,94 @@ func (server *HTTPServer) upgradeRisksPrediction(writer http.ResponseWriter, req
 		}
 
 	case ClusterNoData:
-		log.Info().Msg("No data for the cluster")
-		err = responses.SendNotFound(writer, "No data for the cluster")
+		log.Info().Msg(clusterHasNoData)
+		err = responses.SendNotFound(writer, clusterHasNoData)
 		if err != nil {
 			log.Error().Err(err).Msg(responseDataError)
 		}
 
 	default:
 		server.sendOkResponse(clusterName, writer)
+	}
+}
+
+func (server *HTTPServer) upgradeRisksPredictionMultiCluster(writer http.ResponseWriter, request *http.Request) {
+	// try to read list of cluster IDs
+	clusterList, successful := httputils.ReadClusterListFromBody(writer, request)
+	if !successful {
+		// wrong state has been handled already
+		log.Error().Msg("No cluster list provided")
+		return
+	}
+
+	responseArray := []types.ClusterUpgradeRiskPrediction{}
+	for _, cluster := range clusterList {
+		clusterName := types.ClusterName(cluster)
+
+		switch clusterName {
+		case ClusterManaged:
+			log.Info().Msg("managed cluster case")
+			responseArray = append(responseArray, types.ClusterUpgradeRiskPrediction{
+				Cluster: cluster,
+				Status:  "ok",
+			})
+
+		case ClusterNoAMS:
+			log.Info().Msg("No AMS available case")
+			responseArray = append(responseArray, types.ClusterUpgradeRiskPrediction{
+				Cluster: cluster,
+				Status:  "AMS service not available",
+			})
+
+		case ClusterUnavailable:
+			log.Info().Msg("No Upgrade Risks Prediction service available case")
+			responseArray = append(responseArray, types.ClusterUpgradeRiskPrediction{
+				Cluster: cluster,
+				Status:  "Upgrade Risks Prediction service unavailable",
+			})
+
+		case ClusterOkFailUpgrade:
+			log.Info().Msg("Cluster is not recommended to upgrade")
+			predictors := buildNotEmptyPredictors()
+			responseArray = append(responseArray, types.ClusterUpgradeRiskPrediction{
+				Cluster:     cluster,
+				Status:      "ok",
+				Recommended: false,
+				Predictors:  &predictors,
+			})
+
+		case ClusterOk:
+			responseArray = append(responseArray, types.ClusterUpgradeRiskPrediction{
+				Cluster:     cluster,
+				Status:      "ok",
+				Recommended: true,
+				Predictors: &types.UpgradeRisksPredictors{
+					Alerts:             []types.Alert{},
+					OperatorConditions: []types.OperatorCondition{},
+				},
+			})
+
+		case ClusterNoData:
+		default:
+			log.Info().Msg(clusterHasNoData)
+			responseArray = append(responseArray, types.ClusterUpgradeRiskPrediction{
+				Cluster: cluster,
+				Status:  clusterHasNoData,
+			})
+		}
+	}
+
+	err := responses.SendOK(
+		writer,
+		map[string]interface{}{
+			"predictions": responseArray,
+			"status":      "ok",
+		},
+	)
+
+	if err != nil {
+		log.Error().Err(err).Msg("Error sending response")
+		handleServerError(err)
 	}
 }
 
@@ -123,7 +206,7 @@ func (server *HTTPServer) sendOkResponse(clusterName types.ClusterName, writer h
 	}
 
 	if clusterName == ClusterOkFailUpgrade {
-		buildOkResponse(prediction)
+		buildNotRecommendedPrediction(prediction)
 	}
 
 	writer.Header().Set(contentType, appJSON)
@@ -137,54 +220,59 @@ func (server *HTTPServer) sendOkResponse(clusterName types.ClusterName, writer h
 	}
 }
 
-func buildOkResponse(prediction *types.UpgradeRiskPrediction) {
+func buildNotRecommendedPrediction(prediction *types.UpgradeRiskPrediction) {
 	prediction.Recommended = false
-	prediction.Predictors.Alerts = append(
-		prediction.Predictors.Alerts,
-		types.Alert{
-			Name:      "alert1",
-			Namespace: "namespace1",
-			Severity:  "info",
-			URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert1",
+	prediction.Predictors = buildNotEmptyPredictors()
+}
+
+func buildNotEmptyPredictors() types.UpgradeRisksPredictors {
+	return types.UpgradeRisksPredictors{
+		Alerts: []types.Alert{
+			types.Alert{
+				Name:      "alert1",
+				Namespace: "namespace1",
+				Severity:  "info",
+				URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert1",
+			},
+			types.Alert{
+				Name:      "alert2",
+				Namespace: "namespace2",
+				Severity:  "warning",
+				URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert2",
+			},
+			types.Alert{
+				Name:      "alert3",
+				Namespace: "namespace3",
+				Severity:  "critical",
+				URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert3",
+			},
 		},
-		types.Alert{
-			Name:      "alert2",
-			Namespace: "namespace2",
-			Severity:  "warning",
-			URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert2",
+
+		OperatorConditions: []types.OperatorCondition{
+			types.OperatorCondition{
+				Name:      "foc1",
+				Condition: "Degraded",
+				Reason:    "NotExpected",
+				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc1",
+			},
+			types.OperatorCondition{
+				Name:      "foc2",
+				Condition: "Failing",
+				Reason:    "NotExpected",
+				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc2",
+			},
+			types.OperatorCondition{
+				Name:      "foc3",
+				Condition: "Not Available",
+				Reason:    "NotExpected",
+				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc3",
+			},
+			types.OperatorCondition{
+				Name:      "foc4",
+				Condition: "Not Upgradeable",
+				Reason:    "NotExpected",
+				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc4",
+			},
 		},
-		types.Alert{
-			Name:      "alert3",
-			Namespace: "namespace3",
-			Severity:  "critical",
-			URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert3",
-		},
-	)
-	prediction.Predictors.OperatorConditions = append(
-		prediction.Predictors.OperatorConditions,
-		types.OperatorCondition{
-			Name:      "foc1",
-			Condition: "Degraded",
-			Reason:    "NotExpected",
-			URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc1",
-		},
-		types.OperatorCondition{
-			Name:      "foc2",
-			Condition: "Failing",
-			Reason:    "NotExpected",
-			URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc2",
-		},
-		types.OperatorCondition{
-			Name:      "foc3",
-			Condition: "Not Available",
-			Reason:    "NotExpected",
-			URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc3",
-		},
-		types.OperatorCondition{
-			Name:      "foc4",
-			Condition: "Not Upgradeable",
-			Reason:    "NotExpected",
-			URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc4",
-		},
-	)
+	}
 }
