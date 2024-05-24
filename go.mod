@@ -3,7 +3,7 @@ module github.com/RedHatInsights/insights-results-aggregator-mock
 go 1.14
 
 require (
-	github.com/BurntSushi/toml v1.3.2
+	github.com/BurntSushi/toml v1.4.0
 	github.com/RedHatInsights/insights-operator-utils v1.25.4
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/google/uuid v1.6.0
