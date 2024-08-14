@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/BurntSushi/toml v1.4.0
-	github.com/RedHatInsights/insights-operator-utils v1.25.8
+	github.com/RedHatInsights/insights-operator-utils v1.25.9
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
@@ -13,4 +13,5 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
 	github.com/verdverm/frisby v0.0.0-20170604211311-b16556248a9a
+	golang.org/x/net v0.24.0 // indirect
 )
