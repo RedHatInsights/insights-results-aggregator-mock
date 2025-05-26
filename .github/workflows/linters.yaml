@@ -7,18 +7,13 @@ on:
 jobs:
   golint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version:
-          - "1.20"
-          - "1.21"
-    name: Linters for Go ${{ matrix.go-version}}
+    name: Linters for Go
     steps:
       - uses: actions/checkout@v4
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: "1.23"
       - name: Build project
         run: go build
       - name: Style linters
