@@ -1,3 +1,29 @@
-run:
-    skip-files:
-        - export_test.go
+version: "2"
+linters:
+  enable:
+    - errcheck
+    - goconst
+    - gocyclo
+    - gosec
+    - govet
+    - ineffassign
+    - nilerr
+    - prealloc
+    - revive
+    - staticcheck
+    - unconvert
+    - unused
+    - whitespace
+    - zerologlint
+  settings:
+    goconst:
+      min-occurrences: 3
+  exclusions:
+    rules:
+      - path: export_test.go
+        linters:
+          - unused
+formatters:
+  enable:
+    - gofmt
+    - goimports
