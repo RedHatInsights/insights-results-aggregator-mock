@@ -16,5 +16,5 @@ jobs:
           go-version: "1.23"
       - name: Build project
         run: go build
-      - name: Style linters
-        run: make style
+      - name: ABC metrics
+        run: make abcgo
