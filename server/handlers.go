@@ -58,7 +58,7 @@ func readOrganizationID(_ http.ResponseWriter, request *http.Request) (types.Org
 	if err != nil {
 		return 0, err
 	}
-	return types.OrgID(organizationID), nil
+	return types.OrgID(organizationID), nil // #nosec G115
 }
 
 // readRuleSelector retrieves rule selector from request

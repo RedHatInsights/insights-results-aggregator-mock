@@ -18,6 +18,15 @@ linters:
   settings:
     goconst:
       min-occurrences: 3
+    staticcheck:
+      checks:
+        - all
+        - "-ST1005" # disable error string should not be capitalized
+        - "-ST1000" # disable at least one file in a package should have a package comment
+    revive:
+      rules:
+        - name: package-comments
+          disabled: true
   exclusions:
     rules:
       - path: export_test.go

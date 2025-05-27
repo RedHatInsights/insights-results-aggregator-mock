@@ -228,19 +228,19 @@ func buildNotRecommendedPrediction(prediction *types.UpgradeRiskPrediction) {
 func buildNotEmptyPredictors() types.UpgradeRisksPredictors {
 	return types.UpgradeRisksPredictors{
 		Alerts: []types.Alert{
-			types.Alert{
+			{
 				Name:      "alert1",
 				Namespace: "namespace1",
 				Severity:  "info",
 				URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert1",
 			},
-			types.Alert{
+			{
 				Name:      "alert2",
 				Namespace: "namespace2",
 				Severity:  "warning",
 				URL:       "https://my-cluster.com/monitoring/alerts?orderBy=asc&sortBy=Severity&alert-name=alert2",
 			},
-			types.Alert{
+			{
 				Name:      "alert3",
 				Namespace: "namespace3",
 				Severity:  "critical",
@@ -249,25 +249,25 @@ func buildNotEmptyPredictors() types.UpgradeRisksPredictors {
 		},
 
 		OperatorConditions: []types.OperatorCondition{
-			types.OperatorCondition{
+			{
 				Name:      "foc1",
 				Condition: "Degraded",
 				Reason:    "NotExpected",
 				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc1",
 			},
-			types.OperatorCondition{
+			{
 				Name:      "foc2",
 				Condition: "Failing",
 				Reason:    "NotExpected",
 				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc2",
 			},
-			types.OperatorCondition{
+			{
 				Name:      "foc3",
 				Condition: "Not Available",
 				Reason:    "NotExpected",
 				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc3",
 			},
-			types.OperatorCondition{
+			{
 				Name:      "foc4",
 				Condition: "Not Upgradeable",
 				Reason:    "NotExpected",
