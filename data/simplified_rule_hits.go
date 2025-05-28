@@ -64,15 +64,15 @@ func init() {
 	}
 
 	rm1 := map[types.RequestID][]types.SimplifiedRuleHit{
-		"3nl2vda87ld6e3s25jlk7n2dna": []types.SimplifiedRuleHit{
+		"3nl2vda87ld6e3s25jlk7n2dna": {
 			ruleHit1,
 			ruleHit2,
 		},
-		"18njbjudvkc521w8buicx2clri": []types.SimplifiedRuleHit{
+		"18njbjudvkc521w8buicx2clri": {
 			ruleHit2,
 			ruleHit3,
 		},
-		"38584huk209q82uhl8md5gsdxr": []types.SimplifiedRuleHit{
+		"38584huk209q82uhl8md5gsdxr": {
 			ruleHit1,
 			ruleHit2,
 			ruleHit3,
@@ -82,28 +82,28 @@ func init() {
 	}
 
 	rm2 := map[types.RequestID][]types.SimplifiedRuleHit{
-		"1zlcewj4kjtsp37x0yyr6cwhgr": []types.SimplifiedRuleHit{
+		"1zlcewj4kjtsp37x0yyr6cwhgr": {
 			ruleHit1,
 		},
-		"3m3imli92shw225d4c3glzycxq": []types.SimplifiedRuleHit{
+		"3m3imli92shw225d4c3glzycxq": {
 			ruleHit2,
 		},
-		"13yqlst6dmdji2z717w2v5fwcp": []types.SimplifiedRuleHit{
+		"13yqlst6dmdji2z717w2v5fwcp": {
 			ruleHit1,
 			ruleHit2,
 		},
-		"271w1b53jlfjq2axaetgpe0yrd": []types.SimplifiedRuleHit{
+		"271w1b53jlfjq2axaetgpe0yrd": {
 			ruleHit2,
 			ruleHit3,
 		},
-		"32zr43d2a4cbq1ogi1eu3hrti1": []types.SimplifiedRuleHit{
+		"32zr43d2a4cbq1ogi1eu3hrti1": {
 			ruleHit1,
 			ruleHit2,
 			ruleHit3,
 			ruleHit4,
 			ruleHit5,
 		},
-		"3pyjpvp4umqwx1xnhdq3mwgzkh": []types.SimplifiedRuleHit{
+		"3pyjpvp4umqwx1xnhdq3mwgzkh": {
 			ruleHit5,
 		},
 	}
