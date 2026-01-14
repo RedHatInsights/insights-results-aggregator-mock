@@ -124,7 +124,7 @@ func (server *HTTPServer) allDVONamespaces(writer http.ResponseWriter, _ *http.R
 	writer.Header().Set(contentType, appJSON)
 
 	dvoWorkloads := data.DVOWorkloads
-	var workloads []Workload
+	workloads := make([]Workload, 0, len(dvoWorkloads))
 
 	for clusterUUID, workloadsForCluster := range dvoWorkloads {
 		// retrieve set of all namespaces for given cluster
@@ -329,7 +329,7 @@ func getNamespaces(workloads []types.DVOWorkload) []string {
 	}
 
 	// convert map to slice of keys.
-	keys := []string{}
+	keys := make([]string, 0, len(namespaces))
 	for key := range namespaces {
 		keys = append(keys, key)
 	}

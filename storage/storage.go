@@ -165,7 +165,7 @@ func (storage MemoryStorage) ListOfOrgs() ([]types.OrgID, error) {
 }
 
 func clustersForOrganization11789772() []types.ClusterName {
-	clusters := make([]types.ClusterName, 0)
+	clusters := make([]types.ClusterName, 0, 14)
 	clusters = append(clusters,
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
