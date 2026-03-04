@@ -357,6 +357,7 @@ func (server *HTTPServer) readReportForCluster(writer http.ResponseWriter, reque
 	writer.Header().Set(contentType, appJSON)
 
 	r := []byte(report)
+	// #nosec G705 -- Content-Type is set to application/json, no XSS risk in JSON API responses
 	_, err = writer.Write(r)
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
@@ -489,6 +490,7 @@ func (server *HTTPServer) readReportForOrganizationAndCluster(writer http.Respon
 	}
 
 	r := []byte(report)
+	// #nosec G705 -- Content-Type is set to application/json, no XSS risk in JSON API responses
 	_, err = writer.Write(r)
 	if err != nil {
 		log.Error().Err(err).Msg(responseDataError)
