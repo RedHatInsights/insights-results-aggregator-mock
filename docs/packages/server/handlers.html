@@ -114,7 +114,7 @@
   <table>
     <thead><tr><th class="doc"><h1>handlers.go</h1></th><th class="code"></th></tr></thead>
     <tbody>
-      
+
       <tr class="section">
 	<td class="doc"></td>
 	<td class="code"><pre><code><div class="comment">/*
@@ -160,7 +160,7 @@ limitations under the License.
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>readOrganizationID retrieves organization id from request
 if it's not possible, it writes http error to the writer and returns error</p>
@@ -175,7 +175,7 @@ if it's not possible, it writes http error to the writer and returns error</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>readRuleSelector retrieves rule selector from request</p>
 </td>
@@ -193,7 +193,7 @@ if it's not possible, it writes http error to the writer and returns error</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>readClusterName retrieves cluster name from request
 if it's not possible, it writes http error to the writer and returns error</p>
@@ -212,7 +212,7 @@ if it's not possible, it writes http error to the writer and returns error</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>getRouterParam retrieves parameter from URL like <code>/organization/{org_id}</code></p>
 </td>
@@ -227,7 +227,7 @@ if it's not possible, it writes http error to the writer and returns error</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>getRouterPositiveIntParam retrieves parameter from URL like <code>/organization/{org_id}</code>
 and check it for being valid and positive integer, otherwise returns error</p>
@@ -252,7 +252,7 @@ and check it for being valid and positive integer, otherwise returns error</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>mainEndpoint will handle the requests for / endpoint</p>
 </td>
@@ -265,7 +265,7 @@ and check it for being valid and positive integer, otherwise returns error</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>serveAPISpecFile serves an OpenAPI specifications file specified in config file</p>
 </td>
@@ -283,7 +283,7 @@ and check it for being valid and positive integer, otherwise returns error</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>listOfGroups returns the list of defined groups</p>
 </td>
@@ -316,7 +316,7 @@ and check it for being valid and positive integer, otherwise returns error</p>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>everything has been handled already</p>
 </td>
@@ -344,7 +344,7 @@ and check it for being valid and positive integer, otherwise returns error</p>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>everything has been handled already</p>
 </td>
@@ -380,7 +380,7 @@ and check it for being valid and positive integer, otherwise returns error</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ClusterList is a data structure that store list of cluster IDs (names).</p>
 </td>
@@ -390,7 +390,7 @@ and check it for being valid and positive integer, otherwise returns error</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ClusterReports is a data structure containing list of clusters, list of
 errors and dictionary with results per cluster.</p>
@@ -408,7 +408,7 @@ errors and dictionary with results per cluster.</p>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>everything has been handled already</p>
 </td>
@@ -456,7 +456,7 @@ errors and dictionary with results per cluster.</p>
 			<div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Errors</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Errors</div><div class="operator">,</div> <div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>if error happen, simply go to the next cluster</p>
 </td>
@@ -469,7 +469,7 @@ errors and dictionary with results per cluster.</p>
 			<div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Errors</div> <div class="operator">=</div> <div class="ident">append</div><div class="operator">(</div><div class="ident">generatedReports</div><div class="operator">.</div><div class="ident">Errors</div><div class="operator">,</div> <div class="ident">clusterName</div><div class="operator">)</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>if error happen, simply go to the next cluster</p>
 </td>
@@ -494,7 +494,7 @@ errors and dictionary with results per cluster.</p>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>everything has been handled already</p>
 </td>
@@ -505,7 +505,7 @@ errors and dictionary with results per cluster.</p>
 	<div class="keyword">if</div> <div class="ident">err</div> <div class="operator">!=</div> <div class="ident">nil</div> <div class="operator">{</div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>everything has been handled already</p>
 </td>
@@ -554,7 +554,7 @@ errors and dictionary with results per cluster.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>TODO: quick and dirty linear search should be imroved later if required</p>
 </td>
@@ -569,7 +569,7 @@ errors and dictionary with results per cluster.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>HittingClustersMetadata used to store metadata of hitting clusters</p>
 </td>
@@ -582,7 +582,7 @@ errors and dictionary with results per cluster.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>HittingClusters is a data structure containing list of clusters
 hitting the given rule.</p>
@@ -594,14 +594,14 @@ hitting the given rule.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ruleClusterDetailEndpoint methods implements endpoint that should return a list of all the clusters IDs affected by this rule</p>
 </td>
 	<td class="code"><pre><code><div class="keyword">func</div> <div class="operator">(</div><div class="ident">server</div> <div class="operator">*</div><div class="ident">HTTPServer</div><div class="operator">)</div> <div class="ident">ruleClusterDetailEndpoint</div><div class="operator">(</div><div class="ident">writer</div> <div class="ident">http</div><div class="operator">.</div><div class="ident">ResponseWriter</div><div class="operator">,</div> <div class="ident">request</div> <div class="operator">*</div><div class="ident">http</div><div class="operator">.</div><div class="ident">Request</div><div class="operator">)</div> <div class="operator">{</div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>read the selector</p>
 </td>
@@ -610,7 +610,7 @@ hitting the given rule.</p>
 		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;unable to read rule selector&#34;</div><div class="operator">)</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>everything has been handled already</p>
 </td>
@@ -619,7 +619,7 @@ hitting the given rule.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>parse the selector</p>
 </td>
@@ -628,7 +628,7 @@ hitting the given rule.</p>
 		<div class="ident">log</div><div class="operator">.</div><div class="ident">Error</div><div class="operator">(</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Err</div><div class="operator">(</div><div class="ident">err</div><div class="operator">)</div><div class="operator">.</div><div class="ident">Msg</div><div class="operator">(</div><div class="literal">&#34;unable to parse rule selector&#34;</div><div class="operator">)</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>everything has been handled already</p>
 </td>
@@ -637,7 +637,7 @@ hitting the given rule.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>read all clusters hitting given rule</p>
 </td>
@@ -650,7 +650,7 @@ hitting the given rule.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>prepare response</p>
 </td>
@@ -658,7 +658,7 @@ hitting the given rule.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>first fill-in metadata</p>
 </td>
@@ -669,7 +669,7 @@ hitting the given rule.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>second fill-in list of clusters</p>
 </td>
@@ -688,7 +688,7 @@ hitting the given rule.</p>
 
 </code></pre></td>
       </tr>
-      
+
     </tbody>
   </table>
 </div>

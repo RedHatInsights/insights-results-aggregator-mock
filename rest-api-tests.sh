@@ -71,6 +71,7 @@ function test_rest_api() {
     return $EXIT_CODE
 }
 
+# shellcheck disable=SC2329
 function cleanup() {
     print_descendent_pids() {
         pids=$(pgrep -P "$1")

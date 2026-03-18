@@ -45,16 +45,16 @@ namespace server {
         + Groups <font color=blue>map</font>[string]groups.Group
         + Serv *http.Server
 
-        - addEndpointsToRouter(router *mux.Router) 
+        - addEndpointsToRouter(router *mux.Router)
         - addCORSHeaders(nextHandler http.Handler) http.Handler
         - handleOptionsMethod(nextHandler http.Handler) http.Handler
-        - mainEndpoint(writer http.ResponseWriter, _ *http.Request) 
-        - serveAPISpecFile(writer http.ResponseWriter, request *http.Request) 
-        - listOfGroups(writer http.ResponseWriter, request *http.Request) 
-        - listOfOrganizations(writer http.ResponseWriter, _ *http.Request) 
-        - listOfClustersForOrganization(writer http.ResponseWriter, request *http.Request) 
-        - readReportForCluster(writer http.ResponseWriter, request *http.Request) 
-        - readReportForOrganizationAndCluster(writer http.ResponseWriter, request *http.Request) 
+        - mainEndpoint(writer http.ResponseWriter, _ *http.Request)
+        - serveAPISpecFile(writer http.ResponseWriter, request *http.Request)
+        - listOfGroups(writer http.ResponseWriter, request *http.Request)
+        - listOfOrganizations(writer http.ResponseWriter, _ *http.Request)
+        - listOfClustersForOrganization(writer http.ResponseWriter, request *http.Request)
+        - readReportForCluster(writer http.ResponseWriter, request *http.Request)
+        - readReportForOrganizationAndCluster(writer http.ResponseWriter, request *http.Request)
 
         + Start() error
         + Stop(ctx context.Context) error

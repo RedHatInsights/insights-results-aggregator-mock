@@ -114,7 +114,7 @@
   <table>
     <thead><tr><th class="doc"><h1>endpoints.go</h1></th><th class="code"></th></tr></thead>
     <tbody>
-      
+
       <tr class="section">
 	<td class="doc"></td>
 	<td class="code"><pre><code><div class="comment">/*
@@ -143,7 +143,7 @@ limitations under the License.
 <div class="keyword">const</div> <div class="operator">(</div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>MainEndpoint defines suffix of the root endpoint</p>
 </td>
@@ -151,98 +151,98 @@ limitations under the License.
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>GroupsEndpoint defines suffix of the groups request endpoint</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">GroupsEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;groups&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>DeleteOrganizationsEndpoint deletes all {organizations}(comma separated array). DEBUG only</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">DeleteOrganizationsEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;organizations/{organizations}&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>DeleteClustersEndpoint deletes all {clusters}(comma separated array). DEBUG only</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">DeleteClustersEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;clusters/{clusters}&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>OrganizationsEndpoint returns all organizations</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">OrganizationsEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;organizations&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ClustersEndpoint returns reports for selected clusters</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">ClustersEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;clusters&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ClustersInOrgEndpoint returns reports for all clusters in selected organization</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">ClustersInOrgEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;clusters/{organization}&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ReportEndpoint returns report for provided {organization} and {cluster}</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">ReportEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;report/{organization}/{cluster}&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ReportForClusterEndpoint returns report for provided {cluster} (w/o organization)</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">ReportForClusterEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;report/{cluster}&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>LikeRuleEndpoint likes rule with {rule_id} for {cluster} using current user(from auth header)</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">LikeRuleEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;clusters/{cluster}/rules/{rule_id}/like&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>DislikeRuleEndpoint dislikes rule with {rule_id} for {cluster} using current user(from auth header)</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">DislikeRuleEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;clusters/{cluster}/rules/{rule_id}/dislike&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ResetVoteOnRuleEndpoint resets vote on rule with {rule_id} for {cluster} using current user(from auth header)</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">ResetVoteOnRuleEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;clusters/{cluster}/rules/{rule_id}/reset_vote&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>GetVoteOnRuleEndpoint is an endpoint to get vote on rule. DEBUG only</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">GetVoteOnRuleEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;clusters/{cluster}/rules/{rule_id}/get_vote&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>RuleEndpoint is an endpoint to create&amp;delete a rule. DEBUG only</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">RuleEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;rules/{rule_id}&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>RuleErrorKeyEndpoint is for endpoints to create&amp;delete a rule<em>error</em>key (DEBUG only)
 and for endpoint to get a rule</p>
@@ -250,42 +250,42 @@ and for endpoint to get a rule</p>
 	<td class="code"><pre><code>	<div class="ident">RuleErrorKeyEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;rules/{rule_id}/error_keys/{error_key}&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>RuleGroupsEndpoint is a simple redirect endpoint to the insights-content-service API specified in configuration</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">RuleGroupsEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;groups&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ClustersForOrganizationEndpoint returns all clusters for {organization}</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">ClustersForOrganizationEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;organizations/{organization}/clusters&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>DisableRuleForClusterEndpoint disables a rule for specified cluster</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">DisableRuleForClusterEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;clusters/{cluster}/rules/{rule_id}/disable&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>EnableRuleForClusterEndpoint re-enables a rule for specified cluster</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">EnableRuleForClusterEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;clusters/{cluster}/rules/{rule_id}/enable&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>RuleClusterDetailEndpoint should return a list of all the clusters IDs affected by this rule</p>
 </td>
 	<td class="code"><pre><code>	<div class="ident">RuleClusterDetailEndpoint</div> <div class="operator">=</div> <div class="literal">&#34;rule/{rule_selector}/clusters_detail/&#34;</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>MetricsEndpoint returns prometheus metrics</p>
 </td>
@@ -294,7 +294,7 @@ and for endpoint to get a rule</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>MakeURLToEndpoint creates URL to endpoint, use constants from file endpoints.go</p>
 </td>
@@ -306,7 +306,7 @@ and for endpoint to get a rule</p>
 
 </code></pre></td>
       </tr>
-      
+
     </tbody>
   </table>
 </div>

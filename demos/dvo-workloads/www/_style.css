@@ -3,14 +3,14 @@ body {
 }
 
 .navbar-inverse .navbar-nav > .active > a,
-.navbar-inverse .navbar-nav > .active > a:hover, 
+.navbar-inverse .navbar-nav > .active > a:hover,
 .navbar-inverse .navbar-nav > .active > a:focus {
     color: black;
     background-color: #a0a0a0;
     font-size: 150%;
 }
 .navbar-inverse .navbar-nav > li a,
-.navbar-inverse .navbar-nav > li > a:hover, 
+.navbar-inverse .navbar-nav > li > a:hover,
 .navbar-inverse .navbar-nav > li > a:focus {
     color: white;
     /* background-color: #a0a0a0; */

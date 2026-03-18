@@ -19,7 +19,7 @@ service_availability:
     - service_availability
 security:
   name: Security
-  description: Issues related to certificates, user management, security groups, specific port usage, storage permissions, usage of kubeadmin account, exposed keys etc. 
+  description: Issues related to certificates, user management, security groups, specific port usage, storage permissions, usage of kubeadmin account, exposed keys etc.
   tags:
     - security
 fault_tolerance:
