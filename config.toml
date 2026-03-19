@@ -12,4 +12,3 @@ path = "groups_config.yaml"
 
 [paths]
 mock_data = "data"
-

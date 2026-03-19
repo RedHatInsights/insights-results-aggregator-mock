@@ -169,4 +169,3 @@
      [:get "/workloads"]
      (submit-button "Workloads" "workloads" "workloads")
      [:br][:br]) ])
-

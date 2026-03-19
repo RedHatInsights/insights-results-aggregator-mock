@@ -114,7 +114,7 @@
   <table>
     <thead><tr><th class="doc"><h1>errors.go</h1></th><th class="code"></th></tr></thead>
     <tbody>
-      
+
       <tr class="section">
 	<td class="doc"></td>
 	<td class="code"><pre><code><div class="comment">/*
@@ -137,7 +137,7 @@ limitations under the License.
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Generated documentation is available at:
 https://godoc.org/github.com/RedHatInsights/insights-results-aggregator-mock/types</p>
@@ -156,7 +156,7 @@ https://redhatinsights.github.io/insights-results-aggregator-mock/packages/types
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ErrOldReport is an error returned if a more recent already
 exists on the storage while attempting to write a report for a cluster.</p>
@@ -165,7 +165,7 @@ exists on the storage while attempting to write a report for a cluster.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ItemNotFoundError shows that item with id ItemID wasn't found in the storage</p>
 </td>
@@ -175,7 +175,7 @@ exists on the storage while attempting to write a report for a cluster.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Error returns error string</p>
 </td>
@@ -185,7 +185,7 @@ exists on the storage while attempting to write a report for a cluster.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>TableNotFoundError table not found error</p>
 </td>
@@ -195,7 +195,7 @@ exists on the storage while attempting to write a report for a cluster.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Error returns error string</p>
 </td>
@@ -205,7 +205,7 @@ exists on the storage while attempting to write a report for a cluster.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>TableAlreadyExistsError represents table already exists error</p>
 </td>
@@ -215,7 +215,7 @@ exists on the storage while attempting to write a report for a cluster.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Error returns error string</p>
 </td>
@@ -225,7 +225,7 @@ exists on the storage while attempting to write a report for a cluster.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ForeignKeyError something violates foreign key error
 tableName and foreignKeyName can be empty for DBs not supporting it (SQLite)</p>
@@ -236,7 +236,7 @@ tableName and foreignKeyName can be empty for DBs not supporting it (SQLite)</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Details can reveal you information about specific item violating fk</p>
 </td>
@@ -245,7 +245,7 @@ tableName and foreignKeyName can be empty for DBs not supporting it (SQLite)</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Error returns error string</p>
 </td>
@@ -334,7 +334,7 @@ func convertPostgresError(err error) error {
 	<div class="keyword">case</div> <div class="ident">pgForeignKeyViolationErrorCode</div><div class="operator">:</div> <div class="comment">// foreign_key_violation</div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ConvertDBError converts sql errors to those defined in this package</p>
 </td>
@@ -378,7 +378,7 @@ func convertPostgresError(err error) error {
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>see https://www.postgresql.org/docs/current/errcodes-appendix.html to get the magic happening below</p>
 </td>
@@ -394,7 +394,7 @@ func convertPostgresError(err error) error {
 	case pgForeignKeyViolationErrorCode: // foreign_key_violation
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>for some reason field Table is filled not in all errors</p>
 </td>
@@ -438,7 +438,7 @@ func convertSQLiteError(err error) error {
 
 </code></pre></td>
       </tr>
-      
+
     </tbody>
   </table>
 </div>

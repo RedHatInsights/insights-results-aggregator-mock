@@ -1,4 +1,6 @@
-.PHONY: default clean build fmt lint shellcheck abcgo style run test cover license before_commit help install_golangci-lint
+.PHONY: default clean build build-cover lint shellcheck abcgo style run test cover coverage \
+	integration_tests local_integration_tests license before_commit help function_list \
+	godoc install_docgo install_addlicense
 
 SOURCES:=$(shell find . -name '*.go')
 DOCFILES:=$(addprefix docs/packages/, $(addsuffix .html, $(basename ${SOURCES})))
@@ -24,25 +26,16 @@ build: ## Build binary containing service executable
 build-cover:	${SOURCES}  ## Build binary with code coverage detection support
 	go build -cover -ldflags="-X 'main.BuildTime=$(buildtime)' -X 'main.BuildVersion=$(version)' -X 'main.BuildBranch=$(branch)' -X 'main.BuildCommit=$(commit)'"
 
-install_golangci-lint:
-	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
-
-fmt: install_golangci-lint ## Run go formatting
-	@echo "Running go formatting"
-	golangci-lint fmt
-
-lint: install_golangci-lint ## Run go liting
-	@echo "Running go linting"
-	golangci-lint run --fix
+lint: ## Run go liting
+	pre-commit run --all-files golang-ci-lint-full
 
 shellcheck: ## Run shellcheck
-	shellcheck $(shell find . -name "*.sh")
+	pre-commit run --all-files shellcheck
 
 abcgo: ## Run ABC metrics checker
-	@echo "Run ABC metrics checker"
-	./abcgo.sh
+	pre-commit run --all-files abcgo
 
-style: fmt lint shellcheck abcgo ## Run all the formatting related commands (fmt, vet, lint, cyclo) + check shell scripts
+style: lint shellcheck abcgo ## Run all the formatting related commands (fmt, vet, lint, cyclo) + check shell scripts
 
 run: clean build ## Build the project and executes the binary
 	./insights-results-aggregator-mock
@@ -69,7 +62,8 @@ license:
 	GO111MODULE=off go get -u github.com/google/addlicense && \
 		addlicense -c "Red Hat, Inc" -l "apache" -v ./
 
-before_commit: style test license
+before_commit: test license
+	pre-commit run --all-files
 	./check_coverage.sh
 
 help: ## Show this help screen

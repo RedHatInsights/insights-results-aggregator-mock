@@ -114,7 +114,7 @@
   <table>
     <thead><tr><th class="doc"><h1>storage.go</h1></th><th class="code"></th></tr></thead>
     <tbody>
-      
+
       <tr class="section">
 	<td class="doc"></td>
 	<td class="code"><pre><code><div class="comment">/*
@@ -134,7 +134,7 @@ See the License for the specific language governing permissions and
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Package storage contains an implementation of interface between Go code and
 (almost any) SQL database like PostgreSQL, SQLite, or MariaDB. An implementation
@@ -159,7 +159,7 @@ method if database schema is empty.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Storage represents an interface to almost any database or storage system</p>
 </td>
@@ -224,7 +224,7 @@ method if database schema is empty.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>MemoryStorage data structure represents configuration of memory storage used
 to store mock data.</p>
@@ -234,7 +234,7 @@ to store mock data.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Special clusters can change results in given time period, for example each
 10 minutes or so. This is to simulate real world behaviour.</p>
@@ -250,7 +250,7 @@ to store mock data.</p>
 	<div class="operator">}</div><div class="operator"></div>
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>disable &quot;G304 (CWE-22): Potential file inclusion via variable&quot;</p>
 
@@ -316,7 +316,7 @@ to store mock data.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>New function creates and initializes a new instance of Storage interface</p>
 </td>
@@ -327,7 +327,7 @@ to store mock data.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Init performs all database initialization
 tasks necessary for further service operation.</p>
@@ -339,7 +339,7 @@ tasks necessary for further service operation.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Close method closes the connection to database. Needs to be called at the end of application lifecycle.</p>
 </td>
@@ -350,7 +350,7 @@ tasks necessary for further service operation.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>Report represents one (latest) cluster report.
     Org: organization ID
@@ -366,7 +366,7 @@ tasks necessary for further service operation.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ListOfOrgs reads list of all organizations that have at least one cluster report</p>
 </td>
@@ -399,7 +399,7 @@ tasks necessary for further service operation.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ListOfClustersForOrg reads list of all clusters fro given organization</p>
 </td>
@@ -440,7 +440,7 @@ tasks necessary for further service operation.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>GetOrgIDByClusterID reads OrgID for specified cluster</p>
 </td>
@@ -460,7 +460,7 @@ tasks necessary for further service operation.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ReadReportForCluster reads result (health status) for selected cluster</p>
 </td>
@@ -471,7 +471,7 @@ tasks necessary for further service operation.</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>clusters that can change its output (report)
 please note that these clusters have special name:
@@ -502,7 +502,7 @@ please note that these clusters have special name:
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>handling for clusters that can change its report</p>
 </td>
@@ -517,7 +517,7 @@ please note that these clusters have special name:
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>chooseReport for &quot;changing cluster&quot;</p>
 </td>
@@ -526,7 +526,7 @@ please note that these clusters have special name:
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>first we need to get the minute in hour</p>
 </td>
@@ -536,7 +536,7 @@ please note that these clusters have special name:
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>then compute index of report</p>
 </td>
@@ -545,7 +545,7 @@ please note that these clusters have special name:
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>and choose the report according to the index</p>
 </td>
@@ -557,7 +557,7 @@ please note that these clusters have special name:
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ReadReportForOrganizationAndCluster reads result (health status) for
 selected cluster for given organization</p>
@@ -585,7 +585,7 @@ selected cluster for given organization</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ReadReportForClusterByClusterName reads result (health status) for selected cluster for given organization</p>
 </td>
@@ -600,7 +600,7 @@ selected cluster for given organization</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>GetContentForRules retrieves content for rules that were hit in the report</p>
 </td>
@@ -616,7 +616,7 @@ selected cluster for given organization</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>ReportsCount reads number of all records stored in database</p>
 </td>
@@ -628,7 +628,7 @@ selected cluster for given organization</p>
 
 </code></pre></td>
       </tr>
-      
+
       <tr class="section">
 	<td class="doc"><p>GetRuleByID gets a rule by ID</p>
 </td>
@@ -640,7 +640,7 @@ selected cluster for given organization</p>
 
 </code></pre></td>
       </tr>
-      
+
     </tbody>
   </table>
 </div>
