@@ -2,7 +2,6 @@ module github.com/RedHatInsights/insights-results-aggregator-mock
 
 go 1.23.0
 
-
 require (
 	github.com/BurntSushi/toml v1.4.0
 	github.com/RedHatInsights/insights-operator-utils v1.26.0
@@ -10,7 +9,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/prometheus/client_golang v1.22.0
-	github.com/rs/zerolog v1.34.0
+	github.com/rs/zerolog v1.35.0
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.10.0
 	github.com/verdverm/frisby v0.0.0-20170604211311-b16556248a9a
@@ -31,7 +30,7 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
