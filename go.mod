@@ -2,7 +2,6 @@ module github.com/RedHatInsights/insights-results-aggregator-mock
 
 go 1.23.0
 
-
 require (
 	github.com/BurntSushi/toml v1.4.0
 	github.com/RedHatInsights/insights-operator-utils v1.26.0
@@ -12,7 +11,7 @@ require (
 	github.com/prometheus/client_golang v1.22.0
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/viper v1.19.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/verdverm/frisby v0.0.0-20170604211311-b16556248a9a
 )
 
