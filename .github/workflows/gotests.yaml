@@ -20,6 +20,12 @@ jobs:
         run: go test -coverprofile coverage.out $(go list ./... | grep -v tests)
       - name: Display code coverage
         run: go tool cover -func=coverage.out
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unit-tests
+          fail_ci_if_error: false
       - name: REST API tests setup
         run: ./run_on_ci.sh
       - name: Run REST API tests
