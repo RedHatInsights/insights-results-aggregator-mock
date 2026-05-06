@@ -32,6 +32,8 @@ const (
 var acks map[types.RuleSelector]types.Acknowledge = make(map[types.RuleSelector]types.Acknowledge)
 
 // initialize the acks data structure
+//
+//nolint:goconst
 func init() {
 	acks[rule1] = types.Acknowledge{
 		Acknowledged:  true,

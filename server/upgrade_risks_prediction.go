@@ -41,7 +41,9 @@ const (
 	// ClusterNoData is the cluster name for the response when the Upgrade risks prediction service returns a 404
 	ClusterNoData = "234ec1a1-4679-4122-aacb-f0ae9f9e1a56"
 
-	clusterHasNoData = "No data for the cluster"
+	clusterHasNoData  = "No data for the cluster"
+	statusOk          = "ok"
+	reasonNotExpected = "NotExpected"
 )
 
 // method upgradeRisksPrediction return a recommendation to upgrade or not a cluster
@@ -183,7 +185,7 @@ func (server *HTTPServer) upgradeRisksPredictionMultiCluster(writer http.Respons
 		writer,
 		map[string]interface{}{
 			"predictions": responseArray,
-			"status":      "ok",
+			"status":      statusOk,
 		},
 	)
 
@@ -252,25 +254,25 @@ func buildNotEmptyPredictors() types.UpgradeRisksPredictors {
 			{
 				Name:      "foc1",
 				Condition: "Degraded",
-				Reason:    "NotExpected",
+				Reason:    reasonNotExpected,
 				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc1",
 			},
 			{
 				Name:      "foc2",
 				Condition: "Failing",
-				Reason:    "NotExpected",
+				Reason:    reasonNotExpected,
 				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc2",
 			},
 			{
 				Name:      "foc3",
 				Condition: "Not Available",
-				Reason:    "NotExpected",
+				Reason:    reasonNotExpected,
 				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc3",
 			},
 			{
 				Name:      "foc4",
 				Condition: "Not Upgradeable",
-				Reason:    "NotExpected",
+				Reason:    reasonNotExpected,
 				URL:       "https://my-cluster.com/k8s/cluster/config.openshift.io~v1~ClusterOperator/foc4",
 			},
 		},
