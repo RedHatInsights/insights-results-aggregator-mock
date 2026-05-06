@@ -79,7 +79,7 @@ func init() {
 
 func initStorage(path string) error {
 	clusters := []string{
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266", //nolint:goconst
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a268",
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a269",
@@ -89,10 +89,10 @@ func initStorage(path string) error {
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26d",
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26e",
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26f",
-		"74ae54aa-6577-4e80-85e7-697cb646ff37",
-		"a7467445-8d6a-43cc-b82c-7007664bdf69",
-		"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
-		"eeeeeeee-eeee-eeee-eeee-000000000001",
+		"74ae54aa-6577-4e80-85e7-697cb646ff37", //nolint:goconst
+		"a7467445-8d6a-43cc-b82c-7007664bdf69", //nolint:goconst
+		"ee7d2bf4-8933-4a3a-8634-3328fe806e08", //nolint:goconst
+		"eeeeeeee-eeee-eeee-eeee-000000000001", //nolint:goconst
 		"00000001-624a-49a5-bab8-4fdc5e51a266",
 		"00000001-624a-49a5-bab8-4fdc5e51a267",
 		"00000001-624a-49a5-bab8-4fdc5e51a268",
@@ -167,7 +167,7 @@ func (storage MemoryStorage) ListOfOrgs() ([]types.OrgID, error) {
 func clustersForOrganization11789772() []types.ClusterName {
 	clusters := make([]types.ClusterName, 0, 14)
 	clusters = append(clusters,
-		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
+		"34c3ecc5-624a-49a5-bab8-4fdc5e51a266", //nolint:goconst
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a267",
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a268",
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a269",
@@ -177,10 +177,10 @@ func clustersForOrganization11789772() []types.ClusterName {
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26d",
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26e",
 		"34c3ecc5-624a-49a5-bab8-4fdc5e51a26f",
-		"74ae54aa-6577-4e80-85e7-697cb646ff37",
-		"a7467445-8d6a-43cc-b82c-7007664bdf69",
-		"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
-		"eeeeeeee-eeee-eeee-eeee-000000000001")
+		"74ae54aa-6577-4e80-85e7-697cb646ff37", //nolint:goconst
+		"a7467445-8d6a-43cc-b82c-7007664bdf69", //nolint:goconst
+		"ee7d2bf4-8933-4a3a-8634-3328fe806e08", //nolint:goconst
+		"eeeeeeee-eeee-eeee-eeee-000000000001") //nolint:goconst
 	return clusters
 }
 
@@ -244,21 +244,21 @@ func (storage MemoryStorage) ReadReportForCluster(
 	// Mnemotechnic: c - changing
 	changingClusters := map[string][]string{
 		"cccccccc-cccc-cccc-cccc-000000000001": {
-			"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",
-			"74ae54aa-6577-4e80-85e7-697cb646ff37",
-			"a7467445-8d6a-43cc-b82c-7007664bdf69"},
+			"34c3ecc5-624a-49a5-bab8-4fdc5e51a266",  //nolint:goconst
+			"74ae54aa-6577-4e80-85e7-697cb646ff37",  //nolint:goconst
+			"a7467445-8d6a-43cc-b82c-7007664bdf69"}, //nolint:goconst
 		"cccccccc-cccc-cccc-cccc-000000000002": {
-			"74ae54aa-6577-4e80-85e7-697cb646ff37",
-			"a7467445-8d6a-43cc-b82c-7007664bdf69",
-			"ee7d2bf4-8933-4a3a-8634-3328fe806e08"},
+			"74ae54aa-6577-4e80-85e7-697cb646ff37",  //nolint:goconst
+			"a7467445-8d6a-43cc-b82c-7007664bdf69",  //nolint:goconst
+			"ee7d2bf4-8933-4a3a-8634-3328fe806e08"}, //nolint:goconst
 		"cccccccc-cccc-cccc-cccc-000000000003": {
-			"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
-			"ee7d2bf4-8933-4a3a-8634-3328fe806e08",
-			"34c3ecc5-624a-49a5-bab8-4fdc5e51a266"},
+			"ee7d2bf4-8933-4a3a-8634-3328fe806e08",  //nolint:goconst
+			"ee7d2bf4-8933-4a3a-8634-3328fe806e08",  //nolint:goconst
+			"34c3ecc5-624a-49a5-bab8-4fdc5e51a266"}, //nolint:goconst
 		"cccccccc-cccc-cccc-cccc-000000000004": {
-			"eeeeeeee-eeee-eeee-eeee-000000000001",
-			"eeeeeeee-eeee-eeee-eeee-000000000001",
-			"34c3ecc5-624a-49a5-bab8-4fdc5e51a266"},
+			"eeeeeeee-eeee-eeee-eeee-000000000001",  //nolint:goconst
+			"eeeeeeee-eeee-eeee-eeee-000000000001",  //nolint:goconst
+			"34c3ecc5-624a-49a5-bab8-4fdc5e51a266"}, //nolint:goconst
 	}
 
 	reportName := clusterName

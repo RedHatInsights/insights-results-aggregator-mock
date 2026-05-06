@@ -27,10 +27,11 @@ import (
 
 // rule names
 const (
-	ackedRule1      = "my|RULE1"
-	ackedRule2      = "my|RULE2"
-	nonExistingRule = "my|RULEX"
-	incorrectRule   = "this is incorrect"
+	ackedRule1        = "my|RULE1"
+	ackedRule2        = "my|RULE2"
+	nonExistingRule   = "my|RULEX"
+	incorrectRule     = "this is incorrect"
+	testJustification = "justification"
 )
 
 // AckListResponse represents response containing list of acks
@@ -129,7 +130,7 @@ func checkAckRule() {
 	// set the payload to be sent
 	f.SetJson(RuleAckRequest{
 		Rule:          ackedRule1,
-		Justification: "justification"})
+		Justification: testJustification})
 
 	f.Send()
 	f.ExpectStatus(http.StatusCreated)
@@ -157,7 +158,7 @@ func checkAckRuleWithIncorrectName() {
 	// set the payload to be sent
 	f.SetJson(RuleAckRequest{
 		Rule:          "incorrect rule name",
-		Justification: "justification"})
+		Justification: testJustification})
 
 	f.Send()
 	f.ExpectStatus(http.StatusBadRequest)
@@ -208,7 +209,7 @@ func checkUpdateExistingRule() {
 	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP PUT method").Put(url)
 	// set the payload to be sent
 	f.SetJson(Justification{
-		Justification: "justification"})
+		Justification: testJustification})
 
 	f.Send()
 	f.ExpectStatus(http.StatusOK)
@@ -234,7 +235,7 @@ func checkUpdateNonExistingRule() {
 	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP PUT method for non-existing rule").Put(url)
 	// set the payload to be sent
 	f.SetJson(Justification{
-		Justification: "justification"})
+		Justification: testJustification})
 
 	f.Send()
 	f.ExpectStatus(http.StatusNotFound)
@@ -247,7 +248,7 @@ func checkUpdateIncorrectRule() {
 	f := frisby.Create("Check the 'ack/{rule_selector}' REST API point using HTTP PUT method for incorrect rule").Put(url)
 	// set the payload to be sent
 	f.SetJson(Justification{
-		Justification: "justification"})
+		Justification: testJustification})
 
 	f.Send()
 	f.ExpectStatus(http.StatusBadRequest)

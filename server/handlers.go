@@ -48,6 +48,8 @@ const requestParameter = "Request parameter"
 const unableToReadReportErrorMessage = "Unable to read report for cluster"
 const requestsForClusterNotFound = "Requests for cluster not found"
 
+const statusKey = "status"
+
 // StatusProcessed is message returned for already processed reports (rule hits)
 const StatusProcessed = "processed"
 
@@ -195,7 +197,7 @@ func (server *HTTPServer) serveContentWithGroups(writer http.ResponseWriter, _ *
 	server.initGroupList()
 
 	// prepare data structure
-	responseData := map[string]interface{}{"status": "ok"}
+	responseData := map[string]interface{}{statusKey: "ok"}
 	responseData["content"] = server.Content
 	responseData["groups"] = server.groupsList
 
@@ -658,7 +660,7 @@ func (server *HTTPServer) readListOfRequestIDs(writer http.ResponseWriter, reque
 	}
 
 	// prepare data structure
-	responseData := map[string]interface{}{"status": "ok"}
+	responseData := map[string]interface{}{statusKey: "ok"}
 	responseData["cluster"] = string(clusterName)
 	responseData["requests"] = constructRequestsList(requestIDs)
 
@@ -749,7 +751,7 @@ func (server *HTTPServer) readListOfRequestIDsPostVariant(writer http.ResponseWr
 	logRequestIDs("Filtered IDs", filteredIDs)
 
 	// prepare data structure
-	responseData := map[string]interface{}{"status": "ok"}
+	responseData := map[string]interface{}{statusKey: "ok"}
 	responseData["cluster"] = string(clusterName)
 	responseData["requests"] = constructRequestsList(filteredIDs)
 
@@ -796,13 +798,13 @@ func (server *HTTPServer) readStatusOfRequestID(writer http.ResponseWriter, requ
 	responseData := map[string]interface{}{}
 	responseData["cluster"] = string(clusterName)
 	responseData["requestID"] = requestID
-	responseData["status"] = "unknown"
+	responseData[statusKey] = "unknown"
 
 	// try to find the required request in requests IDs
 	for _, storedRequestID := range requestIDs {
 		if storedRequestID == requestID {
 			// update data structure
-			responseData["status"] = StatusProcessed
+			responseData[statusKey] = StatusProcessed
 			break
 		}
 	}
