@@ -1,4 +1,4 @@
-name: BDD tests
+name: BDD Tests
 
 on:
   push:
@@ -8,6 +8,6 @@ on:
 jobs:
   bdd:
     name: BDD tests
-    uses: RedHatInsights/processing-tools/.github/workflows/bdd.yaml@master
+    uses: RedHatInsights/processing-tools/.github/workflows/bdd.yaml@v0.4.4
     with:
       service: aggregator-mock
