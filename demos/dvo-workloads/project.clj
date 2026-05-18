@@ -19,7 +19,7 @@
                  [ring/ring-core "1.10.0"]
                  [ring/ring-jetty-adapter "1.8.1"]
                  [hiccup "1.0.4"]
-                 [org.clojure/tools.logging "0.3.1"]
+                 [org.clojure/tools.logging "1.3.1"]
                  [log4j/log4j "1.2.17" :exclusions [javax.mail/mail
                                                     javax.jms/jms
                                                     com.sun.jmdk/jmxtools
