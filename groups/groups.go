@@ -29,8 +29,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/go-yaml/yaml"
 	"github.com/rs/zerolog/log"
+	"gopkg.in/yaml.v3"
 )
 
 // Group represent the relative information about a group
