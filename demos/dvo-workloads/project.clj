@@ -24,7 +24,7 @@
                                                     javax.jms/jms
                                                     com.sun.jmdk/jmxtools
                                                     com.sun.jmx/jmxri]]
-                 [org.slf4j/slf4j-log4j12 "1.6.6"]
+                 [org.slf4j/slf4j-log4j12 "1.7.36"]
                  [org.clojars.tisnik/clj-utils "0.3.0-SNAPSHOT"]
                  [org.clojars.tisnik/clj-middleware "0.1.0-SNAPSHOT"]
                  [org.clojars.tisnik/clj-fileutils "0.4.0-SNAPSHOT"]
